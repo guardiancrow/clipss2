@@ -1,0 +1,61 @@
+{
+  "version": 2,
+  "author": "guardiancrow",
+  "date": "2026-10-19",
+  "patches": [
+    {
+      "package": "highway",
+      "path": "hwy/base.h",
+      "beforeSha256": "E3F6049A91809D443841FFA7AC29B3B0E88827E429B37F54434CB18D3E1EDD64",
+      "afterSha256": "E4DC0016DFDACDA41C0FEFBF0F5E63DD20BDE181F024AD1D00838EB7C4B7F90C",
+      "replacementCount": 2,
+      "from": "__FILE__",
+      "to": "\"highway\"",
+      "lineCountUnchanged": true,
+      "noticeReplacementCount": 1
+    },
+    {
+      "package": "libjxl",
+      "path": "lib/jxl/base/status.h",
+      "beforeSha256": "30101C43CC5EBF09A13587ACA1A1739FA69D60E5F47DFA1766811D8B638B14E9",
+      "afterSha256": "E804F5A71FDF53B3D4D8FC29A2CCB42C6C7C9EECF2CAA3F64232604EA0B8B7CA",
+      "replacementCount": 5,
+      "from": "__FILE__",
+      "to": "\"libjxl\"",
+      "lineCountUnchanged": true
+    },
+    {
+      "package": "libjxl",
+      "path": "lib/jxl/decode.cc",
+      "beforeSha256": "C6AFC0252FB0ABFF0DD57EEC9742AF87B609BA5B49692EB3D936AF46D5A13E61",
+      "afterSha256": "161AE9D556EC57F6C3FE2A2CACB5609CC5506114254081877DBF23F5F9E0AE4B",
+      "replacementCount": 2,
+      "from": "__FILE__",
+      "to": "\"libjxl\"",
+      "lineCountUnchanged": true
+    },
+    {
+      "package": "libjxl",
+      "path": "lib/jxl/encode.cc",
+      "beforeSha256": "EB1D2E2C6EB8B1A1287305CF125DCF741008463E8B51326D6C3E0276AC9D3D23",
+      "afterSha256": "299D47019B1958C2E088E3645B809FA3E2EFA658D3432AA28881F22FED8202B9",
+      "replacementCount": 4,
+      "from": "__FILE__",
+      "to": "\"libjxl\"",
+      "lineCountUnchanged": true
+    },
+    {
+      "package": "libjxl",
+      "path": "third_party/CMakeLists.txt",
+      "beforeSha256": "A401639FA6F855E6CF8787518666B881F8FA18CA55FA0F3EF7C01010730618F9",
+      "afterSha256": "ED6C658418B3213F7591EDBF2CD574C7D1B9C09189FC4F8BDE894FC85C6351D6",
+      "replacementCount": 1,
+      "from": "# Copyright (c) the JPEG XL Project\n#\n",
+      "to": "# Copyright (c) the JPEG XL Project\n# Modified for clipss2 using Microsoft vcpkg dependency-resolution changes; upstream patch author/date not asserted.\n",
+      "lineCountUnchanged": true
+    }
+  ],
+  "conditionsFormatLineCallbackCleanupAbiUnchanged": true,
+  "profile": "v2",
+  "noticeImplementationDate": "2026-10-20"
+}

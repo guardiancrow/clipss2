@@ -1,0 +1,44 @@
+{
+  "version": 8,
+  "configurePresets": [
+    {
+      "name": "_s1-release-base",
+      "hidden": true,
+      "generator": "Ninja",
+      "toolchainFile": "${sourceDir}/build/shipping-vcpkg-s1-v2/scripts/buildsystems/vcpkg.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_STANDARD": "23",
+        "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+        "CMAKE_CXX_EXTENSIONS": "OFF"
+      }
+    },
+    {
+      "name": "windows-x64-shipping-v2",
+      "inherits": "_s1-release-base",
+      "binaryDir": "${sourceDir}/build/windows-x64-s1-v2",
+      "cacheVariables": {
+        "CLIPSS2_SHIPPING_PRIVACY": "ON",
+        "CLIPSS2_SHIPPING_PROFILE": "v2",
+        "CLIPSS2_PUBLICATION_SCOPE": "s1-v1",
+        "CLIPSS2_JPEGLI_SOURCE_DIR": "${sourceDir}/build/managed-jpegli-src",
+        "CLIPSS2_DERIVED_JPEGLI_DIR": "${sourceDir}/build/managed-jpegli-s1-v2",
+        "VCPKG_INSTALLED_DIR": "${sourceDir}/build/vcpkg_installed-s1-v2",
+        "VCPKG_TARGET_TRIPLET": "x64-windows-shipping-privacy",
+        "VCPKG_HOST_TRIPLET": "x64-windows",
+        "VCPKG_OVERLAY_PORTS": "${sourceDir}/vcpkg-overlays/shipping-privacy-v2",
+        "VCPKG_OVERLAY_TRIPLETS": "${sourceDir}/triplets",
+        "VCPKG_MANIFEST_INSTALL": "OFF",
+        "CMAKE_FIND_USE_PACKAGE_REGISTRY": "OFF",
+        "CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY": "OFF"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "windows-x64-shipping-v2",
+      "configurePreset": "windows-x64-shipping-v2",
+      "configuration": "Release"
+    }
+  ]
+}

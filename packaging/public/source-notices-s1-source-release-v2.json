@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 2,
+  "purpose": "source-release-notice",
+  "catalogId": "clipss2-source-s1-release-v2",
+  "anchorId": "clipss2-source-s1-release-notices-v2",
+  "noticeSetIds": [
+    "source-s1-direct-v1",
+    "source-s1-license-notice-v1"
+  ]
+}

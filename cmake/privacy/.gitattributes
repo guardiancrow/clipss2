@@ -1,0 +1,7 @@
+# Exact S1/v2 contract bytes. Historical contracts are outside this scope.
+managed-origin-s1-v1.json -text
+managed-origin-s1-v1.tsv -text
+managed-diagnostics-v2.json -text
+managed-sources-v2.tsv -text
+dependency-diagnostics-v2.json -text
+source-inputs-s1-v1.json -text

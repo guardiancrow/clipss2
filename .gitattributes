@@ -1,0 +1,5 @@
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+# Preserve the unchanged official libyuv raw port/patch bytes.
+/vcpkg-overlays/shipping-privacy-v2/libyuv/** -text

@@ -1,0 +1,15 @@
+# clipss2 libjxl 0.12.0 modified-file notice (implemented 2026-10-20).
+# Apply after the unmodified official vcpkg fix-dependencies.patch.
+# Upstream: Copyright (c) the JPEG XL Project; Apache-2.0.
+# Retain the Microsoft vcpkg MIT attribution for the dependency-resolution patch.
+# Original patch author/date are not asserted; existing CMake commands/line numbers are retained.
+
+--- a/third_party/CMakeLists.txt
++++ b/third_party/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ # Copyright (c) the JPEG XL Project
+-#
++# Modified for clipss2 using Microsoft vcpkg dependency-resolution changes; upstream patch author/date not asserted.
+ # Licensed under the Apache License, Version 2.0 (the "License");
+ # you may not use this file except in compliance with the License.
+ # You may obtain a copy of the License at

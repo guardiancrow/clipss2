@@ -1,0 +1,66 @@
+# Acquisition is explicit/offline-repeatable; normal configure never fetches.
+set(CLIPSS2_JPEGLI_SOURCE_DIR "${CMAKE_SOURCE_DIR}/build/managed-jpegli-src" CACHE PATH "Pinned jpegli checkout")
+function(clipss2_add_managed_jpegli)
+    if(NOT MSVC OR NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        message(FATAL_ERROR "Managed jpegli admission requires the audited MSVC C++ exception/CRT boundary")
+    endif()
+    find_package(Git REQUIRED)
+    foreach(entry IN ITEMS
+        ".|031a0077f5799a6041004267fc12b956c1f52a20"
+        "third_party/highway|271a9a0ed9de1232d9117f1572c3fe28f8542ec1"
+        "third_party/skcms|96d9171c94b937a1b5f0293de7309ac16311b722"
+        "third_party/libjpeg-turbo|8ecba3647edb6dd940463fedf38ca33a8e2a73d1")
+        string(REPLACE "|" ";" pair "${entry}")
+        list(GET pair 0 path)
+        list(GET pair 1 revision)
+        execute_process(COMMAND "${GIT_EXECUTABLE}" -C "${CLIPSS2_JPEGLI_SOURCE_DIR}/${path}" rev-parse HEAD
+            OUTPUT_VARIABLE actual OUTPUT_STRIP_TRAILING_WHITESPACE RESULT_VARIABLE result ERROR_QUIET)
+        if(NOT result EQUAL 0 OR NOT actual STREQUAL revision)
+            message(FATAL_ERROR "jpegli source pin mismatch/missing: ${path}. Run tools/prepare_jpegli.ps1 explicitly.")
+        endif()
+        execute_process(COMMAND "${GIT_EXECUTABLE}" -C "${CLIPSS2_JPEGLI_SOURCE_DIR}/${path}" status --porcelain --untracked-files=no
+            OUTPUT_VARIABLE dirty RESULT_VARIABLE result)
+        if(NOT result EQUAL 0 OR NOT dirty STREQUAL "")
+            message(FATAL_ERROR "Pinned jpegli checkout has tracked modifications: ${path}; preserved")
+        endif()
+    endforeach()
+    # Keep original four pin/clean checks above; admit derived input separately.
+    if(CLIPSS2_SHIPPING_PRIVACY)
+        clipss2_validate_privacy_derivative(
+            "${CLIPSS2_JPEGLI_SOURCE_DIR}" "${CLIPSS2_DERIVED_JPEGLI_DIR}")
+        set(CLIPSS2_JPEGLI_SOURCE_DIR "${CLIPSS2_DERIVED_JPEGLI_DIR}")
+    endif()
+    set(CLIPSS2_JPEGLI_BUILD_SOURCE_DIR "${CLIPSS2_JPEGLI_SOURCE_DIR}" PARENT_SCOPE)
+    set(BUILD_TESTING OFF)
+    set(BUILD_SHARED_LIBS OFF)
+    set(JPEGLI_ENABLE_TOOLS OFF)
+    set(JPEGLI_ENABLE_JPEGLI_LIBJPEG OFF)
+    set(JPEGLI_ENABLE_SKCMS ON)
+    set(JPEGLI_ENABLE_SJPEG OFF)
+    set(JPEGLI_ENABLE_DOXYGEN OFF)
+    set(JPEGLI_ENABLE_MANPAGES OFF)
+    set(JPEGLI_ENABLE_BENCHMARK OFF)
+    set(JPEGLI_ENABLE_JNI OFF)
+    set(JPEGLI_ENABLE_OPENEXR OFF)
+    set(JPEGLI_ENABLE_FUZZERS OFF)
+    set(PROVISION_DEPENDENCIES OFF)
+    add_subdirectory("${CLIPSS2_JPEGLI_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/managed-jpegli" EXCLUDE_FROM_ALL)
+    # Throwing error callbacks are safe only with full same-toolchain unwinding.
+    target_compile_options(jpegli-static PRIVATE /EHs /utf-8)
+    get_target_property(hwy_options hwy COMPILE_OPTIONS)
+    list(REMOVE_ITEM hwy_options /EHs-c- -D_HAS_EXCEPTIONS=0)
+    set_property(TARGET hwy PROPERTY COMPILE_OPTIONS "${hwy_options};/EHs")
+    # Do not leak jpegli's incompatible jpeglib include directory to Turbo TUs.
+    set_property(TARGET jpegli-static PROPERTY INTERFACE_INCLUDE_DIRECTORIES "")
+    foreach(notice IN ITEMS LICENSE PATENTS)
+        if(EXISTS "${CLIPSS2_JPEGLI_SOURCE_DIR}/${notice}")
+            configure_file("${CLIPSS2_JPEGLI_SOURCE_DIR}/${notice}" "${CMAKE_BINARY_DIR}/notices/jpegli/${notice}" COPYONLY)
+        endif()
+    endforeach()
+    configure_file("${CLIPSS2_JPEGLI_SOURCE_DIR}/third_party/highway/LICENSE" "${CMAKE_BINARY_DIR}/notices/highway/LICENSE" COPYONLY)
+    foreach(notice IN ITEMS LICENSE.md README.ijg)
+        configure_file("${CLIPSS2_JPEGLI_SOURCE_DIR}/third_party/libjpeg-turbo/${notice}"
+            "${CMAKE_BINARY_DIR}/notices/jpegli-headers/${notice}" COPYONLY)
+    endforeach()
+endfunction()
+clipss2_add_managed_jpegli()

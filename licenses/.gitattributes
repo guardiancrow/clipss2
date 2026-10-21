@@ -1,0 +1,5 @@
+# Preserve third-party originals byte-for-byte, including CRLF and whitespace.
+* -text -whitespace
+.gitattributes text eol=lf whitespace
+SOURCES.md text eol=lf whitespace
+libjxl/OVERLAY-ATTRIBUTION.md text eol=lf whitespace

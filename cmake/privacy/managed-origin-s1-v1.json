@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "contractId": "clipss2-managed-origin-s1-v1",
+  "sourceScopeId": "clipss2-source-s1-v1",
+  "checkouts": [
+    {
+      "path": ".",
+      "uri": "https://github.com/google/jpegli.git",
+      "revision": "031a0077f5799a6041004267fc12b956c1f52a20"
+    },
+    {
+      "path": "third_party/highway",
+      "uri": "https://github.com/google/highway.git",
+      "revision": "271a9a0ed9de1232d9117f1572c3fe28f8542ec1"
+    },
+    {
+      "path": "third_party/skcms",
+      "uri": "https://skia.googlesource.com/skcms",
+      "revision": "96d9171c94b937a1b5f0293de7309ac16311b722"
+    },
+    {
+      "path": "third_party/libjpeg-turbo",
+      "uri": "https://github.com/libjpeg-turbo/libjpeg-turbo.git",
+      "revision": "8ecba3647edb6dd940463fedf38ca33a8e2a73d1"
+    }
+  ],
+  "gitlinks": [
+    {
+      "mode": "160000",
+      "type": "commit",
+      "oid": "ff8d743aaba05b3014f17e5475e576242fa979fc",
+      "path": "testdata"
+    },
+    {
+      "mode": "160000",
+      "type": "commit",
+      "oid": "6910c9d9165801d8827d628cb72eb7ea9dd538c5",
+      "path": "third_party/googletest"
+    },
+    {
+      "mode": "160000",
+      "type": "commit",
+      "oid": "271a9a0ed9de1232d9117f1572c3fe28f8542ec1",
+      "path": "third_party/highway"
+    },
+    {
+      "mode": "160000",
+      "type": "commit",
+      "oid": "5176347635785e53ee5cee92328f76fda766ecc6",
+      "path": "third_party/lcms"
+    },
+    {
+      "mode": "160000",
+      "type": "commit",
+      "oid": "8ecba3647edb6dd940463fedf38ca33a8e2a73d1",
+      "path": "third_party/libjpeg-turbo"
+    },
+    {
+      "mode": "160000",
+      "type": "commit",
+      "oid": "872555f4ba910252783af1507f9e7fe1653be252",
+      "path": "third_party/libpng"
+    },
+    {
+      "mode": "160000",
+      "type": "commit",
+      "oid": "94e0df6d0f8b44228de5be0ff35efb9f946a13c9",
+      "path": "third_party/sjpeg"
+    },
+    {
+      "mode": "160000",
+      "type": "commit",
+      "oid": "96d9171c94b937a1b5f0293de7309ac16311b722",
+      "path": "third_party/skcms"
+    },
+    {
+      "mode": "160000",
+      "type": "commit",
+      "oid": "51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf",
+      "path": "third_party/zlib"
+    }
+  ],
+  "manifest": {
+    "path": "cmake/privacy/managed-origin-s1-v1.tsv",
+    "size": 231616,
+    "sha256": "7D4BC1700562893F34721C9AECE02C5D42672C21EB9071341BD17107DD53777D",
+    "rowCount": 1481,
+    "columns": [
+      "originalSha256",
+      "mode",
+      "gitBlob",
+      "path"
+    ]
+  }
+}

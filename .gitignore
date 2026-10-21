@@ -1,0 +1,22 @@
+/build/
+/out/
+/dist/
+.vs/
+.vscode/
+*.user
+*.suo
+*.VC.db
+*.VC.VC.opendb
+
+# Root-level local use / generated output. Templates and fixtures stay visible.
+/settings.conf
+/captures/
+/logs/
+/*.log
+/*.exe
+/*.dll
+/*.pdb
+/*.zip
+/*.tmp
+/*.reserve
+/CMakeUserPresets.json

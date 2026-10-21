@@ -1,0 +1,6 @@
+add_executable(clipss2_libjxl_smoke tests/libjxl_smoke.cpp)
+target_link_libraries(clipss2_libjxl_smoke PRIVATE PkgConfig::LIBJXL PkgConfig::LIBJXL_THREADS)
+clipss2_configure_cpp_target(clipss2_libjxl_smoke)
+if(BUILD_TESTING)
+    add_test(NAME libjxl_smoke COMMAND clipss2_libjxl_smoke)
+endif()

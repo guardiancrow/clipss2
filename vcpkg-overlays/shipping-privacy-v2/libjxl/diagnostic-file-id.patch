@@ -1,0 +1,96 @@
+diff --git a/lib/jxl/base/status.h b/lib/jxl/base/status.h
+index 6a2c3884ceb236f2e5331b5c04c7e6360cb8587a..44f1561eb1311140cbdb8e7681c28807b8aa8222 100644
+--- a/lib/jxl/base/status.h
++++ b/lib/jxl/base/status.h
+@@ -66,7 +66,7 @@ inline JXL_NOINLINE bool Debug(const char* format, ...) {
+ //   #define JXL_DEBUG_MYMODULE 0
+ //   #endif JXL_DEBUG_MYMODULE
+ #define JXL_DEBUG_TMP(format, ...) \
+-  ::jxl::Debug(("%s:%d: " format "\n"), __FILE__, __LINE__, ##__VA_ARGS__)
++  ::jxl::Debug(("%s:%d: " format "\n"), "libjxl", __LINE__, ##__VA_ARGS__)
+ 
+ #define JXL_DEBUG(enabled, format, ...)     \
+   do {                                      \
+@@ -100,7 +100,7 @@ JXL_NORETURN inline JXL_NOINLINE bool Abort() {
+ #define JXL_DEBUG_ABORT(format, ...)                                   \
+   do {                                                                 \
+     if (JXL_DEBUG_ON_ABORT) {                                          \
+-      ::jxl::Debug(("%s:%d: JXL_DEBUG_ABORT: " format "\n"), __FILE__, \
++      ::jxl::Debug(("%s:%d: JXL_DEBUG_ABORT: " format "\n"), "libjxl", \
+                    __LINE__, ##__VA_ARGS__);                           \
+     }                                                                  \
+     ::jxl::Abort();                                                    \
+@@ -115,7 +115,7 @@ JXL_NORETURN inline JXL_NOINLINE bool Abort() {
+ // this if this path is really unreachable.
+ #if JXL_IS_DEBUG_BUILD
+ #define JXL_UNREACHABLE(format, ...)                                          \
+-  (::jxl::Debug(("%s:%d: JXL_UNREACHABLE: " format "\n"), __FILE__, __LINE__, \
++  (::jxl::Debug(("%s:%d: JXL_UNREACHABLE: " format "\n"), "libjxl", __LINE__, \
+                 ##__VA_ARGS__),                                               \
+    ::jxl::Abort(), JXL_FAILURE(format, ##__VA_ARGS__))
+ #else  // JXL_IS_DEBUG_BUILD
+@@ -142,7 +142,7 @@ JXL_NORETURN inline JXL_NOINLINE bool Abort() {
+ // A jxl::Status value from a StatusCode or Status which prints a debug message
+ // when enabled.
+ #define JXL_STATUS(status, format, ...)                                        \
+-  ::jxl::StatusMessage(::jxl::Status(status), "%s:%d: " format "\n", __FILE__, \
++  ::jxl::StatusMessage(::jxl::Status(status), "%s:%d: " format "\n", "libjxl", \
+                        __LINE__, ##__VA_ARGS__)
+ 
+ // Notify of an error but discard the resulting Status value. This is only
+@@ -176,7 +176,7 @@ JXL_NORETURN inline JXL_NOINLINE bool Abort() {
+     if (!jxl_return_if_error_status) {                                    \
+       (void)::jxl::StatusMessage(                                         \
+           jxl_return_if_error_status,                                     \
+-          "%s:%d: JXL_RETURN_IF_ERROR code=%d: %s\n", __FILE__, __LINE__, \
++          "%s:%d: JXL_RETURN_IF_ERROR code=%d: %s\n", "libjxl", __LINE__, \
+           static_cast<int>(jxl_return_if_error_status.code()), #status);  \
+       return jxl_return_if_error_status;                                  \
+     }                                                                     \
+diff --git a/lib/jxl/decode.cc b/lib/jxl/decode.cc
+index 969b380d3b5e31888b1a838c54883d9e4b836d0d..64221b2ac465b684986868d62091eb1b6a4de130 100644
+--- a/lib/jxl/decode.cc
++++ b/lib/jxl/decode.cc
+@@ -87,12 +87,12 @@ JXL_INLINE size_t InitialBasicInfoSizeHint() {
+ // JXL_DEC_ERROR
+ #if (JXL_CRASH_ON_ERROR)
+ #define JXL_API_ERROR(format, ...)                                           \
+-  (::jxl::Debug(("%s:%d: " format "\n"), __FILE__, __LINE__, ##__VA_ARGS__), \
++  (::jxl::Debug(("%s:%d: " format "\n"), "libjxl", __LINE__, ##__VA_ARGS__), \
+    ::jxl::Abort(), JXL_DEC_ERROR)
+ #else  // JXL_CRASH_ON_ERROR
+ #define JXL_API_ERROR(format, ...)                                             \
+   (((JXL_IS_DEBUG_BUILD) &&                                                    \
+-    ::jxl::Debug(("%s:%d: " format "\n"), __FILE__, __LINE__, ##__VA_ARGS__)), \
++    ::jxl::Debug(("%s:%d: " format "\n"), "libjxl", __LINE__, ##__VA_ARGS__)), \
+    JXL_DEC_ERROR)
+ #endif  // JXL_CRASH_ON_ERROR
+ 
+diff --git a/lib/jxl/encode.cc b/lib/jxl/encode.cc
+index dcb85f3aa36d448236106cbfce0d50fcd9ff313f..e0381dc71cda4c7c08bc46325c262a2d8b7578fe 100644
+--- a/lib/jxl/encode.cc
++++ b/lib/jxl/encode.cc
+@@ -91,19 +91,19 @@ struct JxlErrorOrStatus {
+ #if (JXL_CRASH_ON_ERROR)
+ #define JXL_API_ERROR(enc, error_code, format, ...)                          \
+   (enc->error = error_code,                                                  \
+-   ::jxl::Debug(("%s:%d: " format "\n"), __FILE__, __LINE__, ##__VA_ARGS__), \
++   ::jxl::Debug(("%s:%d: " format "\n"), "libjxl", __LINE__, ##__VA_ARGS__), \
+    ::jxl::Abort(), JxlErrorOrStatus::Error())
+ #define JXL_API_ERROR_NOSET(format, ...)                                     \
+-  (::jxl::Debug(("%s:%d: " format "\n"), __FILE__, __LINE__, ##__VA_ARGS__), \
++  (::jxl::Debug(("%s:%d: " format "\n"), "libjxl", __LINE__, ##__VA_ARGS__), \
+    ::jxl::Abort(), JxlErrorOrStatus::Error())
+ #else  // JXL_CRASH_ON_ERROR
+ #define JXL_API_ERROR(enc, error_code, format, ...)                            \
+   (enc->error = error_code,                                                    \
+    ((JXL_IS_DEBUG_BUILD) &&                                                    \
+-    ::jxl::Debug(("%s:%d: " format "\n"), __FILE__, __LINE__, ##__VA_ARGS__)), \
++    ::jxl::Debug(("%s:%d: " format "\n"), "libjxl", __LINE__, ##__VA_ARGS__)), \
+    JxlErrorOrStatus::Error())
+ #define JXL_API_ERROR_NOSET(format, ...)                                     \
+-  (::jxl::Debug(("%s:%d: " format "\n"), __FILE__, __LINE__, ##__VA_ARGS__), \
++  (::jxl::Debug(("%s:%d: " format "\n"), "libjxl", __LINE__, ##__VA_ARGS__), \
+    JxlErrorOrStatus::Error())
+ #endif  // JXL_CRASH_ON_ERROR
+ 
