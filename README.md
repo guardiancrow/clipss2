@@ -8,7 +8,7 @@ Windows向けのスクリーンキャプチャツールです。Window、単一�
 
 [構築・検証状況](BUILDING.md)、[操作の説明](docs/USAGE.md)、[OS/APIと未検証範囲](docs/SUPPORT.md)を参照してください。
 S1で実測済みなのはsource contract、read-only PlanOnly、限定source transformationとNOTICEの構造検査です。
-自動Installは未完成で、本source cutの依存Install入口は未実装です。実configure/build・ABI・runtime・独立再ビルドのbitwise再現性は未実証です。
+依存Install経路は実装済みですが、実install・configure/build・ABI・runtime・独立再ビルドのbitwise再現性は未実証です。実行前にBuild Toolsの使用資格確認が必要です。
 過去の別構成・旧f3の動作実績を新S1の成功には読み替えません。
 
 自作部分は[MIT原文](LICENSE)。第三者成分を一律MITとは扱いません。

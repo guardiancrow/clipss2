@@ -7,7 +7,7 @@ Windows 11 24H2/build26100以降のConsole Allocation Policyを、Windows 10で�
 これらは既存sourceのAPI設計上の境界で、今回OS実機検証を追加した結果ではありません。
 
 新S1はMSVC x64 / Ninja single-config / Release / Privacy ON / profile v2のみを公開支援経路とします。
-現在のCMake統合は静的・script mode/CLI接続の受入までで、実configure・依存install・ABI・runtimeは未実施です。
+現在のCMake統合は静的・script mode/CLI接続の受入までです。依存Install経路の隔離fixture検証は実install・configure・ABI・runtimeの受入ではありません。
 旧構成にあったWindows 10の限定USER-REPORTED成功や別PC成功をS1へ転用しません。
 
 captureは実capability・target・color・topology等を確認し、不明/不整合を拒否する設計です。

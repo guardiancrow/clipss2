@@ -86,10 +86,8 @@ function Assert-S1Marker($Marker,$Plan) {
     if(($Marker.schemaVersion -isnot [int] -and $Marker.schemaVersion -isnot [long]) -or $Marker.schemaVersion -ne 1){Stop-S1 MarkerIdentity}
     foreach($key in @($wanted.Keys|Where-Object {$_ -cne 'schemaVersion'})){Assert-S1Value $Marker[$key] $wanted[$key] MarkerIdentity}
 }
-function Test-S1Installed($Root,$InstalledDir,$Plan) {
+function Test-S1InstalledStructure($Root,$InstalledDir,$Plan) {
     $installed=Get-S1ExpectedRoot $Root 'build/vcpkg_installed-s1-v2' $InstalledDir
-    $marker=Read-S1StrictJson (Resolve-S1Path $installed 'share/clipss2-source-profile-s1-v1.json')
-    Assert-S1Marker $marker $Plan
     foreach($relative in @('x64-windows-shipping-privacy/bin','x64-windows-shipping-privacy/lib','x64-windows-shipping-privacy/include','x64-windows-shipping-privacy/share','x64-windows/tools','x64-windows/share','vcpkg/info')){
         if(![IO.Directory]::Exists((Resolve-S1Path $installed $relative))){Stop-S1 InstalledStructure}
     }
@@ -102,7 +100,13 @@ function Test-S1Installed($Root,$InstalledDir,$Plan) {
     foreach($paragraph in ($status -split '(?:\r?\n){2,}')){
         if([string]::IsNullOrWhiteSpace($paragraph)){continue}
         $fields=@{}
-        foreach($line in ($paragraph -split '\r?\n')){if(!$line){continue};if($line -notmatch '^([A-Za-z-]+): (.*)$' -or $fields.ContainsKey($Matches[1])){Stop-S1 InstalledStatus};$fields[$Matches[1]]=$Matches[2]}
+        $lastField=''
+        foreach($line in ($paragraph -split '\r?\n')){
+            if(!$line){continue}
+            if($line.StartsWith(' ') -and $lastField -ceq 'Description'){continue}
+            if($line -notmatch '^([A-Za-z-]+): (.*)$' -or $fields.ContainsKey($Matches[1])){Stop-S1 InstalledStatus}
+            $lastField=$Matches[1];$fields[$lastField]=$Matches[2]
+        }
         if(!$fields.ContainsKey('Package') -or !$fields.ContainsKey('Architecture')){Stop-S1 InstalledStatus}
         $package=@($Plan.inputs.packages|Where-Object name -CEQ $fields.Package)
         if($package.Count -ne 1){Stop-S1 InstalledStatus}
@@ -117,7 +121,15 @@ function Test-S1Installed($Root,$InstalledDir,$Plan) {
         $records.Add($fields.Package,$fields)
     }
     if($records.Count -ne 16){Stop-S1 InstalledStatus}
-    return [pscustomobject]@{result='PASS';markerValidated=$true;packageStatusRecords=16;actualInstallPerformed=$false;abiVerified=$false;binaryIdentityVerified=$false}
+    return [pscustomobject]@{result='PASS';markerValidated=$false;packageStatusRecords=16;actualInstallPerformed=$false;abiVerified=$false;binaryIdentityVerified=$false}
+}
+function Test-S1Installed($Root,$InstalledDir,$Plan) {
+    $installed=Get-S1ExpectedRoot $Root 'build/vcpkg_installed-s1-v2' $InstalledDir
+    Assert-S1Marker (Read-S1StrictJson (Resolve-S1Path $installed 'share/clipss2-source-profile-s1-v1.json')) $Plan
+    $result=Test-S1InstalledStructure $Root $installed $Plan
+    $null=Test-S1InstallReceipt $installed $Plan
+    $result.markerValidated=$true
+    return $result
 }
 function Get-S1Plan($Root,$Profile,$Scope,$Privacy,$Configuration,$Architecture) {
     Assert-S1Selection $Profile $Scope $Privacy $Configuration $Architecture
@@ -125,3 +137,4 @@ function Get-S1Plan($Root,$Profile,$Scope,$Privacy,$Configuration,$Architecture)
     $states=@(foreach($key in $script:S1OutputPolicy.Keys){$path=Resolve-S1Path $Root $script:S1OutputPolicy[$key];[ordered]@{role=$key;relative=$script:S1OutputPolicy[$key];state=$(if([IO.File]::Exists($path)){Stop-S1 OutputRoot}elseif([IO.Directory]::Exists($path)){'PRESENT_UNADMITTED'}else{'ABSENT'})}})
     return [ordered]@{result='PASS';mode='PlanOnly';sourceScopeId='clipss2-source-s1-v1';profile='v2';sourceInputsSha256=$plan.sourceInputsSha256;boundInputs=28;packages=$plan.inputs.packages;targetTriplet=$plan.inputs.targetTriplet;hostTriplet=$plan.inputs.hostTriplet;overlayRoot=$plan.inputs.overlayRoot;originalTuples=1481;checkouts=4;gitlinks=9;v2Stages=3;outputRoots=$states;verified=@('28 raw input identities','origin contract/1481 original tuples','fixed v2 metadata and 3-stage postimages','preset/config/profile/output policy');notVerified=@('real dependency install/ABI/binaries','actual source checkouts or derived output bytes in PlanOnly','compiler/toolchain/generator runtime','ownership or reusability of existing output directories');sideEffects='NONE';vcpkgInvoked=$false;compilerProbe=$false;actualInstallPerformed=$false;installedValidated=$false}
 }
+. (Join-Path $PSScriptRoot S1DependencyInstall.ps1)

@@ -2,10 +2,16 @@
 # Copyright (c) 2026 guardiancrow. MIT.
 # Consumer tests only. Does not perform derive/install/build or duplicate B1 suite.
 param([Parameter(Mandatory)][string]$Root,[Parameter(Mandatory)][string]$EvidenceRoot,
-      [Parameter(Mandatory)][string]$OriginalRoot)
+      [string]$OriginalRoot='', [switch]$ContractOnly)
 $ErrorActionPreference='Stop'
 Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot ../tools/ShippingProfileS1.ps1)
+if(!$ContractOnly){Assert-S1String $OriginalRoot}
+# This suite writes synthetic installed bytes. Never point it at a Git working
+# repository or an existing installed tree, even when other outputs are valid.
+if(Test-Path -LiteralPath (Join-Path $Root .git)){throw 'Fixture Root must be an isolated source export without Git metadata'}
+$fixtureInstalled=Resolve-S1Path $Root 'build/vcpkg_installed-s1-v2'
+if(Test-Path -LiteralPath $fixtureInstalled){throw 'Fixture installed root already exists; preserved'}
 $utf8=[Text.UTF8Encoding]::new($false)
 $run=Join-Path $EvidenceRoot ('fixtures-'+[DateTime]::UtcNow.ToString('yyyyMMdd-HHmmssfff'))
 if(Test-Path -LiteralPath $run){throw 'Fixture collision'}
@@ -39,7 +45,7 @@ $ledger=Read-S1StrictJson (Join-Path $Root cmake/privacy/source-inputs-s1-v1.jso
 function New-View($Name){
  $destination=Join-Path $run $Name
  [void][IO.Directory]::CreateDirectory($destination)
- $copyPaths=@($ledger.files.path)+@('cmake/privacy/source-inputs-s1-v1.json','tools/S1SourceContracts.psm1','tools/ShippingPrivacyS1.ps1','tools/ShippingProfileS1.ps1','tools/build_shipping_dependencies_s1.ps1','tools/derive_shipping_privacy_s1.ps1','cmake/ShippingPrivacy.cmake')
+ $copyPaths=@($ledger.files.path)+@('cmake/privacy/source-inputs-s1-v1.json','tools/S1SourceContracts.psm1','tools/ShippingPrivacyS1.ps1','tools/ShippingProfileS1.ps1','tools/S1DependencyInstall.ps1','tools/build_shipping_dependencies_s1.ps1','tools/derive_shipping_privacy_s1.ps1','cmake/ShippingPrivacy.cmake')
  foreach($relative in $copyPaths){$out=Join-Path $destination $relative;[void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($out));[IO.File]::Copy((Join-Path $Root $relative),$out,$false)}
  return $destination
 }
@@ -80,7 +86,7 @@ Case 'output.override-one-empty-string-array' negative ScalarString {Get-S1Expec
 Case 'output.override-null' negative ScalarString {Get-S1ExpectedRoot $Root 'build/managed-jpegli-s1-v2' $null}
 Case 'cli.no-mode' negative ScalarString {Invoke-S1FixtureCli $cli (@('-Root',$Root)+$selection) ScalarString}
 Case 'cli.no-profile' negative ScalarString {Invoke-S1FixtureCli $cli @('-Root',$Root,'-Mode','PlanOnly','-Scope','s1-v1','-Privacy','ON','-Configuration','Release','-Architecture','x64') ScalarString}
-Case 'cli.explicit-install-disabled' negative InstallNotImplemented {Invoke-S1FixtureCli $cli (@('-Root',$Root,'-Mode','Install')+$selection) InstallNotImplemented}
+Case 'cli.install-needs-buildtools-eligibility' negative BuildToolsEligibilityUnconfirmed {Invoke-S1FixtureCli $cli (@('-Root',$Root,'-Mode','Install')+$selection) BuildToolsEligibilityUnconfirmed}
 Case 'cli.plan-cannot-request-installed' negative Mode {Invoke-S1FixtureCli $cli (@('-Root',$Root,'-Mode','PlanOnly','-InstalledDir','old')+$selection) Mode}
 foreach($mutation in @('missing','extra','unregistered','case','traversal','size-type','hash-type','packages','scope','off','v1','output','unknown')){
  $expected=@{'missing'='InputCount';'extra'='InputCount';'unregistered'='InputSet';'case'='InputSet';'traversal'='RelativePath';'size-type'='InputRecord';'hash-type'='ScalarString';'packages'='Packages';'scope'='InputSelection';'off'='InputSelection';'v1'='InputSelection';'output'='OutputPolicy';'unknown'='Fields'}[$mutation]
@@ -126,6 +132,19 @@ function Create-InstalledFixture($View){
  Save-Json "$installed/share/clipss2-source-profile-s1-v1.json" (Get-S1MarkerExpected $plan)
  $paragraphs=@(foreach($package in $plan.inputs.packages){$version=$package.version.Split('#');$arch=if($package.role -ceq 'target'){$plan.inputs.targetTriplet}else{$plan.inputs.hostTriplet};$port=if($version.Count -eq 2){$version[1]}else{'0'};"Package: $($package.name)`nVersion: $($version[0])`nPort-Version: $port`nArchitecture: $arch`nStatus: install ok installed"})
  [IO.File]::WriteAllText("$installed/vcpkg/status",(($paragraphs -join "`n`n")+"`n"),$utf8)
+ # Synthetic payload only; this fixture is never admitted as an actual install.
+ foreach($package in $plan.inputs.packages){
+  $arch=if($package.role -ceq 'target'){$plan.inputs.targetTriplet}else{$plan.inputs.hostTriplet}
+  $payload="$arch/share/$($package.name)/fixture.txt"
+  [void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName("$installed/$payload"))
+  [IO.File]::WriteAllText("$installed/$payload",'synthetic test fixture',$utf8)
+  [IO.File]::WriteAllText("$installed/vcpkg/info/$($package.name)_$($package.version)_$arch.list",($payload+"`n"),$utf8)
+ }
+ foreach($path in @('x64-windows-shipping-privacy/bin/fixture.dll','x64-windows-shipping-privacy/lib/fixture.lib','x64-windows-shipping-privacy/include/fixture.h','x64-windows/tools/pkgconf/pkgconf.exe')){
+  [void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName("$installed/$path"))
+  [IO.File]::WriteAllText("$installed/$path",'not an executable: fixture bytes',$utf8)
+ }
+ Write-S1NewJson "$installed/share/clipss2-s1-install-receipt-v1.json" (New-S1InstallReceipt $installed $plan ('A'*64))
  return $installed
 }
 $installed=Create-InstalledFixture $Root
@@ -141,6 +160,7 @@ Case 'marker.status-mismatch' negative InstalledStatus {$v=New-View wrong-status
 Case 'marker.missing-structure' negative InstalledStructure {$v=New-View wrong-layout;[void][IO.Directory]::CreateDirectory("$v/build/vcpkg_installed-s1-v2/share");Save-Json "$v/build/vcpkg_installed-s1-v2/share/clipss2-source-profile-s1-v1.json" (Get-S1MarkerExpected $plan);Test-S1Installed $v "$v/build/vcpkg_installed-s1-v2" $plan}
 Case 'plan.existing-root-is-not-admitted' positive ACCEPT {$p=Get-S1Plan $Root v2 s1-v1 ON Release x64;if(@($p.outputRoots|Where-Object state -CEQ PRESENT_UNADMITTED).Count -lt 1 -or $p.installedValidated){throw 'Reuse claim'}}
 
+if(!$ContractOnly){
 function Cmake-Harness($Name,$Mutation='',$InvokeProfile=$false,$InvokeCallback=$false){
  $rootSlash=$Root.Replace('\','/');$originalSlash=$OriginalRoot.Replace('\','/')
  $lines=@('cmake_minimum_required(VERSION 3.28)',('set(CMAKE_SOURCE_DIR "'+$rootSlash+'")'),'set(CMAKE_GENERATOR "Ninja")','set(CMAKE_BUILD_TYPE "Release")','set(MSVC TRUE)','set(CMAKE_CXX_COMPILER_ID "MSVC")','set(CMAKE_CXX_COMPILER_ARCHITECTURE_ID "x64")','set(CMAKE_SIZEOF_VOID_P 8)','set(CLIPSS2_SHIPPING_PRIVACY "ON")','set(CLIPSS2_SHIPPING_PROFILE "v2")','set(CLIPSS2_PUBLICATION_SCOPE "s1-v1")','set(VCPKG_TARGET_TRIPLET "x64-windows-shipping-privacy")','set(VCPKG_HOST_TRIPLET "x64-windows")','set(VCPKG_MANIFEST_INSTALL "OFF")','set(CMAKE_FIND_USE_PACKAGE_REGISTRY "OFF")','set(CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY "OFF")')
@@ -185,10 +205,11 @@ $badDerived=Join-Path $run corrupt-derived
 foreach($row in $plan.managed.rows){$dest=Join-Path $badDerived $row.path;[void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($dest));[IO.File]::Copy((Join-Path "$Root/build/managed-jpegli-s1-v2" $row.path),$dest,$false)}
 Case 'derive.postimage-mismatch' negative DerivedPostimage {[IO.File]::AppendAllText((Join-Path $badDerived 'third_party/highway/hwy/base.h'),' ',$utf8);Test-S1ManagedDerivative $Root $badDerived}
 Case 'derive.unregistered-empty-directory' negative DirectorySet {[void][IO.Directory]::CreateDirectory("$badDerived/unregistered-empty");Test-S1ManagedDerivative $Root $badDerived}
+}else{$notTested.Add('ContractOnly: real managed checkout/derivative and CMake -P integration not run.')}
 $notTested.Add('Physical file symlink: B1 Windows privilege limitation retained; junction tested here.')
 $notTested.Add('Physically dirty upstream checkout: forwarding unit fixture, original preserved.')
-$notTested.Add('Actual generator/MSVC/compiler/configure/install/build/ABI/runtime: NOT PERFORMED; CMake -P uses explicit metadata fixtures.')
-$summary=[ordered]@{result=$(if(@($results|Where-Object result -CEQ FAIL).Count){'FAIL'}else{'PASS'});positive=@($results|Where-Object kind -CEQ positive).Count;negative=@($results|Where-Object kind -CEQ negative).Count;failed=@($results|Where-Object result -CEQ FAIL).Count;cases=@($results);notTested=@($notTested);cmakeMode='SCRIPT -P ONLY, no project/configure/compiler';derivePerformedBySuite=$false;actualInstall=$false}
+$notTested.Add('Actual generator/MSVC/compiler/configure/install/build/ABI/runtime: NOT PERFORMED.')
+$summary=[ordered]@{result=$(if(@($results|Where-Object result -CEQ FAIL).Count){'FAIL'}else{'PASS'});positive=@($results|Where-Object kind -CEQ positive).Count;negative=@($results|Where-Object kind -CEQ negative).Count;failed=@($results|Where-Object result -CEQ FAIL).Count;cases=@($results);notTested=@($notTested);cmakeMode=$(if($ContractOnly){'NOT RUN'}else{'SCRIPT -P ONLY, no project/configure/compiler'});derivePerformedBySuite=$false;actualInstall=$false}
 [IO.File]::WriteAllText("$run/results.json",($summary|ConvertTo-Json -Depth 10),$utf8)
 [ordered]@{receipt="$run/results.json";result=$summary.result;positive=$summary.positive;negative=$summary.negative;failed=$summary.failed;failures=@($results|Where-Object result -CEQ FAIL)}|ConvertTo-Json -Depth 7
 if($summary.failed){exit 1}
