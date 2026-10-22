@@ -1,8 +1,8 @@
 # 原LICENSE/PATENTSの出典とraw identity
 
-原文22件を短縮・意訳せず保持します。日本語NOTICEだけで原文掲載条件を満たしたとは扱いません。
+原文23件を短縮・意訳せず保持します。日本語NOTICEだけで原文掲載条件を満たしたとは扱いません。
 [S1 NOTICE](../THIRD-PARTY-NOTICES-S1.md)と[帰属](../cmake/privacy/ATTRIBUTION.md)にsource-direct/reference-onlyの対応を示します。
-source URI/revisionは固定資料の由来で、今回HTTP到達・新tag状態を測定した意味ではありません。
+source URI/revisionは固定資料の由来です。今回HTTPでraw identityを照合した追加対象は固定skcmsだけであり、他の原文や新tag状態を再調査した意味ではありません。
 
 | 原文path | bytes | SHA-256 | 出典 / revision |
 | --- | ---: | --- | --- |
@@ -28,7 +28,8 @@ source URI/revisionは固定資料の由来で、今回HTTP到達・新tag状態
 | [licenses/libyuv/copyright](libyuv/copyright) | 1506 | 2B2CC1180C7E6988328AD2033B04B80117419DB9C4C584918BBB3CFEC7E9364F | https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libyuv/portfile.cmake / 1916 |
 | [licenses/vcpkg/LICENSE.txt](vcpkg/LICENSE.txt) | 1073 | 1EE376FC340E0AA6AD6A3581C94126E741468705096AC92263048A21DAA86460 | https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/LICENSE.txt / 04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4 |
 | [licenses/zlib/copyright](zlib/copyright) | 1002 | E32FF4E00D9D94930537635291DA39E7E612703334BF6FDE8C7F1686FE8A45A2 | https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/zlib/portfile.cmake / 1.3.2#2 |
+| [licenses/skcms/LICENSE](skcms/LICENSE) | 1635 | E59BB5C5C6BA426A9AC4BA9FE667AD14C5166B12AA25BE8AF1D122B14FBE2E36 | https://skia.googlesource.com/skcms/+/96d9171c94b937a1b5f0293de7309ac16311b722/LICENSE / 96d9171c94b937a1b5f0293de7309ac16311b722 |
 
 原文には第三者の連絡先・copyrightが含まれる場合があります。これは権利文言の保全であり利用者の個人情報ではありません。
-licenses/の閉集合は原文22件と本SOURCES.md、.gitattributesの計24件です。
+v3のlicenses/閉集合は原文23件と本SOURCES.md、.gitattributesの計25件です。旧v2閉集合は元snapshotの記録です。
 旧overlay sidecarは含めず、帰属はS1表へ整理しました。権利の未確定を解消したとはしません。

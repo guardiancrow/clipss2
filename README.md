@@ -14,6 +14,7 @@ S1で実測済みなのはsource contract、read-only PlanOnly、限定source tr
 自作部分は[MIT原文](LICENSE)。第三者成分を一律MITとは扱いません。
 [S1 NOTICE](THIRD-PARTY-NOTICES-S1.md)、[原LICENSE/PATENTS一覧](licenses/SOURCES.md)、[S1 Reader](docs/SOURCE-S1-NOTICES.md)でsource-directとreference-onlyを区別します。
 schema2のsource承認宣言は、別途所有者が明示承認した特定のsource集合と、後で対応付けるGit tree/commitのsnapshotにだけ適用します。binaryは非承認、binaryProfilesは空です。
+現在のReaderは固定skcmsのBSD-3-Clause確認を反映したv3 source-developmentを検証します。旧v2承認metadataは元snapshotの記録として保持し、今回のsource集合へ承認を引き継ぎません。[確認範囲とPackaging条件](docs/SKCMS-LICENSE-REVIEW.md)を参照してください。
 公開ReaderのPASSやdeclaredSourceReleaseApproved=trueだけでは所有者の実承認・掲載許可を証明しません。掲載は別のPRIVATE admissionと具体的公開許可を得た同一snapshotに限定します。
 
 通常開発の正本はGitHub guardiancrow/clipss2のmainで、ローカルも同じGit履歴を使います。PR/Issueは同じrepositoryで扱い、旧Internalは移行完了後にPRIVATEアーカイブへ保全します。

@@ -21,7 +21,7 @@ pwsh -NoProfile -File tools/build_shipping_dependencies_s1.ps1 -Mode PlanOnly -P
 これはvcpkg、compiler、configure、installを起動せず、output directoryも作成しません。
 既存outputはPRESENT_UNADMITTEDとして扱い、その所有権・ABI・再利用を承認しません。
 PlanOnlyのPASSは実source checkout、派生bytes、既存outputの所有権や再利用を承認しません。
-NOTICE固定hash対象の`cmake/privacy/README.md`と`docs/SOURCE-S1-NOTICES.md`は元snapshotの記録として保持しています。Install経路の現在の状態と手順は本文書を参照してください。
+固定skcmsの[権利確認](docs/SKCMS-LICENSE-REVIEW.md)はv3 source-development NOTICEへ反映済みです。MS-003確認を含むInstall経路の手順は本文書を参照してください。
 
 managed sourceの固定4 checkoutは[中立origin](cmake/privacy/managed-origin-s1-v1.json)に記載します。
 [取得script](tools/prepare_jpegli.ps1)は明示的なGit/network取得を行う別操作です。実行前に取得条件を確認し、既存source/cacheを保全してください。
@@ -73,7 +73,7 @@ pwsh -NoProfile -File tools/build_shipping_dependencies_s1.ps1 -Mode ValidateIns
 
 [NOTICE検査](docs/SOURCE-S1-NOTICES.md)は独立したread-only操作です。
 source-release宣言の構造受入は実Install/build・ABI/runtimeの受入ではありません。これらは未実施/未実証です。正式source承認は特定snapshotに限り、別のOwner admissionと公開許可に従います。
-既存NOTICE metadataと固定28入力は変更していません。追加tool/testを含む今回の変更全体は旧正式snapshotの承認を継承せず、新しい正式公開時にはPublicationViewのpath集合を含む再固定とOwner判断が必要です。
+固定28入力と旧v2 NOTICE metadataのbytesは維持します。skcmsの権利情報は新v3 NOTICE世代のhash連鎖とPublicationView集合へ再固定しました。新しい正式公開時には全source集合の再固定とOwner判断が必要であり、旧snapshotの承認を引き継ぎません。
 
 実installやcompilerを使わない検証:
 

@@ -3,6 +3,7 @@
 S1はsource-onlyのsource-release契約で、配布ZIP/EXE/DLL/installerや署名済み製品はありません。
 依存Install経路は実装済みですが、実install・製品build・runtimeは未実施です。[BUILDING](../BUILDING.md)を参照してください。
 将来のbinary配布は、PE集合、Runtime、NOTICE/原文、Packaging/署名/公開判断の別審査が必要です。
+固定skcmsを含むbinary配布では[licenses/skcms/LICENSE](../licenses/skcms/LICENSE)のcopyright・3条件・免責全文を配布物の付随資料に同梱し、Binary NOTICEから対応付けます。build treeの`LICENSE.skcms`だけでは配布同梱の証拠になりません。[確認範囲](SKCMS-LICENSE-REVIEW.md)を超える利用とMS-002等は別の残件です。
 
 製品実装ではEXE隣の既存settings.confを優先し、有効な[Portable marker見本](../packaging/clipss2.portable)を扱います。
 markerの内容はASCII clipss2-portable-v1と末尾LF。見本は実設定ではありません。

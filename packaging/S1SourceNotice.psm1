@@ -4,7 +4,7 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
 Import-Module (Join-Path $PSScriptRoot ../tools/S1SourceContracts.psm1)
-$script:S1CatalogSha='F0DD256170A8AC302046493A5F5D529D09A12C5EF24F749D1261091E193D75B5'
+$script:S1CatalogSha='69A55FC63D5A11F9C7776547D8F197A3A3C41A6524A357194FD6AE952D4714C3'
 function Reject-S1Notice($Code){throw [IO.InvalidDataException]::new('S1:'+$Code)}
 function Assert-S1NoticeObject($Value,$Keys){
     if($Value -isnot [Collections.IDictionary]){Reject-S1Notice ObjectType}
@@ -76,16 +76,16 @@ function Assert-S1SourceStatePolicy($Catalog){
 function Assert-S1NoticeCatalog($Catalog){
     Assert-S1NoticeObject $Catalog @('schemaVersion','catalogId','sourceScopeId','status','sourceReleaseApproved','binaryReleaseApproved','binaryProfiles','approvalReferenceId','resolvedRights','anchor','directPaths','rawPaths','licensePaths','publicationPaths','componentPolicy','directPolicy','noticeSetPolicy','postimagePolicy','sourceInputBinding','openRights')
     Assert-S1NoticeValue $Catalog.schemaVersion 2
-    Assert-S1NoticeValue $Catalog.catalogId 'clipss2-source-s1-release-v2' CatalogIdentity
+    Assert-S1NoticeValue $Catalog.catalogId 'clipss2-source-s1-development-v3' CatalogIdentity
     Assert-S1NoticeValue $Catalog.sourceScopeId 'clipss2-source-s1-v1' CatalogIdentity
     Assert-S1SourceStatePolicy $Catalog
     Assert-S1NoticeObject $Catalog.anchor @('id','path','size','sha256')
-    Assert-S1NoticeValue $Catalog.anchor.id 'clipss2-source-s1-release-notices-v2' AnchorIdentity
-    Assert-S1NoticeValue $Catalog.anchor.path 'packaging/public/notice-anchor-s1-source-release-v2.json' AnchorIdentity
+    Assert-S1NoticeValue $Catalog.anchor.id 'clipss2-source-s1-development-notices-v3' AnchorIdentity
+    Assert-S1NoticeValue $Catalog.anchor.path 'packaging/public/notice-anchor-s1-source-development-v3.json' AnchorIdentity
     Assert-S1NoticeIdentityRecord $Catalog.anchor
-    Assert-S1NoticePaths $Catalog.directPaths 15;Assert-S1NoticePaths $Catalog.rawPaths 43
-    Assert-S1NoticePaths $Catalog.licensePaths 22;Assert-S1NoticePaths $Catalog.publicationPaths 288
-    Assert-S1NoticePaths (@($Catalog.directPaths)+@($Catalog.rawPaths)) 58
+    Assert-S1NoticePaths $Catalog.directPaths 15;Assert-S1NoticePaths $Catalog.rawPaths 45
+    Assert-S1NoticePaths $Catalog.licensePaths 23;Assert-S1NoticePaths $Catalog.publicationPaths 295
+    Assert-S1NoticePaths (@($Catalog.directPaths)+@($Catalog.rawPaths)) 60
     foreach($path in $Catalog.publicationPaths){Assert-S1NoticePublicPath $path}
     foreach($path in @($Catalog.directPaths)+@($Catalog.rawPaths)+@($Catalog.licensePaths)){if($path -cnotin $Catalog.publicationPaths){Reject-S1Notice ScopePolicy}}
     foreach($key in @('componentPolicy','directPolicy','noticeSetPolicy','postimagePolicy')){
@@ -103,27 +103,38 @@ function Assert-S1NoticeCatalog($Catalog){
         Assert-S1NoticeValue $set.status $state NoticeSets
     }
     Assert-S1NoticeValue $Catalog.sourceInputBinding ([ordered]@{inputId='clipss2-source-inputs-s1-v1';path='cmake/privacy/source-inputs-s1-v1.json';size=9645;sha256='80BD9B28EF236F29E31BC12B1D6C16120C9F7E60AC0ACF4F861691C6DF5C64AB';profile='v2';sourceScopeId='clipss2-source-s1-v1';overlayRoot='vcpkg-overlays/shipping-privacy-v2'}) SourceInputBinding
+    $skcms=@($Catalog.componentPolicy|Where-Object id -CEQ skcms-reference)
+    if($skcms.Count -ne 1){Reject-S1Notice ComponentPolicy}
+    Assert-S1NoticeValue $skcms[0].version '96d9171c94b937a1b5f0293de7309ac16311b722' ComponentPolicy
+    Assert-S1NoticeValue $skcms[0].origin ([ordered]@{uri='https://skia.googlesource.com/skcms';revision='96d9171c94b937a1b5f0293de7309ac16311b722'}) ComponentPolicy
+    Assert-S1NoticeValue $skcms[0].licenseExpression 'BSD-3-Clause' ComponentPolicy
+    Assert-S1NoticeValue $skcms[0].selectedLicense 'BSD-3-Clause' ComponentPolicy
+    Assert-S1NoticeValue $skcms[0].selectionStatus 'declared' ComponentPolicy
+    Assert-S1NoticeValue $skcms[0].scopes @('static') ComponentPolicy
+    Assert-S1NoticeValue $skcms[0].distributionScope 'reference-only' ComponentPolicy
+    Assert-S1NoticeValue $skcms[0].exceptions @() ComponentPolicy
+    Assert-S1NoticeValue $skcms[0].rawFileIds @('raw-44','raw-45') ComponentPolicy
 }
 function Read-S1NoticeCatalog($Root){
-    $path=Resolve-S1Path $Root 'packaging/public/profiles-s1-source-release-v2.json'
+    $path=Resolve-S1Path $Root 'packaging/public/profiles-s1-source-development-v3.json'
     if((Get-FileHash -LiteralPath $path).Hash -cne $script:S1CatalogSha){Reject-S1Notice CatalogHash}
     $catalog=Read-S1StrictJson $path;Assert-S1NoticeCatalog $catalog;return ,$catalog
 }
 function Assert-S1NoticeAnchor($Anchor,$Catalog){
     Assert-S1NoticeObject $Anchor @('schemaVersion','anchorId','sourceScopeId','originPublicCommit','approval','noticeSets','components','rawFiles','fileAttributions','sourceInputBinding','postimages')
     Assert-S1NoticeValue $Anchor.schemaVersion 2
-    Assert-S1NoticeValue $Anchor.anchorId 'clipss2-source-s1-release-notices-v2' AnchorIdentity
+    Assert-S1NoticeValue $Anchor.anchorId 'clipss2-source-s1-development-notices-v3' AnchorIdentity
     Assert-S1NoticeValue $Anchor.sourceScopeId 'clipss2-source-s1-v1' AnchorIdentity
-    Assert-S1NoticeValue $Anchor.originPublicCommit 'd06bf89ce6a7430d97b7e896987e4e82c0dd2a51' AnchorIdentity
+    Assert-S1NoticeValue $Anchor.originPublicCommit '3288094f29ba2110fa1011ff8d9b1746daf86a7c' AnchorIdentity
     Assert-S1NoticeValue $Anchor.approval (Get-S1SourceApproval $Catalog) Approval
     Assert-S1NoticeValue $Anchor.components $Catalog.componentPolicy ComponentPolicy
     Assert-S1NoticeValue $Anchor.fileAttributions $Catalog.directPolicy DirectPolicy
     Assert-S1NoticeValue $Anchor.noticeSets $Catalog.noticeSetPolicy NoticeSets
     Assert-S1NoticeValue $Anchor.postimages $Catalog.postimagePolicy Postimages
     Assert-S1NoticeValue $Anchor.sourceInputBinding $Catalog.sourceInputBinding SourceInputBinding
-    if($Anchor.rawFiles -isnot [array] -or $Anchor.rawFiles.Count -ne 43){Reject-S1Notice ArrayShape}
+    if($Anchor.rawFiles -isnot [array] -or $Anchor.rawFiles.Count -ne 45){Reject-S1Notice ArrayShape}
     $rawMap=@{};$componentMap=@{};$attrMap=@{}
-    for($i=0;$i -lt 43;$i++){
+    for($i=0;$i -lt 45;$i++){
         $raw=$Anchor.rawFiles[$i]
         Assert-S1NoticeObject $raw @('id','path','size','sha256','sourceKind','origin','role')
         Assert-S1NoticeValue $raw.id ('raw-'+($i+1).ToString('00')) RawId
@@ -133,6 +144,10 @@ function Assert-S1NoticeAnchor($Anchor,$Catalog){
         Assert-S1NoticeOrigin $raw.origin;Assert-S1NoticeIdentityRecord $raw
         $rawMap[$raw.id]=$raw
     }
+    Assert-S1NoticeValue $rawMap['raw-44'].path 'licenses/skcms/LICENSE' RawPaths
+    Assert-S1NoticeValue $rawMap['raw-44'].sha256 'E59BB5C5C6BA426A9AC4BA9FE667AD14C5166B12AA25BE8AF1D122B14FBE2E36' SkcmsLicenseIdentity
+    Assert-S1NoticeInteger $rawMap['raw-44'].size 1635
+    Assert-S1NoticeValue $rawMap['raw-45'].path 'docs/SKCMS-LICENSE-REVIEW.md' RawPaths
     foreach($component in $Anchor.components){
         Assert-S1NoticeOrigin $component.origin
         if($componentMap.ContainsKey($component.id)){Reject-S1Notice ComponentPolicy}
@@ -160,7 +175,7 @@ function Assert-S1NoticeAnchor($Anchor,$Catalog){
     }
 }
 function Assert-S1NoticeInput($InputValue){
-    Assert-S1NoticeValue $InputValue ([ordered]@{schemaVersion=2;purpose='source-release-notice';catalogId='clipss2-source-s1-release-v2';anchorId='clipss2-source-s1-release-notices-v2';noticeSetIds=@('source-s1-direct-v1','source-s1-license-notice-v1')}) NoticeInput
+    Assert-S1NoticeValue $InputValue ([ordered]@{schemaVersion=2;purpose='source-release-notice';catalogId='clipss2-source-s1-development-v3';anchorId='clipss2-source-s1-development-notices-v3';noticeSetIds=@('source-s1-direct-v1','source-s1-license-notice-v1')}) NoticeInput
 }
 function Assert-S1NoticeTree($Root,$Expected,$Whole=$false){
     $files=Get-S1Files $Root
@@ -200,7 +215,7 @@ function Read-S1SourceState($Root,[switch]$PublicationView){
     try{Assert-S1Identity $anchorPath $catalog.anchor.size $catalog.anchor.sha256}catch{if($_.Exception.Message -ceq 'S1:RawIdentity'){Reject-S1Notice AnchorHash};throw}
     $anchor=Read-S1StrictJson $anchorPath
     Assert-S1NoticeAnchor $anchor $catalog
-    Assert-S1NoticeInput (Read-S1StrictJson (Resolve-S1Path $Root 'packaging/public/source-notices-s1-source-release-v2.json'))
+    Assert-S1NoticeInput (Read-S1StrictJson (Resolve-S1Path $Root 'packaging/public/source-notices-s1-source-development-v3.json'))
     foreach($file in @($anchor.rawFiles)+@($anchor.fileAttributions)){Assert-S1Identity (Resolve-S1Path $Root $file.path) $file.size $file.sha256}
     foreach($file in $anchor.fileAttributions){
         if((Get-S1BlobOid ([IO.File]::ReadAllBytes((Resolve-S1Path $Root $file.path)))) -cne $file.gitBlob){Reject-S1Notice GitIdentity}
@@ -211,7 +226,7 @@ function Read-S1SourceState($Root,[switch]$PublicationView){
     Assert-S1NoticeTree $licenses (@($catalog.licensePaths|ForEach-Object {$_.Substring(9)})+@('SOURCES.md','.gitattributes'))
     Assert-S1NoticeSourceBinding $Root $anchor
     if($PublicationView){Assert-S1NoticeTree $Root $catalog.publicationPaths $true}
-    return [pscustomobject]@{result='PASS';validationScope='NOTICE_AND_DECLARED_STATE_ONLY';schemaVersion=2;status=$catalog.status;candidateOnly=$false;declaredSourceReleaseApproved=$catalog.sourceReleaseApproved;binaryReleaseApproved=$false;binaryProfiles=0;openRights=$catalog.openRights;resolvedRights=$catalog.resolvedRights;approvalReferenceId=$catalog.approvalReferenceId;approvalScope='EXTERNALLY_ATTESTED_SNAPSHOT_ONLY';currentCheckoutOwnerApproval='NOT_VERIFIED';ownerApprovalEvidenceVerified=$false;publicationPermissionVerified=$false;direct=15;raw=43;licenses=22;components=23;sourceDirectComponents=6;referenceOnlyComponents=17;sourceInputs=28;publicationScopeChecked=[bool]$PublicationView;publicationPaths=288;wholeScopeBytesAuthenticated=$false;gitModePolicy='100644 planned; actual new Git tree/modes independently verified at authorized J6E';productBuild=$false;binaryAbiRuntimeVerified=$false}
+    return [pscustomobject]@{result='PASS';validationScope='NOTICE_AND_DECLARED_STATE_ONLY';schemaVersion=2;status=$catalog.status;candidateOnly=$false;declaredSourceReleaseApproved=$catalog.sourceReleaseApproved;binaryReleaseApproved=$false;binaryProfiles=0;openRights=$catalog.openRights;resolvedRights=$catalog.resolvedRights;approvalReferenceId=$catalog.approvalReferenceId;approvalScope='EXTERNALLY_ATTESTED_SNAPSHOT_ONLY';currentCheckoutOwnerApproval='NOT_VERIFIED';ownerApprovalEvidenceVerified=$false;publicationPermissionVerified=$false;direct=15;raw=45;licenses=23;components=23;sourceDirectComponents=6;referenceOnlyComponents=17;sourceInputs=28;publicationScopeChecked=[bool]$PublicationView;publicationPaths=295;wholeScopeBytesAuthenticated=$false;gitModePolicy='Git modes and all source bytes require independent snapshot admission';productBuild=$false;binaryAbiRuntimeVerified=$false}
 }
 function Read-S1SourceRelease($Root,[switch]$PublicationView){
     $result=Read-S1SourceState $Root -PublicationView:$PublicationView

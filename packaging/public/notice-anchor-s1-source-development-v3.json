@@ -1,0 +1,1795 @@
+{
+  "schemaVersion": 2,
+  "anchorId": "clipss2-source-s1-development-notices-v3",
+  "sourceScopeId": "clipss2-source-s1-v1",
+  "originPublicCommit": "3288094f29ba2110fa1011ff8d9b1746daf86a7c",
+  "approval": {
+    "status": "source-development",
+    "sourceReleaseApproved": false,
+    "binaryReleaseApproved": false,
+    "openRights": [
+      "s1-included-source-rights-review",
+      "s1-final-source-identity",
+      "s1-publication-owner-approval"
+    ],
+    "resolvedRights": [],
+    "approvalReferenceId": null
+  },
+  "noticeSets": [
+    {
+      "id": "source-s1-direct-v1",
+      "purpose": "source",
+      "status": "source-development",
+      "profile": "s1-v2",
+      "componentIds": [
+        "clipss2",
+        "highway-source",
+        "libjxl-cmake",
+        "libjxl-root",
+        "libyuv-source",
+        "vcpkg-port"
+      ],
+      "rawFileIds": [
+        "raw-16",
+        "raw-15",
+        "raw-21",
+        "raw-02",
+        "raw-23",
+        "raw-06",
+        "raw-20",
+        "raw-19"
+      ],
+      "attributionIds": [
+        "s1-direct-01",
+        "s1-direct-02",
+        "s1-direct-03",
+        "s1-direct-04",
+        "s1-direct-05",
+        "s1-direct-06",
+        "s1-direct-07",
+        "s1-direct-08",
+        "s1-direct-09",
+        "s1-direct-10",
+        "s1-direct-11",
+        "s1-direct-12",
+        "s1-direct-13",
+        "s1-direct-14",
+        "s1-direct-15"
+      ]
+    },
+    {
+      "id": "source-s1-license-notice-v1",
+      "purpose": "documents",
+      "status": "source-development",
+      "profile": "documents",
+      "componentIds": [
+        "aom",
+        "brotli",
+        "cppwinrt",
+        "jpegli",
+        "jpegli-headers",
+        "lcms",
+        "libavif",
+        "libjpeg-turbo",
+        "libjxl-root",
+        "libpng",
+        "libwebp",
+        "libyuv",
+        "zlib",
+        "vcpkg-port",
+        "libjxl-cmake",
+        "clipss2",
+        "highway-source",
+        "libyuv-source",
+        "highway-v2-reference",
+        "highway-managed-v2-reference",
+        "skcms-reference",
+        "microsoft-build-runtime-reference",
+        "vcpkg-tool-reference"
+      ],
+      "rawFileIds": [
+        "raw-01",
+        "raw-02",
+        "raw-03",
+        "raw-04",
+        "raw-05",
+        "raw-06",
+        "raw-07",
+        "raw-08",
+        "raw-09",
+        "raw-10",
+        "raw-11",
+        "raw-12",
+        "raw-13",
+        "raw-14",
+        "raw-15",
+        "raw-16",
+        "raw-17",
+        "raw-18",
+        "raw-19",
+        "raw-20",
+        "raw-21",
+        "raw-22",
+        "raw-23",
+        "raw-24",
+        "raw-25",
+        "raw-26",
+        "raw-27",
+        "raw-28",
+        "raw-29",
+        "raw-30",
+        "raw-31",
+        "raw-32",
+        "raw-33",
+        "raw-34",
+        "raw-35",
+        "raw-36",
+        "raw-37",
+        "raw-38",
+        "raw-39",
+        "raw-40",
+        "raw-41",
+        "raw-42",
+        "raw-43",
+        "raw-44",
+        "raw-45"
+      ],
+      "attributionIds": []
+    },
+    {
+      "id": "source-s1-reference-v1",
+      "purpose": "reference",
+      "status": "reference-only",
+      "profile": "reference-only",
+      "componentIds": [
+        "aom",
+        "brotli",
+        "cppwinrt",
+        "jpegli",
+        "jpegli-headers",
+        "lcms",
+        "libavif",
+        "libjpeg-turbo",
+        "libpng",
+        "libwebp",
+        "libyuv",
+        "zlib",
+        "highway-v2-reference",
+        "highway-managed-v2-reference",
+        "skcms-reference",
+        "microsoft-build-runtime-reference",
+        "vcpkg-tool-reference"
+      ],
+      "rawFileIds": [
+        "raw-01",
+        "raw-03",
+        "raw-04",
+        "raw-09",
+        "raw-10",
+        "raw-07",
+        "raw-08",
+        "raw-11",
+        "raw-12",
+        "raw-14",
+        "raw-13",
+        "raw-17",
+        "raw-18",
+        "raw-20",
+        "raw-19",
+        "raw-22",
+        "raw-06",
+        "raw-02",
+        "raw-05",
+        "raw-29",
+        "raw-28",
+        "raw-21",
+        "raw-44",
+        "raw-45"
+      ],
+      "attributionIds": []
+    }
+  ],
+  "components": [
+    {
+      "id": "aom",
+      "name": "aom",
+      "version": "3.15.0",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/aom/portfile.cmake",
+        "revision": "3.15.0"
+      },
+      "scopes": [
+        "dynamic"
+      ],
+      "licenseExpression": "LicenseRef-aom-aggregate",
+      "selectedLicense": "LicenseRef-aom-aggregate",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-01"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": []
+    },
+    {
+      "id": "brotli",
+      "name": "brotli",
+      "version": "1.2.0",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/brotli/portfile.cmake",
+        "revision": "1.2.0"
+      },
+      "scopes": [
+        "dynamic"
+      ],
+      "licenseExpression": "MIT",
+      "selectedLicense": "MIT",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-03"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": []
+    },
+    {
+      "id": "cppwinrt",
+      "name": "C++/WinRT",
+      "version": "2.0.250303.1",
+      "origin": {
+        "uri": "https://github.com/microsoft/cppwinrt",
+        "revision": "2.0.250303.1"
+      },
+      "scopes": [
+        "header"
+      ],
+      "licenseExpression": "MIT",
+      "selectedLicense": "MIT",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-04"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": []
+    },
+    {
+      "id": "jpegli",
+      "name": "managed jpegli",
+      "version": "031a0077f5799a6041004267fc12b956c1f52a20",
+      "origin": {
+        "uri": "https://github.com/google/jpegli/blob/031a0077f5799a6041004267fc12b956c1f52a20/LICENSE",
+        "revision": "031a0077f5799a6041004267fc12b956c1f52a20"
+      },
+      "scopes": [
+        "static"
+      ],
+      "licenseExpression": "BSD-3-Clause",
+      "selectedLicense": "BSD-3-Clause",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-09",
+        "raw-10"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": []
+    },
+    {
+      "id": "jpegli-headers",
+      "name": "managed libjpeg headers",
+      "version": "8ecba3647edb6dd940463fedf38ca33a8e2a73d1",
+      "origin": {
+        "uri": "https://github.com/libjpeg-turbo/libjpeg-turbo/blob/8ecba3647edb6dd940463fedf38ca33a8e2a73d1/LICENSE.md",
+        "revision": "8ecba3647edb6dd940463fedf38ca33a8e2a73d1"
+      },
+      "scopes": [
+        "header"
+      ],
+      "licenseExpression": "LicenseRef-libjpeg-headers-aggregate",
+      "selectedLicense": "LicenseRef-libjpeg-headers-aggregate",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-07",
+        "raw-08"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": []
+    },
+    {
+      "id": "lcms",
+      "name": "lcms",
+      "version": "2.19.1#1",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/lcms/portfile.cmake",
+        "revision": "2.19.1#1"
+      },
+      "scopes": [
+        "dynamic"
+      ],
+      "licenseExpression": "MIT",
+      "selectedLicense": "MIT",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-11"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": []
+    },
+    {
+      "id": "libavif",
+      "name": "libavif",
+      "version": "1.4.2#1",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libavif/portfile.cmake",
+        "revision": "1.4.2#1"
+      },
+      "scopes": [
+        "dynamic"
+      ],
+      "licenseExpression": "LicenseRef-libavif-aggregate",
+      "selectedLicense": "LicenseRef-libavif-aggregate",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-12"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": []
+    },
+    {
+      "id": "libjpeg-turbo",
+      "name": "libjpeg-turbo",
+      "version": "3.2.0",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libjpeg-turbo/portfile.cmake",
+        "revision": "3.2.0"
+      },
+      "scopes": [
+        "dynamic"
+      ],
+      "licenseExpression": "LicenseRef-libjpeg-turbo-aggregate",
+      "selectedLicense": "LicenseRef-libjpeg-turbo-aggregate",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-14",
+        "raw-13"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": []
+    },
+    {
+      "id": "libjxl-root",
+      "name": "libjxl",
+      "version": "0.12.0",
+      "origin": {
+        "uri": "https://github.com/libjxl/libjxl/blob/v0.12.0/LICENSE",
+        "revision": "0.12.0"
+      },
+      "scopes": [
+        "dynamic"
+      ],
+      "licenseExpression": "BSD-3-Clause",
+      "selectedLicense": "BSD-3-Clause",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-16",
+        "raw-15"
+      ],
+      "distributionScope": "source-direct",
+      "exceptions": []
+    },
+    {
+      "id": "libpng",
+      "name": "libpng",
+      "version": "1.6.58",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libpng/portfile.cmake",
+        "revision": "1.6.58"
+      },
+      "scopes": [
+        "dynamic"
+      ],
+      "licenseExpression": "libpng-2.0",
+      "selectedLicense": "libpng-2.0",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-17"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": []
+    },
+    {
+      "id": "libwebp",
+      "name": "libwebp",
+      "version": "1.6.0#3",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libwebp/portfile.cmake",
+        "revision": "1.6.0#3"
+      },
+      "scopes": [
+        "dynamic"
+      ],
+      "licenseExpression": "BSD-3-Clause",
+      "selectedLicense": "BSD-3-Clause",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-18"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": []
+    },
+    {
+      "id": "libyuv",
+      "name": "libyuv",
+      "version": "1916",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libyuv/portfile.cmake",
+        "revision": "1916"
+      },
+      "scopes": [
+        "dynamic"
+      ],
+      "licenseExpression": "BSD-3-Clause",
+      "selectedLicense": "BSD-3-Clause",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-20",
+        "raw-19"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": []
+    },
+    {
+      "id": "zlib",
+      "name": "zlib",
+      "version": "1.3.2#2",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/zlib/portfile.cmake",
+        "revision": "1.3.2#2"
+      },
+      "scopes": [
+        "dynamic"
+      ],
+      "licenseExpression": "Zlib",
+      "selectedLicense": "Zlib",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-22"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": []
+    },
+    {
+      "id": "vcpkg-port",
+      "name": "Microsoft vcpkg derived port and patch",
+      "version": "baseline",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/tree/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libjxl",
+        "revision": "04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4"
+      },
+      "scopes": [
+        "source-copied",
+        "build-only"
+      ],
+      "licenseExpression": "MIT",
+      "selectedLicense": "MIT",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-21"
+      ],
+      "distributionScope": "source-direct",
+      "exceptions": []
+    },
+    {
+      "id": "libjxl-cmake",
+      "name": "JPEG XL third_party CMake file",
+      "version": "0.12.0",
+      "origin": {
+        "uri": "https://github.com/libjxl/libjxl/blob/v0.12.0/third_party/CMakeLists.txt",
+        "revision": "v0.12.0"
+      },
+      "scopes": [
+        "source-copied",
+        "build-only"
+      ],
+      "licenseExpression": "Apache-2.0",
+      "selectedLicense": "Apache-2.0",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-02"
+      ],
+      "distributionScope": "source-direct",
+      "exceptions": []
+    },
+    {
+      "id": "clipss2",
+      "name": "clipss2",
+      "version": "bf7e23256c3b88f6f4e7d9867d11e45f043042b0",
+      "origin": {
+        "uri": "urn:clipss2:product:source",
+        "revision": "bf7e23256c3b88f6f4e7d9867d11e45f043042b0"
+      },
+      "scopes": [
+        "source-copied"
+      ],
+      "licenseExpression": "MIT",
+      "selectedLicense": "MIT",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-23"
+      ],
+      "distributionScope": "source-direct",
+      "exceptions": []
+    },
+    {
+      "id": "highway-source",
+      "name": "Highway patch context",
+      "version": "1.4.0",
+      "origin": {
+        "uri": "https://github.com/google/highway",
+        "revision": "1.4.0"
+      },
+      "scopes": [
+        "source-copied"
+      ],
+      "licenseExpression": "Apache-2.0 OR BSD-3-Clause",
+      "selectedLicense": "Apache-2.0",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-06",
+        "raw-02"
+      ],
+      "distributionScope": "source-direct",
+      "exceptions": [
+        "CC0-1.0: hwy/contrib/random/random-inl.h; dual license original retained"
+      ]
+    },
+    {
+      "id": "libyuv-source",
+      "name": "LibYuv patch context",
+      "version": "1916",
+      "origin": {
+        "uri": "https://chromium.googlesource.com/libyuv/libyuv",
+        "revision": "d98915a654d3564e4802a0004add46221c4e4348"
+      },
+      "scopes": [
+        "source-copied"
+      ],
+      "licenseExpression": "BSD-3-Clause",
+      "selectedLicense": "BSD-3-Clause",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-20",
+        "raw-19"
+      ],
+      "distributionScope": "source-direct",
+      "exceptions": []
+    },
+    {
+      "id": "highway-v2-reference",
+      "name": "highway-v2-reference",
+      "version": "1.4.0",
+      "origin": {
+        "uri": "https://github.com/google/highway",
+        "revision": "1.4.0"
+      },
+      "scopes": [
+        "header",
+        "static"
+      ],
+      "licenseExpression": "Apache-2.0 OR BSD-3-Clause",
+      "selectedLicense": "Apache-2.0",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-06",
+        "raw-02"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": [
+        "CC0-1.0: hwy/contrib/random/random-inl.h; dual license original retained"
+      ]
+    },
+    {
+      "id": "highway-managed-v2-reference",
+      "name": "highway-managed-v2-reference",
+      "version": "1.3.0 / 271a9a0ed9de1232d9117f1572c3fe28f8542ec1",
+      "origin": {
+        "uri": "https://github.com/google/highway",
+        "revision": "271a9a0ed9de1232d9117f1572c3fe28f8542ec1"
+      },
+      "scopes": [
+        "header",
+        "static"
+      ],
+      "licenseExpression": "Apache-2.0 OR BSD-3-Clause",
+      "selectedLicense": "Apache-2.0",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-05",
+        "raw-02"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": [
+        "CC0-1.0: hwy/contrib/random/random-inl.h; dual license original retained"
+      ]
+    },
+    {
+      "id": "skcms-reference",
+      "name": "managed skcms",
+      "version": "96d9171c94b937a1b5f0293de7309ac16311b722",
+      "origin": {
+        "uri": "https://skia.googlesource.com/skcms",
+        "revision": "96d9171c94b937a1b5f0293de7309ac16311b722"
+      },
+      "scopes": [
+        "static"
+      ],
+      "licenseExpression": "BSD-3-Clause",
+      "selectedLicense": "BSD-3-Clause",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-44",
+        "raw-45"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": []
+    },
+    {
+      "id": "microsoft-build-runtime-reference",
+      "name": "Microsoft SDK / MSVC STL / CRT",
+      "version": "exact terms/version mapping remains pending",
+      "origin": {
+        "uri": "https://learn.microsoft.com/en-us/visualstudio/releases/2022/redistribution",
+        "revision": "external terms; not redistributed source in this notice set"
+      },
+      "scopes": [
+        "build-only",
+        "header",
+        "dynamic"
+      ],
+      "licenseExpression": "LicenseRef-Microsoft-pending",
+      "selectedLicense": null,
+      "selectionStatus": "pending",
+      "rawFileIds": [
+        "raw-28"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": []
+    },
+    {
+      "id": "vcpkg-tool-reference",
+      "name": "vcpkg build tool",
+      "version": "04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg",
+        "revision": "04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4"
+      },
+      "scopes": [
+        "build-only"
+      ],
+      "licenseExpression": "MIT",
+      "selectedLicense": "MIT",
+      "selectionStatus": "declared",
+      "rawFileIds": [
+        "raw-21"
+      ],
+      "distributionScope": "reference-only",
+      "exceptions": []
+    }
+  ],
+  "rawFiles": [
+    {
+      "id": "raw-01",
+      "path": "licenses/aom/copyright",
+      "size": 10823,
+      "sha256": "797958A3C220F1FD96AB1BE1ECF61F57615593D74B0B170941AE1A309AE554A0",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/aom/portfile.cmake",
+        "revision": "3.15.0"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-02",
+      "path": "licenses/apache-2.0/LICENSE.txt",
+      "size": 11358,
+      "sha256": "CFC7749B96F63BD31C3C42B5C471BF756814053E847C10F3EB003417BC523D30",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+        "revision": "2.0; January 2004"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-03",
+      "path": "licenses/brotli/copyright",
+      "size": 1084,
+      "sha256": "3D180008E36922A4E8DAEC11C34C7AF264FED5962D07924AEA928C38E8663C94",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/brotli/portfile.cmake",
+        "revision": "1.2.0"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-04",
+      "path": "licenses/cppwinrt/LICENSE.txt",
+      "size": 1159,
+      "sha256": "F60485948865406BBC0998B4062B1280887D3083304D69BA1DBD5FCC8C24F59C",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/microsoft/cppwinrt",
+        "revision": "2.0.250303.1"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-05",
+      "path": "licenses/highway-managed/LICENSE",
+      "size": 21155,
+      "sha256": "D208152E2777FFD0126EACC1BD21C0320D69E4E6B622D21A2A12A47E8EF73763",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/google/highway/blob/271a9a0ed9de1232d9117f1572c3fe28f8542ec1/LICENSE",
+        "revision": "1.3.0 / 271a9a0ed9de1232d9117f1572c3fe28f8542ec1"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-06",
+      "path": "licenses/highway-vcpkg/copyright",
+      "size": 20785,
+      "sha256": "E340270D4F64384569A91D546ACB5B094D69CE47F0C015DB77ABB74DC6F815AF",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/highway/portfile.cmake",
+        "revision": "1.4.0"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-07",
+      "path": "licenses/jpegli-headers/LICENSE.md",
+      "size": 5345,
+      "sha256": "4A39A8FDAD00D0F0D0555D35B393DC982BA8153D3AA98E2C3B8AF739A5926227",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/libjpeg-turbo/libjpeg-turbo/blob/8ecba3647edb6dd940463fedf38ca33a8e2a73d1/LICENSE.md",
+        "revision": "8ecba3647edb6dd940463fedf38ca33a8e2a73d1"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-08",
+      "path": "licenses/jpegli-headers/README.ijg",
+      "size": 12990,
+      "sha256": "0517B9B6EA15193CC91ADA5E3C4FE168C1D57BFB9DD62F58D307F8A5A8B805CD",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/libjpeg-turbo/libjpeg-turbo/blob/8ecba3647edb6dd940463fedf38ca33a8e2a73d1/README.ijg",
+        "revision": "8ecba3647edb6dd940463fedf38ca33a8e2a73d1"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-09",
+      "path": "licenses/jpegli/LICENSE",
+      "size": 1535,
+      "sha256": "2C783D8D5D952BD0726292E56AD1F3F247F370667809497A8020B8C2915BA470",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/google/jpegli/blob/031a0077f5799a6041004267fc12b956c1f52a20/LICENSE",
+        "revision": "031a0077f5799a6041004267fc12b956c1f52a20"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-10",
+      "path": "licenses/jpegli/PATENTS",
+      "size": 1355,
+      "sha256": "B85F464F29D8CA92D63AAD39B91C166B38F18B7214344BB805D7CCD60AC705BB",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/google/jpegli/blob/031a0077f5799a6041004267fc12b956c1f52a20/PATENTS",
+        "revision": "031a0077f5799a6041004267fc12b956c1f52a20"
+      },
+      "role": "patent"
+    },
+    {
+      "id": "raw-11",
+      "path": "licenses/lcms/copyright",
+      "size": 1080,
+      "sha256": "6DBD60437F8EF91D8DE1F08AD75882547FD4931BFCC3566A0735F28DB1484D31",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/lcms/portfile.cmake",
+        "revision": "2.19.1#1"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-12",
+      "path": "licenses/libavif/copyright",
+      "size": 20415,
+      "sha256": "165ABF92CC04B39E80D29CADEA7A6A7E8FDDF59407D4AD2616507A7EBE8216F9",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libavif/portfile.cmake",
+        "revision": "1.4.2#1"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-13",
+      "path": "licenses/libjpeg-turbo/README.ijg",
+      "size": 12799,
+      "sha256": "75815E3BF6484201A3C3D17A1BBF10F2E8E3237F84DF10A2357EA896DB2A81D6",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/libjpeg-turbo/libjpeg-turbo/blob/3.2.0/README.ijg",
+        "revision": "3.2.0"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-14",
+      "path": "licenses/libjpeg-turbo/copyright",
+      "size": 6077,
+      "sha256": "BA6BCEEBCBA0FDD35488477C2CCA8C4632CE82C74DBFBC87D886CE6FC4433579",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libjpeg-turbo/portfile.cmake",
+        "revision": "3.2.0"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-15",
+      "path": "licenses/libjxl/PATENTS",
+      "size": 1333,
+      "sha256": "91915F8AE056A68A3C5BDF05D9F6F78BB6903E27A8CA3A8434C9E4AC87300575",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/libjxl/libjxl/blob/v0.12.0/PATENTS",
+        "revision": "0.12.0"
+      },
+      "role": "patent"
+    },
+    {
+      "id": "raw-16",
+      "path": "licenses/libjxl/copyright",
+      "size": 1508,
+      "sha256": "8405932022A556380C2D8C272EFF154A923FEB197233F348CE5F7334FB0A5EDE",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/libjxl/libjxl/blob/v0.12.0/LICENSE",
+        "revision": "0.12.0"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-17",
+      "path": "licenses/libpng/copyright",
+      "size": 5345,
+      "sha256": "BDB0A645EA18C60507D0368379B1AC5474B92255FCC2D115E07486A7672BA526",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libpng/portfile.cmake",
+        "revision": "1.6.58"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-18",
+      "path": "licenses/libwebp/copyright",
+      "size": 3017,
+      "sha256": "050B5BA2C8EB0BD3B996E12EF79312A1C62237F2DE1B3C609843F00BB74744F3",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libwebp/portfile.cmake",
+        "revision": "1.6.0#3"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-19",
+      "path": "licenses/libyuv/PATENTS",
+      "size": 1387,
+      "sha256": "4DA84211F947C6F9F7DD8FBCE513E1522E01833407AE732B8C9A2BBB75FED495",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://chromium.googlesource.com/libyuv/libyuv/+/d98915a654d3564e4802a0004add46221c4e4348/PATENTS",
+        "revision": "1916"
+      },
+      "role": "patent"
+    },
+    {
+      "id": "raw-20",
+      "path": "licenses/libyuv/copyright",
+      "size": 1506,
+      "sha256": "2B2CC1180C7E6988328AD2033B04B80117419DB9C4C584918BBB3CFEC7E9364F",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libyuv/portfile.cmake",
+        "revision": "1916"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-21",
+      "path": "licenses/vcpkg/LICENSE.txt",
+      "size": 1073,
+      "sha256": "1EE376FC340E0AA6AD6A3581C94126E741468705096AC92263048A21DAA86460",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/LICENSE.txt",
+        "revision": "04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-22",
+      "path": "licenses/zlib/copyright",
+      "size": 1002,
+      "sha256": "E32FF4E00D9D94930537635291DA39E7E612703334BF6FDE8C7F1686FE8A45A2",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://github.com/microsoft/vcpkg/blob/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/zlib/portfile.cmake",
+        "revision": "1.3.2#2"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-23",
+      "path": "LICENSE",
+      "size": 1069,
+      "sha256": "9DEC821FCE9F4AF492B61770A1009CF66876C53A6B878DC04ED1E7DD9456AB52",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:source-shipping-candidate:v2",
+        "revision": "bf7e23256c3b88f6f4e7d9867d11e45f043042b0"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-24",
+      "path": "licenses/.gitattributes",
+      "size": 224,
+      "sha256": "6B9D9A895574231381DAE08BEF213904FE57C04DC73E659637B478B03AB71952",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "policy"
+    },
+    {
+      "id": "raw-25",
+      "path": "licenses/SOURCES.md",
+      "size": 6615,
+      "sha256": "6F4207219D3A82898E886E77E26B320CED9BE2E6CB5CDE238B3F91B199F44E24",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "attribution"
+    },
+    {
+      "id": "raw-26",
+      "path": ".gitattributes",
+      "size": 174,
+      "sha256": "EC2D020F268FC0C0AB45B754D018048DAB2BA70A31AE91BDC6A99FF7A4B576B3",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "policy"
+    },
+    {
+      "id": "raw-27",
+      "path": "cmake/privacy/.gitattributes",
+      "size": 269,
+      "sha256": "D220494031C992D6DE95EC507BC09F53521E9689749B73107C60E53B38C09226",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "policy"
+    },
+    {
+      "id": "raw-28",
+      "path": "THIRD-PARTY-NOTICES-S1.md",
+      "size": 3906,
+      "sha256": "B56883F07266C3B49FF0E718D5DC56B12F163769EA26957FFB43078BC8FE0B98",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "notice"
+    },
+    {
+      "id": "raw-29",
+      "path": "docs/SOURCE-S1-NOTICES.md",
+      "size": 5318,
+      "sha256": "139E3EA92454B23B31988AF30D77914A12E156C4887CF7179476728864BCB520",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "notice"
+    },
+    {
+      "id": "raw-30",
+      "path": "cmake/privacy/ATTRIBUTION.md",
+      "size": 11639,
+      "sha256": "5DB3120A705FA9FC3628EDD1DB70DBA6DA41253E47A08A6530090E87955BC089",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "attribution"
+    },
+    {
+      "id": "raw-31",
+      "path": "cmake/privacy/README.md",
+      "size": 1467,
+      "sha256": "1A2B4CFCF046AF1E7067C0175C773C2AE0CCEAADEE2D0F49B0B56A7B340D6EB4",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "notice"
+    },
+    {
+      "id": "raw-32",
+      "path": "cmake/privacy/managed-origin-s1-v1.json",
+      "size": 2570,
+      "sha256": "2E96789787E73F37A8278842ED5258CE71976D08935D644EFDDA8FBA8F07D563",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "policy"
+    },
+    {
+      "id": "raw-33",
+      "path": "cmake/privacy/managed-origin-s1-v1.tsv",
+      "size": 231616,
+      "sha256": "7D4BC1700562893F34721C9AECE02C5D42672C21EB9071341BD17107DD53777D",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "policy"
+    },
+    {
+      "id": "raw-34",
+      "path": "cmake/privacy/managed-diagnostics-v2.json",
+      "size": 2859,
+      "sha256": "4C83CDA89C029EFFF6EF88E3D33C2FEED57EB94B60882C4C1215CCD1BDA70E29",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "policy"
+    },
+    {
+      "id": "raw-35",
+      "path": "cmake/privacy/managed-sources-v2.tsv",
+      "size": 327881,
+      "sha256": "3D372FE265E962D845B8E6D375707071A30662A112B0F531928A006EDDF7F7F2",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "attribution"
+    },
+    {
+      "id": "raw-36",
+      "path": "cmake/privacy/dependency-diagnostics-v2.json",
+      "size": 2272,
+      "sha256": "F9CDAB5B5875208DAEB38B6527962E6D4250A030F3D45A5D8FA81F221143B21A",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "policy"
+    },
+    {
+      "id": "raw-37",
+      "path": "cmake/privacy/DependencyPorts-v2.cmake",
+      "size": 1612,
+      "sha256": "6610FC0E455F8678CF06EA2B457DE1F2793007DD66589F8E8508C1BE5762A7FC",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "policy"
+    },
+    {
+      "id": "raw-38",
+      "path": "cmake/privacy/DependencyProfile-s1-v1.cmake",
+      "size": 2122,
+      "sha256": "00C5FAEA16F3F4AE76F255BB37F506B09D9C913E5B80A9F86927D45819CDCB74",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "policy"
+    },
+    {
+      "id": "raw-39",
+      "path": "cmake/privacy/source-inputs-s1-v1.json",
+      "size": 9645,
+      "sha256": "80BD9B28EF236F29E31BC12B1D6C16120C9F7E60AC0ACF4F861691C6DF5C64AB",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "policy"
+    },
+    {
+      "id": "raw-40",
+      "path": "triplets/x64-windows-shipping-privacy.cmake",
+      "size": 317,
+      "sha256": "E24B8EAE448C4339854A75B1AF1172607CCFB8535915FA44A40522ED29BE43D0",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "policy"
+    },
+    {
+      "id": "raw-41",
+      "path": "vcpkg.json",
+      "size": 630,
+      "sha256": "B6A2179F27BDE3728069A1AAE046DF05DC8A668A07F15BF73748CC2436785C62",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "policy"
+    },
+    {
+      "id": "raw-42",
+      "path": "vcpkg-configuration.json",
+      "size": 70,
+      "sha256": "C93BFC79667AD1A8671A52659FB44981CE4E245419C2FC598655CE0BCE7808A8",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "policy"
+    },
+    {
+      "id": "raw-43",
+      "path": "CMakePresets.json",
+      "size": 1544,
+      "sha256": "9579F7A96FEF71FA2C2A8C55E67ADC39DA98DB3DB76211AB4EB68B3D34803E8B",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:source-candidate",
+        "revision": "uncommitted S1 candidate based on d06bf89ce6a7430d97b7e896987e4e82c0dd2a51"
+      },
+      "role": "policy"
+    },
+    {
+      "id": "raw-44",
+      "path": "licenses/skcms/LICENSE",
+      "size": 1635,
+      "sha256": "E59BB5C5C6BA426A9AC4BA9FE667AD14C5166B12AA25BE8AF1D122B14FBE2E36",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "https://skia.googlesource.com/skcms/+/96d9171c94b937a1b5f0293de7309ac16311b722/LICENSE",
+        "revision": "96d9171c94b937a1b5f0293de7309ac16311b722"
+      },
+      "role": "license"
+    },
+    {
+      "id": "raw-45",
+      "path": "docs/SKCMS-LICENSE-REVIEW.md",
+      "size": 6237,
+      "sha256": "A683503852DCC49CF36F567A2764584DF8A74FD68A4CA8A2D7929285C7ED99FB",
+      "sourceKind": "repository",
+      "origin": {
+        "uri": "urn:clipss2:s1:skcms-review",
+        "revision": "reviewed 2026-10-22 based on 3288094f29ba2110fa1011ff8d9b1746daf86a7c"
+      },
+      "role": "notice"
+    }
+  ],
+  "fileAttributions": [
+    {
+      "id": "s1-direct-01",
+      "path": "vcpkg-overlays/shipping-privacy-v2/highway/diagnostic-file-id.patch",
+      "size": 1170,
+      "sha256": "8363C9F3BF75F1266223A28E7D039B8944B1C2B52F19DE6BF8ADEC0DFCBCB908",
+      "gitBlob": "39fda07db24d4cd9357ac3ad4a505a87fc59506a",
+      "mode": "100644",
+      "profile": "shipping-v2",
+      "componentIds": [
+        "vcpkg-port",
+        "highway-source",
+        "clipss2"
+      ],
+      "upstreamFiles": [
+        {
+          "uri": "https://github.com/microsoft/vcpkg/tree/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/highway",
+          "revision": "04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4"
+        },
+        {
+          "uri": "https://github.com/google/highway/blob/1.4.0/hwy/base.h",
+          "revision": "1.4.0"
+        }
+      ],
+      "upstreamVersion": "1.4.0",
+      "originalCopyright": [
+        "Copyright 2020 Google LLC",
+        "SPDX-License-Identifier: Apache-2.0"
+      ],
+      "licenseRawPaths": [
+        "LICENSE",
+        "licenses/highway-vcpkg/copyright",
+        "licenses/apache-2.0/LICENSE.txt"
+      ],
+      "modification": "added: diagnostic 2-token change retained; patch preamble and generated base.h notice added on 2026-10-20",
+      "noticeLocations": [
+        "sidecar: cmake/privacy/ATTRIBUTION.md; Reader/scope guide: docs/SOURCE-S1-NOTICES.md; patch preamble; generated hwy/base.h line 3 (historical change 2026-10-19)"
+      ],
+      "attributionDocument": "cmake/privacy/ATTRIBUTION.md",
+      "distributionRole": "physically-in-source-tree",
+      "effectiveV2Input": true
+    },
+    {
+      "id": "s1-direct-02",
+      "path": "vcpkg-overlays/shipping-privacy-v2/highway/portfile.cmake",
+      "size": 1251,
+      "sha256": "3D9B392B72D9084D057BBFEE3DF5E7D8E095983747881E6327684C1486F6E457",
+      "gitBlob": "1c2f439ce60931a42fc8fb5289ed860dd3071948",
+      "mode": "100644",
+      "profile": "shipping-v2",
+      "componentIds": [
+        "vcpkg-port"
+      ],
+      "upstreamFiles": [
+        {
+          "uri": "https://github.com/microsoft/vcpkg/tree/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/highway",
+          "revision": "04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4"
+        }
+      ],
+      "upstreamVersion": "1.4.0",
+      "originalCopyright": [
+        "Copyright (c) Microsoft Corporation"
+      ],
+      "licenseRawPaths": [
+        "licenses/vcpkg/LICENSE.txt"
+      ],
+      "modification": "modified-port: add diagnostic patch and source postimage validator; explicit v2 validator/notice patch selection, 2026-10-20",
+      "noticeLocations": [
+        "sidecar: cmake/privacy/ATTRIBUTION.md; Reader/scope guide: docs/SOURCE-S1-NOTICES.md"
+      ],
+      "attributionDocument": "cmake/privacy/ATTRIBUTION.md",
+      "distributionRole": "physically-in-source-tree",
+      "effectiveV2Input": true
+    },
+    {
+      "id": "s1-direct-03",
+      "path": "vcpkg-overlays/shipping-privacy-v2/highway/usage",
+      "size": 120,
+      "sha256": "8C127FD751FECDC43339C05D573B4667BF6877A4EF49F7346EEC0BE3B49AFB55",
+      "gitBlob": "722fc3544ddfea171dd667286bf02f3a2be9cf9f",
+      "mode": "100644",
+      "profile": "shipping-v2",
+      "componentIds": [
+        "vcpkg-port"
+      ],
+      "upstreamFiles": [
+        {
+          "uri": "https://github.com/microsoft/vcpkg/tree/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/highway",
+          "revision": "04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4"
+        }
+      ],
+      "upstreamVersion": "1.4.0",
+      "originalCopyright": [
+        "Copyright (c) Microsoft Corporation"
+      ],
+      "licenseRawPaths": [
+        "licenses/vcpkg/LICENSE.txt"
+      ],
+      "modification": "official-raw-identical: official raw bytes retained; no clipss2 edit",
+      "noticeLocations": [
+        "sidecar: cmake/privacy/ATTRIBUTION.md; Reader/scope guide: docs/SOURCE-S1-NOTICES.md"
+      ],
+      "attributionDocument": "cmake/privacy/ATTRIBUTION.md",
+      "distributionRole": "physically-in-source-tree",
+      "effectiveV2Input": true
+    },
+    {
+      "id": "s1-direct-04",
+      "path": "vcpkg-overlays/shipping-privacy-v2/highway/vcpkg.json",
+      "size": 486,
+      "sha256": "B3C41CB3B79A61A381E867E86A2B76C760444C97259D64FA25FB97F03DD13AA7",
+      "gitBlob": "cde0b2cc4ba5e4f15fe00324fd3b4b807c6235e0",
+      "mode": "100644",
+      "profile": "shipping-v2",
+      "componentIds": [
+        "vcpkg-port"
+      ],
+      "upstreamFiles": [
+        {
+          "uri": "https://github.com/microsoft/vcpkg/tree/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/highway",
+          "revision": "04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4"
+        }
+      ],
+      "upstreamVersion": "1.4.0",
+      "originalCopyright": [
+        "Copyright (c) Microsoft Corporation"
+      ],
+      "licenseRawPaths": [
+        "licenses/vcpkg/LICENSE.txt"
+      ],
+      "modification": "official-raw-identical: official raw bytes retained; no clipss2 edit",
+      "noticeLocations": [
+        "sidecar: cmake/privacy/ATTRIBUTION.md; Reader/scope guide: docs/SOURCE-S1-NOTICES.md"
+      ],
+      "attributionDocument": "cmake/privacy/ATTRIBUTION.md",
+      "distributionRole": "physically-in-source-tree",
+      "effectiveV2Input": true
+    },
+    {
+      "id": "s1-direct-05",
+      "path": "vcpkg-overlays/shipping-privacy-v2/libjxl/diagnostic-file-id.patch",
+      "size": 5758,
+      "sha256": "B74C8BE6CD31AE3C2A20D9B75E2ACD7B1A53D0F440312BEF040E44510959FF9A",
+      "gitBlob": "1042070ca48d7f23884fd8cfa052b103ced36d6b",
+      "mode": "100644",
+      "profile": "shipping-v2",
+      "componentIds": [
+        "vcpkg-port",
+        "libjxl-root",
+        "clipss2"
+      ],
+      "upstreamFiles": [
+        {
+          "uri": "https://github.com/microsoft/vcpkg/tree/b3ae22aef2b857af6e80d756c13f15db12be4e8a/ports/libjxl",
+          "revision": "b3ae22aef2b857af6e80d756c13f15db12be4e8a"
+        },
+        {
+          "uri": "https://github.com/libjxl/libjxl/blob/v0.12.0/lib/jxl/base/status.h",
+          "revision": "v0.12.0"
+        },
+        {
+          "uri": "https://github.com/libjxl/libjxl/blob/v0.12.0/lib/jxl/decode.cc",
+          "revision": "v0.12.0"
+        },
+        {
+          "uri": "https://github.com/libjxl/libjxl/blob/v0.12.0/lib/jxl/encode.cc",
+          "revision": "v0.12.0"
+        }
+      ],
+      "upstreamVersion": "0.12.0",
+      "originalCopyright": [
+        "Copyright (c) the JPEG XL Project Authors. All rights reserved."
+      ],
+      "licenseRawPaths": [
+        "LICENSE",
+        "licenses/libjxl/copyright",
+        "licenses/libjxl/PATENTS"
+      ],
+      "modification": "added: new diagnostic file-ID patch: libjxl, 5/2/4 tokens",
+      "noticeLocations": [
+        "sidecar: cmake/privacy/ATTRIBUTION.md; Reader/scope guide: docs/SOURCE-S1-NOTICES.md"
+      ],
+      "attributionDocument": "cmake/privacy/ATTRIBUTION.md",
+      "distributionRole": "physically-in-source-tree",
+      "effectiveV2Input": true
+    },
+    {
+      "id": "s1-direct-06",
+      "path": "vcpkg-overlays/shipping-privacy-v2/libjxl/fix-dependencies.patch",
+      "size": 1768,
+      "sha256": "05664849DDA5BD7CECE468F87A72D42F753CBE6A65EBECAA4ACD7369112BD344",
+      "gitBlob": "dde6a0c1a7d7bfacb8ed06a4bbcb6c2a7e03c20a",
+      "mode": "100644",
+      "profile": "shipping-v2",
+      "componentIds": [
+        "vcpkg-port",
+        "libjxl-cmake"
+      ],
+      "upstreamFiles": [
+        {
+          "uri": "https://github.com/microsoft/vcpkg/tree/b3ae22aef2b857af6e80d756c13f15db12be4e8a/ports/libjxl",
+          "revision": "b3ae22aef2b857af6e80d756c13f15db12be4e8a"
+        },
+        {
+          "uri": "https://github.com/libjxl/libjxl/blob/v0.12.0/third_party/CMakeLists.txt",
+          "revision": "v0.12.0"
+        }
+      ],
+      "upstreamVersion": "0.12.0",
+      "originalCopyright": [
+        "Copyright (c) Microsoft Corporation",
+        "Copyright (c) the JPEG XL Project"
+      ],
+      "licenseRawPaths": [
+        "licenses/vcpkg/LICENSE.txt",
+        "licenses/apache-2.0/LICENSE.txt"
+      ],
+      "modification": "official-raw-identical: official package/alias fixes; no new clipss2 edit",
+      "noticeLocations": [
+        "sidecar: cmake/privacy/ATTRIBUTION.md; Reader/scope guide: docs/SOURCE-S1-NOTICES.md"
+      ],
+      "attributionDocument": "cmake/privacy/ATTRIBUTION.md",
+      "distributionRole": "physically-in-source-tree",
+      "effectiveV2Input": true
+    },
+    {
+      "id": "s1-direct-07",
+      "path": "vcpkg-overlays/shipping-privacy-v2/libjxl/modified-file-notice.patch",
+      "size": 797,
+      "sha256": "825C70C49176FC88814F36A59AAD77137AEFF0EE92123C7C5412F898753FD71B",
+      "gitBlob": "610be60502557f62f2086ca2bf8911bb8873b1c2",
+      "mode": "100644",
+      "profile": "shipping-v2",
+      "componentIds": [
+        "vcpkg-port",
+        "libjxl-cmake",
+        "clipss2"
+      ],
+      "upstreamFiles": [
+        {
+          "uri": "https://github.com/microsoft/vcpkg/tree/b3ae22aef2b857af6e80d756c13f15db12be4e8a/ports/libjxl",
+          "revision": "b3ae22aef2b857af6e80d756c13f15db12be4e8a"
+        },
+        {
+          "uri": "https://github.com/libjxl/libjxl/blob/v0.12.0/third_party/CMakeLists.txt",
+          "revision": "v0.12.0"
+        }
+      ],
+      "upstreamVersion": "0.12.0",
+      "originalCopyright": [
+        "Copyright (c) Microsoft Corporation",
+        "Copyright (c) the JPEG XL Project"
+      ],
+      "licenseRawPaths": [
+        "licenses/vcpkg/LICENSE.txt",
+        "licenses/apache-2.0/LICENSE.txt",
+        "LICENSE"
+      ],
+      "modification": "new-notice-patch: notice-only replacement of standalone #; CMake commands unchanged; implemented 2026-10-20",
+      "noticeLocations": [
+        "sidecar: cmake/privacy/ATTRIBUTION.md; Reader/scope guide: docs/SOURCE-S1-NOTICES.md; patch preamble; generated third_party/CMakeLists.txt header comment"
+      ],
+      "attributionDocument": "cmake/privacy/ATTRIBUTION.md",
+      "distributionRole": "physically-in-source-tree",
+      "effectiveV2Input": true
+    },
+    {
+      "id": "s1-direct-08",
+      "path": "vcpkg-overlays/shipping-privacy-v2/libjxl/msvc-remove-libm.patch",
+      "size": 1653,
+      "sha256": "F406972257FEF6DB0FC02DF712BA62E7F2DE2A3581D63726E5AD8DBD467F6260",
+      "gitBlob": "89a348c27ba248cf38a85043c52dbcebe990a779",
+      "mode": "100644",
+      "profile": "shipping-v2",
+      "componentIds": [
+        "vcpkg-port",
+        "libjxl-root"
+      ],
+      "upstreamFiles": [
+        {
+          "uri": "https://github.com/microsoft/vcpkg/tree/b3ae22aef2b857af6e80d756c13f15db12be4e8a/ports/libjxl",
+          "revision": "b3ae22aef2b857af6e80d756c13f15db12be4e8a"
+        },
+        {
+          "uri": "https://github.com/libjxl/libjxl/blob/v0.12.0/lib/CMakeLists.txt",
+          "revision": "v0.12.0"
+        },
+        {
+          "uri": "https://github.com/libjxl/libjxl/blob/v0.12.0/lib/jxl_cms.cmake",
+          "revision": "v0.12.0"
+        },
+        {
+          "uri": "https://github.com/libjxl/libjxl/blob/v0.12.0/lib/threads/libjxl_threads.pc.in",
+          "revision": "v0.12.0"
+        }
+      ],
+      "upstreamVersion": "0.12.0",
+      "originalCopyright": [
+        "Copyright (c) Microsoft Corporation",
+        "Copyright (c) the JPEG XL Project Authors. All rights reserved."
+      ],
+      "licenseRawPaths": [
+        "licenses/vcpkg/LICENSE.txt",
+        "licenses/libjxl/copyright",
+        "licenses/libjxl/PATENTS"
+      ],
+      "modification": "official-raw-identical: official MSVC math/pkg-config adjustment; no new clipss2 edit",
+      "noticeLocations": [
+        "sidecar: cmake/privacy/ATTRIBUTION.md; Reader/scope guide: docs/SOURCE-S1-NOTICES.md"
+      ],
+      "attributionDocument": "cmake/privacy/ATTRIBUTION.md",
+      "distributionRole": "physically-in-source-tree",
+      "effectiveV2Input": true
+    },
+    {
+      "id": "s1-direct-09",
+      "path": "vcpkg-overlays/shipping-privacy-v2/libjxl/portfile.cmake",
+      "size": 2377,
+      "sha256": "2D056C4494225525737C81CCF50E6C9841D2F19CF2487CE3F88AF200BA3F3BC1",
+      "gitBlob": "cd2da29f4feb05511a827eec99b41e4e2d867285",
+      "mode": "100644",
+      "profile": "shipping-v2",
+      "componentIds": [
+        "vcpkg-port"
+      ],
+      "upstreamFiles": [
+        {
+          "uri": "https://github.com/microsoft/vcpkg/tree/b3ae22aef2b857af6e80d756c13f15db12be4e8a/ports/libjxl",
+          "revision": "b3ae22aef2b857af6e80d756c13f15db12be4e8a"
+        }
+      ],
+      "upstreamVersion": "0.12.0",
+      "originalCopyright": [
+        "Copyright (c) Microsoft Corporation"
+      ],
+      "licenseRawPaths": [
+        "licenses/vcpkg/LICENSE.txt"
+      ],
+      "modification": "modified-port: add diagnostic patch and source postimage validator; explicit v2 validator/notice patch selection, 2026-10-20",
+      "noticeLocations": [
+        "sidecar: cmake/privacy/ATTRIBUTION.md; Reader/scope guide: docs/SOURCE-S1-NOTICES.md"
+      ],
+      "attributionDocument": "cmake/privacy/ATTRIBUTION.md",
+      "distributionRole": "physically-in-source-tree",
+      "effectiveV2Input": true
+    },
+    {
+      "id": "s1-direct-10",
+      "path": "vcpkg-overlays/shipping-privacy-v2/libjxl/vcpkg.json",
+      "size": 556,
+      "sha256": "26544C5E61C6120693A0B0FE21EEB56553B1DB2156D155B00C58D905C28E3AE8",
+      "gitBlob": "d6ef84adbaf20f780a3a2be6f12057ce7db40d4e",
+      "mode": "100644",
+      "profile": "shipping-v2",
+      "componentIds": [
+        "vcpkg-port"
+      ],
+      "upstreamFiles": [
+        {
+          "uri": "https://github.com/microsoft/vcpkg/tree/b3ae22aef2b857af6e80d756c13f15db12be4e8a/ports/libjxl",
+          "revision": "b3ae22aef2b857af6e80d756c13f15db12be4e8a"
+        }
+      ],
+      "upstreamVersion": "0.12.0",
+      "originalCopyright": [
+        "Copyright (c) Microsoft Corporation"
+      ],
+      "licenseRawPaths": [
+        "licenses/vcpkg/LICENSE.txt"
+      ],
+      "modification": "official-raw-identical: official raw bytes retained; no clipss2 edit",
+      "noticeLocations": [
+        "sidecar: cmake/privacy/ATTRIBUTION.md; Reader/scope guide: docs/SOURCE-S1-NOTICES.md"
+      ],
+      "attributionDocument": "cmake/privacy/ATTRIBUTION.md",
+      "distributionRole": "physically-in-source-tree",
+      "effectiveV2Input": true
+    },
+    {
+      "id": "s1-direct-11",
+      "path": "vcpkg-overlays/shipping-privacy-v2/libyuv/cmake.diff",
+      "size": 2298,
+      "sha256": "38FA71AF1585F2527633342D7C3A64BD6B26829CAADF6558F1B10EEBD3F7554C",
+      "gitBlob": "fdb8953a6a2ca6fe476ed7a24a2aeb88b20824e2",
+      "mode": "100644",
+      "profile": "shipping-v2",
+      "componentIds": [
+        "vcpkg-port",
+        "libyuv-source"
+      ],
+      "upstreamFiles": [
+        {
+          "uri": "https://github.com/microsoft/vcpkg/tree/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libyuv",
+          "revision": "04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4"
+        },
+        {
+          "uri": "https://chromium.googlesource.com/libyuv/libyuv/+/d98915a654d3564e4802a0004add46221c4e4348/CMakeLists.txt",
+          "revision": "d98915a654d3564e4802a0004add46221c4e4348"
+        }
+      ],
+      "upstreamVersion": "1916",
+      "originalCopyright": [
+        "Copyright (c) Microsoft Corporation",
+        "Copyright 2011 The LibYuv Project Authors. All rights reserved.",
+        "CMake source origin comment: Originally created for \"roxlu build system\""
+      ],
+      "licenseRawPaths": [
+        "licenses/vcpkg/LICENSE.txt",
+        "licenses/libyuv/copyright",
+        "licenses/libyuv/PATENTS"
+      ],
+      "modification": "official-raw-identical: official tools/JPEG/install/export patch; no new clipss2 edit",
+      "noticeLocations": [
+        "sidecar: cmake/privacy/ATTRIBUTION.md; Reader/scope guide: docs/SOURCE-S1-NOTICES.md"
+      ],
+      "attributionDocument": "cmake/privacy/ATTRIBUTION.md",
+      "distributionRole": "physically-in-source-tree",
+      "effectiveV2Input": true
+    },
+    {
+      "id": "s1-direct-12",
+      "path": "vcpkg-overlays/shipping-privacy-v2/libyuv/libyuv-config.cmake",
+      "size": 187,
+      "sha256": "76D6A188C29CDE48FC607485A0FDD2118E6080EDE428930DDE7FAEFCF9AB6F53",
+      "gitBlob": "7031eddcaba30103e167b068841dbe8ff2336686",
+      "mode": "100644",
+      "profile": "shipping-v2",
+      "componentIds": [
+        "vcpkg-port"
+      ],
+      "upstreamFiles": [
+        {
+          "uri": "https://github.com/microsoft/vcpkg/tree/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libyuv",
+          "revision": "04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4"
+        }
+      ],
+      "upstreamVersion": "1916",
+      "originalCopyright": [
+        "Copyright (c) Microsoft Corporation"
+      ],
+      "licenseRawPaths": [
+        "licenses/vcpkg/LICENSE.txt"
+      ],
+      "modification": "official-raw-identical: official raw bytes retained; no clipss2 edit",
+      "noticeLocations": [
+        "sidecar: cmake/privacy/ATTRIBUTION.md; Reader/scope guide: docs/SOURCE-S1-NOTICES.md"
+      ],
+      "attributionDocument": "cmake/privacy/ATTRIBUTION.md",
+      "distributionRole": "physically-in-source-tree",
+      "effectiveV2Input": true
+    },
+    {
+      "id": "s1-direct-13",
+      "path": "vcpkg-overlays/shipping-privacy-v2/libyuv/portfile.cmake",
+      "size": 1811,
+      "sha256": "D4E7A030E3AF57B7BD0A873D8C8FD445675BDEFC0521044A883835C55B2DD4CF",
+      "gitBlob": "02cec8488662e0349c75edc617d867933a8c5cab",
+      "mode": "100644",
+      "profile": "shipping-v2",
+      "componentIds": [
+        "vcpkg-port"
+      ],
+      "upstreamFiles": [
+        {
+          "uri": "https://github.com/microsoft/vcpkg/tree/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libyuv",
+          "revision": "04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4"
+        }
+      ],
+      "upstreamVersion": "1916",
+      "originalCopyright": [
+        "Copyright (c) Microsoft Corporation"
+      ],
+      "licenseRawPaths": [
+        "licenses/vcpkg/LICENSE.txt"
+      ],
+      "modification": "modified-port: move get-vars call before main configure to preserve PDB; add explanatory comment",
+      "noticeLocations": [
+        "sidecar: cmake/privacy/ATTRIBUTION.md; Reader/scope guide: docs/SOURCE-S1-NOTICES.md"
+      ],
+      "attributionDocument": "cmake/privacy/ATTRIBUTION.md",
+      "distributionRole": "physically-in-source-tree",
+      "effectiveV2Input": true
+    },
+    {
+      "id": "s1-direct-14",
+      "path": "vcpkg-overlays/shipping-privacy-v2/libyuv/usage",
+      "size": 170,
+      "sha256": "BDF786CA8CB1B9D90A7F7F563533C752ECFD6582492F7B2088AFCF595A1BD3C7",
+      "gitBlob": "b4c7d12f9904ea3b3af9128e537f212d0660f0e7",
+      "mode": "100644",
+      "profile": "shipping-v2",
+      "componentIds": [
+        "vcpkg-port"
+      ],
+      "upstreamFiles": [
+        {
+          "uri": "https://github.com/microsoft/vcpkg/tree/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libyuv",
+          "revision": "04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4"
+        }
+      ],
+      "upstreamVersion": "1916",
+      "originalCopyright": [
+        "Copyright (c) Microsoft Corporation"
+      ],
+      "licenseRawPaths": [
+        "licenses/vcpkg/LICENSE.txt"
+      ],
+      "modification": "official-raw-identical: official raw bytes retained; no clipss2 edit",
+      "noticeLocations": [
+        "sidecar: cmake/privacy/ATTRIBUTION.md; Reader/scope guide: docs/SOURCE-S1-NOTICES.md"
+      ],
+      "attributionDocument": "cmake/privacy/ATTRIBUTION.md",
+      "distributionRole": "physically-in-source-tree",
+      "effectiveV2Input": true
+    },
+    {
+      "id": "s1-direct-15",
+      "path": "vcpkg-overlays/shipping-privacy-v2/libyuv/vcpkg.json",
+      "size": 624,
+      "sha256": "B0A29E191CB001E2A520952AEA06DD9867BAD599D713ED11D945CB3B56DC636E",
+      "gitBlob": "1b77f942f2b09236015772af2b2394e418955a83",
+      "mode": "100644",
+      "profile": "shipping-v2",
+      "componentIds": [
+        "vcpkg-port"
+      ],
+      "upstreamFiles": [
+        {
+          "uri": "https://github.com/microsoft/vcpkg/tree/04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4/ports/libyuv",
+          "revision": "04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4"
+        }
+      ],
+      "upstreamVersion": "1916",
+      "originalCopyright": [
+        "Copyright (c) Microsoft Corporation"
+      ],
+      "licenseRawPaths": [
+        "licenses/vcpkg/LICENSE.txt"
+      ],
+      "modification": "official-raw-identical: official raw bytes retained; no clipss2 edit",
+      "noticeLocations": [
+        "sidecar: cmake/privacy/ATTRIBUTION.md; Reader/scope guide: docs/SOURCE-S1-NOTICES.md"
+      ],
+      "attributionDocument": "cmake/privacy/ATTRIBUTION.md",
+      "distributionRole": "physically-in-source-tree",
+      "effectiveV2Input": true
+    }
+  ],
+  "sourceInputBinding": {
+    "inputId": "clipss2-source-inputs-s1-v1",
+    "path": "cmake/privacy/source-inputs-s1-v1.json",
+    "size": 9645,
+    "sha256": "80BD9B28EF236F29E31BC12B1D6C16120C9F7E60AC0ACF4F861691C6DF5C64AB",
+    "profile": "v2",
+    "sourceScopeId": "clipss2-source-s1-v1",
+    "overlayRoot": "vcpkg-overlays/shipping-privacy-v2"
+  },
+  "postimages": [
+    {
+      "profile": "shipping-v2",
+      "path": "hwy/base.h",
+      "size": 111897,
+      "sha256": "E4DC0016DFDACDA41C0FEFBF0F5E63DD20BDE181F024AD1D00838EB7C4B7F90C"
+    },
+    {
+      "profile": "managed-v2-reference",
+      "path": "third_party/highway/hwy/base.h",
+      "size": 113566,
+      "sha256": "C661956FD75524C8179FE5D3EF358FF6637A04416D9D3ACB6D2F28BFBB79C65F"
+    },
+    {
+      "profile": "shipping-v2",
+      "path": "third_party/CMakeLists.txt",
+      "size": 8619,
+      "sha256": "ED6C658418B3213F7591EDBF2CD574C7D1B9C09189FC4F8BDE894FC85C6351D6"
+    }
+  ]
+}
