@@ -85,14 +85,41 @@ function Get-S1VcpkgPortTree($Paths,$Name) {
         return $text
     }finally{$p.Dispose()}
 }
-function Assert-S1VcpkgSource($Paths,$Plan) {
+function Assert-S1VcpkgSource($Paths,$Plan,$Root) {
+    # Re-read all 28 pinned raw inputs, including the complete overlay file and
+    # directory sets, config and presets. A caller's plan is not hash authority.
+    $Plan=Read-S1SourceInputs $Root
     Assert-S1Checkout $Paths.vcpkg $Plan.inputs.builtinBaseline
-    # Verify all official port trees, including the origins of the three overlays.
+    # vcpkg selects CLI overlays before config overlays, then environment entries,
+    # before consulting registries. S1 passes exactly this root on the CLI and in
+    # config; New-S1InstallProcessInfo removes inherited overlay configuration.
+    # The pinned closed set excludes a root-level CONTROL/vcpkg.json (single-port
+    # mode), so ports here are selected by matching immediate subdirectory name.
+    $overlayRoot=Resolve-S1Path $Root $Plan.inputs.overlayRoot
     foreach($package in $Plan.inputs.packages){
+        $port=Resolve-S1Path $overlayRoot $package.name
+        if([IO.Directory]::Exists($port)){
+            $definition=Read-S1StrictJson (Resolve-S1Path $port vcpkg.json)
+            Assert-S1Value $definition.name $package.name OverlayIdentity
+            $versionFields=@('version','version-semver','version-date','version-string'|Where-Object {$definition.Contains($_)})
+            if($versionFields.Count -ne 1){Stop-S1 OverlayIdentity}
+            $version=$package.version.Split('#')
+            Assert-S1Value $definition[$versionFields[0]] $version[0] OverlayIdentity
+            $expectedPort=if($version.Count -eq 2){$version[1]}else{'0'}
+            $actualPort=if($definition.Contains('port-version')){$definition['port-version']}else{0}
+            if(($actualPort -isnot [long] -and $actualPort -isnot [int]) -or $actualPort -lt 0 -or [string]$actualPort -cne $expectedPort){Stop-S1 OverlayIdentity}
+            # Every definition, portfile and patch was verified above against the
+            # fixed input hashes. The recorded origin tree is not the effective
+            # overlay's registry tree and must not be compared to HEAD:ports/.
+            continue
+        }
+        # Registry ports retain the original fixed-checkout tree comparison.
         if((Get-S1VcpkgPortTree $Paths $package.name) -cne $package.portTree){Stop-S1 ('PortTree:'+ $package.name)}
     }
 }
 function Get-S1InstallArguments($Root,$Paths,$Plan) {
+    # Refuse changed config/overlay bytes immediately before invoking install.
+    $Plan=Read-S1SourceInputs $Root
     return @('install',('--vcpkg-root='+$Paths.vcpkg),('--x-manifest-root='+$Root),
         ('--triplet='+$Plan.inputs.targetTriplet),('--host-triplet='+$Plan.inputs.hostTriplet),
         ('--overlay-ports='+(Resolve-S1Path $Root $Plan.inputs.overlayRoot)),
@@ -185,7 +212,7 @@ function Invoke-S1DependencyInstall($Root,[switch]$BuildToolsEligibilityConfirme
         $step='git-checkout'
         Invoke-S1InstallCommand $step $git @('-C',$paths.vcpkg,'-c','core.autocrlf=false','checkout','--detach',$plan.inputs.builtinBaseline) $Root $paths
         $step='vcpkg-source'
-        Assert-S1VcpkgSource $paths $plan
+        Assert-S1VcpkgSource $paths $plan $Root
         $step='bootstrap'
         Invoke-S1InstallCommand $step (Join-Path $PSHOME pwsh.exe) @('-NoProfile','-File',(Join-Path $paths.vcpkg scripts/bootstrap.ps1),'-disableMetrics') $paths.vcpkg $paths
         $tool=Resolve-S1Path $paths.vcpkg vcpkg.exe
@@ -196,7 +223,7 @@ function Invoke-S1DependencyInstall($Root,[switch]$BuildToolsEligibilityConfirme
         $step='acceptance'
         # Recheck inputs, checkout, original/derived bytes after external work.
         $plan=Read-S1SourceInputs $Root
-        Assert-S1VcpkgSource $paths $plan
+        Assert-S1VcpkgSource $paths $plan $Root
         Test-S1InstallManaged $Root $paths
         if((Get-S1Hash ([IO.File]::ReadAllBytes($tool))) -cne $toolSha){Stop-S1 VcpkgToolChanged}
         $null=Test-S1InstalledStructure $Root $paths.installed $plan

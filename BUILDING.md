@@ -51,12 +51,18 @@ pwsh -NoProfile -File tools/build_shipping_dependencies_s1.ps1 -Mode Install -Pr
 ```
 
 Installは原4 checkoutのpin/clean/Git tree/1481 tupleと派生1481件を再検証し、新規の専用vcpkg checkoutを公式URIから固定baselineで取得します。
-16公式port treeのidentityを確認し、固定checkout内のbootstrapでvcpkgを取得後、元のmanifest・v2 overlay・専用target/host tripletで実installします。
+registry由来13件は固定checkoutのport treeに照合します。overlay由来のhighway・libjxl・libyuvは、固定28入力のraw hashとoverlayのfile/directory閉集合、選択されたport定義のname/version/port-versionを照合します。libjxlは固定overlayの0.12.0を使用し、registryの別versionとのtree差異は拒否理由にしません。
+[vcpkg公式の選択順](https://learn.microsoft.com/en-us/vcpkg/concepts/overlay-ports)はCLI、config、環境変数、registryです。S1ではCLIとconfigを同じ固定overlay rootに限定し、子processの継承overlay環境を除外します。追加portやroot直下の単一port定義も固定閉集合に含まれないため拒否します。
+固定checkout内のbootstrapでvcpkgを取得後、元のmanifest・v2 overlay・専用target/host tripletで実installします。Install直前と受入時にも固定入力を再検証します。
 継承されたvcpkg/Git/CMakeの上書き環境を除き、binary/asset cacheをclear、downloads/buildtrees/packages/registry cache/一時領域を新規専用rootへ限定します。旧生成物をコピーする入口はありません。
 CLIのroot指定は[vcpkg公式オプション](https://learn.microsoft.com/en-us/vcpkg/commands/common-options)に従います。実bootstrap/tool/SDKとの接続はまだ実証していません。
 
 依存領域にはUNADMITTEDの所有記録を作ります。既存vcpkg/依存/installed/製品rootは空でも再利用せず、読み取り検査後に拒否します。
 原sourceと派生sourceは既存の固定内容検証に合格したものを使います。それ以外の既存rootに対するresume、削除、上書き、自動修復は行いません。途中失敗時は原因のstageを報告し、partial outputとlogsを保全します。再試行には別途その領域の確認が必要です。
+
+失敗済みrootがある場合、別名のInstall rootへの切替は固定output policyに反するため行いません。再試行前に、稼働中processがないこと、対象がworkspace配下の正規pathでreparseでないこと、ownerのsourceInputsSha256・UNADMITTED/reuseAllowed=false、vcpkgの固定HEAD/clean状態、installedの内容とmarker/receiptの有無を読み取り確認します。不明な所有物や整合性の不一致があれば停止します。
+確認後の退避は別途明示的に実施する操作です。新規に所有する一意の保全先をworkspaceのbuild配下に作り、既存の3 root（shipping-vcpkg-s1-v2、shipping-dependencies-s1-v2、vcpkg_installed-s1-v2）を、全移動元・移動先の絶対pathがworkspace内であることと宛先未存在を確認してから、PowerShellのLiteralPath指定で上書きせず移動します。owner、logs、未受入payloadを丸ごと保持し、成功済みとは扱いません。3つの固定rootがすべて不在であることを確認するまでInstallを開始しません。
+managed-jpegli-srcとmanaged-jpegli-s1-v2は退避対象に含めず、上記VerifyOnlyでidentityが一致すればそのまま使用します。再取得・再Deriveは不要です。この手順は自動退避や既存rootのresumeを許可するものではありません。
 
 vcpkg終了code=0だけでは受入しません。固定入力・managed bytes・vcpkg source/toolを再確認し、16 packageのstatus/version/triplet、package listと実payloadを検査します。
 その後、全installed fileの相対path/size/SHA-256をreceiptへ記録・照合します。markerは依存領域にCreateNewで完全に書き終えた後、最後に`share/clipss2-source-profile-s1-v1.json`へ上書き禁止のatomic moveで公開します。

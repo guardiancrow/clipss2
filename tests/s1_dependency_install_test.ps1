@@ -58,11 +58,15 @@ function New-Payload($Installed,$Plan){
         [IO.File]::WriteAllText("$Installed/$relative",'fixture only; never execute',$utf8)
     }
 }
-function Invoke-FixtureInstall($View,$FailStep='',$BadPayload=$false){
+function Invoke-FixtureInstall($View,$FailStep='',$BadPayload=$false,$TamperOverlayAt=''){
     $calls=[Collections.Generic.List[string]]::new()
     $managedCalls=[Collections.Generic.List[string]]::new()
     function Test-S1InstallManaged($Root,$Paths){$managedCalls.Add('verify-original-and-derived')}
-    function Assert-S1VcpkgSource($Paths,$Plan){$calls.Add('verify-baseline-and-port-trees')}
+    function Assert-S1VcpkgSource($Paths,$Plan,$Root){
+        if($Root -cne $View){throw 'Wrong source input root'}
+        $calls.Add('verify-baseline-and-port-trees')
+        if($FailStep -ceq 'vcpkg-source'){Stop-S1 FixtureSourceValidation}
+    }
     function Invoke-S1InstallCommand($Step,$Executable,$Arguments,$WorkingDirectory,$Paths){
         $calls.Add($Step)
         if([IO.File]::Exists((Join-Path $Paths.installed $script:S1MarkerPath))){throw 'Premature marker'}
@@ -72,6 +76,7 @@ function Invoke-FixtureInstall($View,$FailStep='',$BadPayload=$false){
             New-Payload $Paths.installed $ledger
             if($BadPayload){[IO.File]::WriteAllText((Join-Path $Paths.installed vcpkg/status),'broken',$utf8)}
         }
+        if($Step -ceq $TamperOverlayAt){[IO.File]::AppendAllText("$View/vcpkg-overlays/shipping-privacy-v2/libjxl/portfile.cmake",' changed during external work',$utf8)}
     }
     $result=Invoke-S1DependencyInstall $View -BuildToolsEligibilityConfirmed
     if($calls -join ',' -cne 'git-init,git-fetch,git-checkout,verify-baseline-and-port-trees,bootstrap,install,verify-baseline-and-port-trees'){throw 'Command order'}
@@ -135,19 +140,80 @@ Case 'install.arguments-dedicated-roots-no-cache' '' {
     $psi=New-S1InstallProcessInfo fixture $a $view $paths
     if($psi.UseShellExecute -or $psi.Environment['VCPKG_BINARY_SOURCES'] -cne 'clear' -or $psi.Environment['VCPKG_DOWNLOADS'] -cne (Join-Path $paths.dependencies downloads)){throw 'Environment isolation'}
 }
-Case 'vcpkg.baseline-and-all-port-trees' '' {
+Case 'vcpkg.baseline-registry-trees-and-effective-overlays' '' {
     $paths=Assert-S1InstallRoots $view $ledger
     $checked=[Collections.Generic.List[string]]::new()
     function Assert-S1Checkout($Root,$Revision){if($Root -cne $paths.vcpkg -or $Revision -cne $ledger.inputs.builtinBaseline){throw 'Wrong checkout validation'};$checked.Add('baseline')}
-    function Get-S1VcpkgPortTree($Paths,$Name){$checked.Add($Name);return @($ledger.inputs.packages|Where-Object name -CEQ $Name)[0].portTree}
-    Assert-S1VcpkgSource $paths $ledger
-    if($checked.Count -ne 17){throw 'Missing port validation'}
+    function Get-S1VcpkgPortTree($Paths,$Name){
+        if($Name -cin @('highway','libjxl','libyuv')){throw 'Overlay incorrectly compared to registry'}
+        $checked.Add($Name);return @($ledger.inputs.packages|Where-Object name -CEQ $Name)[0].portTree
+    }
+    $before=Snapshot $view
+    Assert-S1VcpkgSource $paths $ledger $view
+    if($checked.Count -ne 14){throw 'Missing baseline or registry port validation'}
+    if((Snapshot $view) -cne $before){throw 'Source acceptance wrote files'}
 }
-Case 'vcpkg.port-tree-mismatch' 'PortTree:aom' {
-    $paths=Assert-S1InstallRoots $view $ledger
-    function Assert-S1Checkout($Root,$Revision){}
-    function Get-S1VcpkgPortTree($Paths,$Name){return ('0'*40)}
-    Assert-S1VcpkgSource $paths $ledger
+foreach($registryName in @($ledger.inputs.packages.name|Where-Object {$_ -cnotin @('highway','libjxl','libyuv')})){
+    Case ('vcpkg.registry-tree-mismatch.'+$registryName) ('PortTree:'+$registryName) {
+        $paths=Assert-S1InstallRoots $view $ledger
+        function Assert-S1Checkout($Root,$Revision){}
+        function Get-S1VcpkgPortTree($Paths,$Name){
+            if($Name -ceq $registryName){return ('0'*40)}
+            return @($ledger.inputs.packages|Where-Object name -CEQ $Name)[0].portTree
+        }
+        Assert-S1VcpkgSource $paths $ledger $view
+    }
+}
+foreach($overlayName in @('highway','libjxl','libyuv')){
+    foreach($mutation in @('name','version','port-version','portfile','patch')){
+        Case ('vcpkg.overlay-rejects.'+$overlayName+'.'+$mutation) 'RawIdentity' {
+            $v=New-View ('overlay-'+$overlayName+'-'+$mutation)
+            $port="$v/vcpkg-overlays/shipping-privacy-v2/$overlayName"
+            $file="$port/vcpkg.json"
+            switch($mutation){
+                name {[IO.File]::WriteAllText($file,([IO.File]::ReadAllText($file).Replace(('"name": "'+$overlayName+'"'),'"name": "unexpected"')),$utf8)}
+                version {[IO.File]::WriteAllText($file,([IO.File]::ReadAllText($file) -creplace '("version(?:-semver)?": ")[^"]+','${1}0.0.0'),$utf8)}
+                port-version {[IO.File]::WriteAllText($file,([IO.File]::ReadAllText($file).Replace('{','{"port-version": 1,')),$utf8)}
+                portfile {[IO.File]::AppendAllText("$port/portfile.cmake",' changed',$utf8)}
+                patch {
+                    $file=@($ledger.inputs.files.path|Where-Object {$_ -clike ("*/$overlayName/*.patch") -or $_ -clike ("*/$overlayName/*.diff")})[0]
+                    [IO.File]::AppendAllText((Join-Path $v $file),' changed',$utf8)
+                }
+            }
+            Assert-S1VcpkgSource (Assert-S1InstallRoots $v $ledger) $ledger $v
+        }
+    }
+}
+foreach($extra in @('CONTROL','vcpkg.json','foreign/vcpkg.json')){
+    Case ('vcpkg.overlay-rejects-extra.'+$extra) 'InputSet' {
+        $v=New-View ('extra-overlay-'+$extra.Replace('/','-'))
+        $file="$v/vcpkg-overlays/shipping-privacy-v2/$extra"
+        [void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($file))
+        [IO.File]::WriteAllText($file,'{}',$utf8)
+        Assert-S1VcpkgSource (Assert-S1InstallRoots $v $ledger) $ledger $v
+    }
+}
+Case 'vcpkg.overlay-config-replacement-refused' 'RawIdentity' {
+    $v=New-View overlay-config
+    [IO.File]::WriteAllText("$v/vcpkg-configuration.json",'{"overlay-ports":["foreign"]}',$utf8)
+    Get-S1InstallArguments $v (Assert-S1InstallRoots $v $ledger) $ledger
+}
+Case 'vcpkg.inherited-overlay-cannot-replace-or-add-ports' '' {
+    $savedPorts=[Environment]::GetEnvironmentVariable('VCPKG_OVERLAY_PORTS')
+    $savedTriplets=[Environment]::GetEnvironmentVariable('VCPKG_OVERLAY_TRIPLETS')
+    try{
+        $env:VCPKG_OVERLAY_PORTS=Join-Path $run foreign
+        $env:VCPKG_OVERLAY_TRIPLETS=Join-Path $run foreign-triplets
+        $paths=Assert-S1InstallRoots $view $ledger
+        $a=Get-S1InstallArguments $view $paths $ledger
+        $psi=New-S1InstallProcessInfo fixture $a $view $paths
+        if($psi.Environment.ContainsKey('VCPKG_OVERLAY_PORTS') -or $psi.Environment.ContainsKey('VCPKG_OVERLAY_TRIPLETS')){throw 'Inherited overlay accepted'}
+        $selected=@($psi.ArgumentList|Where-Object {$_ -clike '--overlay-ports=*'})
+        if($selected.Count -ne 1 -or $selected[0] -cne ('--overlay-ports='+(Resolve-S1Path $view $ledger.inputs.overlayRoot))){throw 'Wrong effective overlay'}
+    }finally{
+        [Environment]::SetEnvironmentVariable('VCPKG_OVERLAY_PORTS',$savedPorts)
+        [Environment]::SetEnvironmentVariable('VCPKG_OVERLAY_TRIPLETS',$savedTriplets)
+    }
 }
 Case 'managed.fixed-roots-forwarded' '' {
     $paths=Assert-S1InstallRoots $view $ledger
@@ -168,12 +234,23 @@ Case 'process.failure-preserves-logs' 'InstallCommand:fixture:19' {
         if([IO.File]::ReadAllText((Join-Path $paths.dependencies logs/fixture.err.log)).Trim() -cne 'fixture stderr'){throw 'stderr missing'}
     }
 }
-foreach($step in @('git-init','git-fetch','git-checkout','bootstrap','install')){
+foreach($step in @('git-init','git-fetch','git-checkout','vcpkg-source','bootstrap','install')){
     Case ('install.failure-no-marker.'+$step) ('InstallFailed:'+ $step) {
         $v=New-View ('failed-'+$step)
         try{Invoke-FixtureInstall $v $step}finally{
             if([IO.File]::Exists("$v/build/vcpkg_installed-s1-v2/$script:S1MarkerPath")){throw 'Failed install admitted'}
             if(![IO.File]::Exists("$v/build/shipping-dependencies-s1-v2/owner.json")){throw 'Partial roots missing'}
+        }
+    }
+}
+foreach($tamperAt in @('bootstrap','install')){
+    $failedStage=if($tamperAt -ceq 'bootstrap'){'install'}else{'acceptance'}
+    Case ('install.changed-overlay-no-marker.'+$tamperAt) ('InstallFailed:'+$failedStage) {
+        $v=New-View ('changed-overlay-at-'+$tamperAt)
+        try{Invoke-FixtureInstall $v '' $false $tamperAt}finally{
+            foreach($relative in @($script:S1MarkerPath,$script:S1ReceiptPath)){
+                if([IO.File]::Exists("$v/build/vcpkg_installed-s1-v2/$relative")){throw 'Changed overlay admitted'}
+            }
         }
     }
 }
