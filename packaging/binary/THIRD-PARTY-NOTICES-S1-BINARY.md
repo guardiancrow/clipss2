@@ -1,0 +1,42 @@
+# clipss2 S1 Binary NOTICE — private validation candidate
+
+対象はrevision `93545d458da33cef397fb77458336ea06339dcb6`の受入済み18 PEです。
+これはBinary候補専用の対応表です。旧Source profileの承認は引き継ぎません。
+**MS-002未解決、binaryReleaseApproved=false。非公開検証用であり正式配布不可です。**
+
+clipss2自作部分: Copyright (c) 2026 guardiancrow, [MIT原文](LICENSE)。
+以下の日本語説明や短いlicense名は原文に代わるものではありません。原文のcopyright・条件・免責・特許条項を保持します。
+
+This software is based in part on the work of the Independent JPEG Group.
+
+| 成分 | version / 利用 | 対象PE | 原文 |
+| --- | --- | --- | --- |
+| aom | 3.15.0; aggregate copyright / patent terms | aom.dll | [copyright](licenses/aom/copyright) |
+| Brotli | 1.2.0; MIT | brotlicommon.dll, brotlidec.dll, brotlienc.dll | [copyright](licenses/brotli/copyright) |
+| C++/WinRT | 2.0.250303.1; MIT、header組込み | clipss2.exe | [LICENSE](licenses/cppwinrt/LICENSE.txt) |
+| managed jpegli | 031a0077f5799a6041004267fc12b956c1f52a20; BSD-3-Clause、static組込み | clipss2.exe | [LICENSE](licenses/jpegli/LICENSE), [PATENTS](licenses/jpegli/PATENTS) |
+| managed libjpeg headers | 8ecba3647edb6dd940463fedf38ca33a8e2a73d1; IJG/aggregate、header利用 | clipss2.exe | [LICENSE.md](licenses/jpegli-headers/LICENSE.md), [README.ijg](licenses/jpegli-headers/README.ijg) |
+| managed Highway | 1.3.0 / 271a9a0ed9de1232d9117f1572c3fe28f8542ec1; static組込み | clipss2.exe | [dual-license原文](licenses/highway-managed/LICENSE), [Apache-2.0](licenses/apache-2.0/LICENSE.txt) |
+| Highway | 1.4.0; shared | hwy.dll | [dual-license原文](licenses/highway-vcpkg/copyright), [Apache-2.0](licenses/apache-2.0/LICENSE.txt) |
+| Little CMS | 2.19.1#1; MIT | lcms2-2.dll | [copyright](licenses/lcms/copyright) |
+| libavif | 1.4.2#1; aggregate copyright / patent terms | avif.dll | [copyright](licenses/libavif/copyright) |
+| libjpeg-turbo | 3.2.0; IJG / Modified BSD aggregate | jpeg62.dll, turbojpeg.dll | [copyright](licenses/libjpeg-turbo/copyright), [README.ijg](licenses/libjpeg-turbo/README.ijg) |
+| libjxl | 0.12.0; BSD-3-Clause | jxl.dll, jxl_cms.dll, jxl_threads.dll | [copyright](licenses/libjxl/copyright), [PATENTS](licenses/libjxl/PATENTS) |
+| libpng | 1.6.58; libpng-2.0 | libpng16.dll | [copyright](licenses/libpng/copyright) |
+| libwebp | 1.6.0#3; BSD-3-Clause、PATENTS全文をcopyright内に保持 | libwebp.dll, libsharpyuv.dll | [copyright/PATENTS](licenses/libwebp/copyright) |
+| libyuv | 1916; BSD-3-Clause | libyuv.dll | [copyright](licenses/libyuv/copyright), [PATENTS](licenses/libyuv/PATENTS) |
+| zlib | 1.3.2#2; Zlib | z.dll | [copyright](licenses/zlib/copyright) |
+| Microsoft STL headers | 使用MSVC 14.44.35207のheader表示はApache-2.0 WITH LLVM-exception | C++ header生成コードの保守的なcoverage | [Apache/LLVM exception全文](licenses/msvc-stl/LICENSE.txt) |
+| skcms | 96d9171c94b937a1b5f0293de7309ac16311b722; BSD-3-Clause | 参考coverageのみ。今回の製品targetにmanaged skcms objectなし、libjxl側SKCMS=OFF | [LICENSE全文](licenses/skcms/LICENSE) |
+
+Highwayは両versionともApache-2.0を選択し、dual-license原文を省略しません。`hwy/contrib/random/random-inl.h`のCC0-1.0例外も保持しています。
+Shipping Privacy v2ではjpegli/managed Highwayとvcpkg Highway/libjxlの診断file識別子を変更しています。libjxl overlayには依存・MSVC対応と変更告知patchがあります。これらはclipss2側の変更であり、upstreamによる推奨を意味しません。
+skcms原文の同梱は保守的な権利情報coverageです。コンパイルされていないmanaged CMS targetを製品へ含めた証明ではありません。`jxl_cms.dll`は今回LCMS2を利用します。
+
+## Microsoftの未解決範囲
+
+MSVC 14.44.35207 / compiler 19.44.35229.0、Windows SDK 10.0.26100.0を使用しています。
+Release /MDでもCRT起動コードは静的に組み込まれます。MSVC/SDK由来の組込みコードと適用再頒布許諾の完全な対応は**MS-002として未解決**です。
+STL headerのApache/LLVM exceptionを、CRT起動コードやSDK全体の許諾へ拡張しません。STL原文はMicrosoft STLのvs-2022-17.14 tagが指すcommit `1f6e5b16ec02216665624c1e762f3732605cf2b4`のLICENSE.txtです。取得原文のCRLFだけをLFへ統一し、本文は保持しています。installed header全件との同一性証明ではありません。
+Microsoft Runtime DLL・installer・Windows標準DLLは同梱しません。これらの外部前提と利用条件はREADMEのMicrosoft公式参照先に従って確認してください。
+MS-003の既存使用資格判断と既存skcms/Highway判断は維持します。今回の対応表・原文同梱は最終Binary Release承認ではありません。
