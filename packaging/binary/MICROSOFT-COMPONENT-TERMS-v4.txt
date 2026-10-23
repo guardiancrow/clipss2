@@ -1,0 +1,141 @@
+MICROSOFT-COMPONENT-TERMS.txt
+Version 2 — 2026-10-23
+clipss2 0.1.0 — Windows x64 Portable
+
+1. Scope and separate licenses
+
+The existing SDK-1 review for this release identifies reviewed
+Windows SDK 10.0.26100.0 library inputs under the designated
+Windows Kits library locations:
+
+    Lib/10.0.26100.0/um/x64/
+    Lib/10.0.26100.0/ucrt/x64/
+
+That review establishes the relevant input locations and their
+SDK redistribution designation. It is not an exhaustive inventory
+of object code incorporated into the finished binaries.
+
+"Covered SDK Code" means only Microsoft-owned object code actually
+incorporated from those reviewed SDK Distributable Code inputs
+into this clipss2 binary distribution. This definition does not
+assert that every reviewed library, library member, or complete
+SDK implementation is included. Inclusion of additional code is
+not presumed where the existing evidence does not establish it.
+
+The clipss2-authored code remains under the MIT License in LICENSE.
+Other components remain under their respective licenses identified
+in THIRD-PARTY-NOTICES.md. These SDK-specific conditions do not
+replace or restrict rights independently granted for that code.
+
+These conditions do not cover Windows operating-system DLLs called
+through imports, the separately installed Visual C++ Runtime,
+Microsoft Visual C++ startup code, or Microsoft STL code. Those
+components retain their own applicable licensing arrangements.
+Use of an import library does not mean that the implementation
+of the imported operating-system function is embedded in clipss2.
+
+2. Request to agree
+
+Before using or redistributing the Covered SDK Code, review this
+document. The distributor requires recipients and redistributors
+of the Covered SDK Code to agree to the component-specific
+conditions in sections 3 through 6.
+
+If you do not agree, do not use or redistribute the Covered SDK
+Code. This does not affect your rights in separately licensed
+source code that does not contain the Covered SDK Code.
+
+This document does not state that downloading, extracting, or
+running a file, by itself, establishes your explicit agreement.
+
+3. Redistribution of the Covered SDK Code
+
+Any redistribution of the Covered SDK Code must remain within
+applicable Microsoft redistribution rights.
+
+Distribute it only in linked object-code form as part of a program
+that adds significant primary functionality. Do not redistribute
+it for operation on a non-Microsoft operating-system platform.
+
+This document does not authorize extraction or distribution of
+standalone SDK libraries, SDK tools, or Windows operating-system
+DLLs.
+
+4. Preservation and component-specific restrictions
+
+Preserve the copyright, trademark, and patent notices associated with the Covered SDK Code.
+
+Do not use Microsoft trademarks in a program name or otherwise suggest that Microsoft produced or endorsed your program.
+
+Do not include the Covered SDK Code in malicious, deceptive, or unlawful programs.
+
+To the extent permitted by applicable law, do not circumvent technical limitations in the Covered SDK Code or reverse engineer, decompile, or disassemble that code, except to the extent that applicable law expressly permits such conduct notwithstanding this restriction.
+
+This restriction applies only to the Covered SDK Code actually incorporated into this binary distribution. It does not apply to independently licensed clipss2-authored code, third-party open-source components, or other independently licensed components. The inclusion of different components in the same executable or library does not, by itself, extend this restriction to those independent components or override rights granted under their respective licenses.
+
+For the following source-code restriction only, "Corresponding Microsoft Source" means Microsoft's source code corresponding to the Covered SDK Code. That source is not supplied by this binary package, and this document grants no right to obtain, modify, or distribute it.
+
+If you separately have rights to handle Corresponding Microsoft Source, do not modify or distribute that source in a manner that, contrary to the applicable Microsoft license, subjects any part of that Microsoft code to license conditions requiring disclosure or distribution of its source, or granting others rights to modify that Microsoft code.
+
+This restriction does not classify the distributed object code as source code. It does not impose a general prohibition on GPL or other open-source software, or alter the licenses of independent components.
+
+5. Onward distribution
+
+When redistributing a binary containing the Covered SDK Code:
+
+(a) Include this component-conditions document and preserve the
+    applicable copyright, trademark, and patent notices.
+
+(b) Clearly identify the limited scope of these conditions and
+    make them available to recipients. On a download page you
+    control, provide a prominent reference before the binary
+    download. For other transfer methods, provide the conditions
+    before the recipient uses or further redistributes the
+    Covered SDK Code.
+
+(c) Require downstream distributors and external end users to
+    agree to the applicable component-specific conditions.
+    Require downstream distributors to preserve the notice,
+    transmission, and agreement-request obligations in further
+    distributions.
+
+(d) If different downstream terms are used, they must protect
+    the Covered SDK Code at least as much as the applicable
+    SDK agreement requires.
+
+Providing a document, asking for agreement, and establishing
+legally effective agreement are distinct matters. A redistributor
+must not represent that the presence of this file, a download,
+or execution alone proves every recipient's agreement.
+
+These duties concern redistribution of the Covered SDK Code.
+They do not attach to distribution of separately licensed source
+code that contains no Covered SDK Code.
+
+6. Microsoft warranty and liability protections; mandatory rights
+
+The Covered SDK Code is provided "as is." To the extent permitted by applicable law, Microsoft gives no express warranties, guarantees, or conditions for it and excludes implied warranties of merchantability, fitness for a particular purpose, and non-infringement.
+
+To the maximum extent permitted by applicable law, Microsoft and its suppliers shall not be liable for damages of any kind arising out of or relating to the Covered SDK Code, including direct, indirect, incidental, consequential, or special damages, or lost profits, whether arising under contract, warranty, strict liability, negligence, or another legal theory, even if they knew or should have known of the possibility of such damages.
+
+These limitations are intended to protect Microsoft and its suppliers solely in connection with the Covered SDK Code. Microsoft and its suppliers are intended third-party beneficiaries of these protections to the extent recognized by applicable law.
+
+Nothing in this document excludes or limits rights, statutory guarantees, remedies, or liabilities that applicable law does not permit to be excluded or limited. Where an exclusion or limitation is not enforceable, it applies only to the extent permitted by applicable law.
+
+These provisions do not establish a separate agreement with Microsoft, represent an endorsement or individual permission from Microsoft, or create any payment obligation on Microsoft's behalf. No monetary liability cap from Microsoft's separate SDK agreement is incorporated into this document.
+
+The protections in this section do not extend to independently licensed components merely because they are distributed together with the Covered SDK Code. They do not combine Microsoft's responsibilities with those of the clipss2 distributor, create a new blanket exemption for that distributor, or transfer the distributor's SDK indemnification and defense obligations to end users.
+
+7. Origin and references
+
+This is a project-authored component notice, not a Microsoft
+template, endorsement, or individual permission from Microsoft.
+
+Its SDK reference is the Windows SDK license identified as
+WIN10SDK.RTM.AUG_2018_en-US, particularly sections 2(a)(ii)
+and 2(a)(iii). It does not replace Microsoft's underlying license
+or grant rights to use or redistribute the SDK itself.
+
+See README.md for package requirements and the external Visual C++
+Runtime prerequisite. See LICENSE and THIRD-PARTY-NOTICES.md for
+the separate licenses and attribution notices.

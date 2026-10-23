@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "authorizationId": "clipss2-s1-sdk2-v4-private-v1",
+  "approvalScope": "PHASE3D-SDK2-V4-PRIVATE-CANDIDATE-ONLY",
+  "ownerInstruction": "clipss2 — Phase 3-D：承認済みMicrosoft条件文書の実装とv4 Private Packaging受入",
+  "candidateGenerationAuthorized": true,
+  "binaryReleaseApproved": false,
+  "publicDistributionAllowed": false,
+  "thirdPartyTransferAllowed": false,
+  "githubReleaseAllowed": false,
+  "signingAllowed": false,
+  "legalApprovalGranted": false,
+  "productSourceRevision": "93545d458da33cef397fb77458336ea06339dcb6",
+  "packagingHead": "ffac56bd1713d5afe659cb16dc9fe2e34e3a6649",
+  "branch": "release/shipping-s1-v2",
+  "releaseProfile": {
+    "path": "packaging/public/profile-s1-binary-release-v4.json",
+    "size": 31780,
+    "sha256": "37369A41BEB90BE0A413FA1C4492CB5DF8836F470DA1EA8FB431F0DA1E29B78B"
+  },
+  "legacyImplementation": {
+    "path": "packaging/S1BinarySdk2Package.psm1",
+    "size": 21777,
+    "sha256": "E59850DF67428E3DA8A46894A9455AFDC974A8C5FF1AEF34E03E683FCA134CCE"
+  },
+  "legacyCLI": {
+    "path": "tools/package_s1_binary_sdk2.ps1",
+    "size": 2219,
+    "sha256": "F8F6113D2173F022F0B8E2BFA655330B5E796BA8C8CA0DF9AD91A4A712A9A46D"
+  },
+  "outputPrefixes": [
+    "build/phase3d-sdk2-v4-private-",
+    "build/phase3d-sdk2-v4-tests-"
+  ],
+  "existingRootAction": "REFUSE",
+  "reuseAllowed": false,
+  "legacyFallbackAllowed": false,
+  "legalState": "SDK-2 CLEAR IF; sections 4 and 6 wording formally approved by Owner; not legal-effect or universal-assent proof; G3 not authorized",
+  "provenance": "Unsigned local record of explicit Owner instruction, not signed provenance, license grant or publication approval",
+  "ownerTermsTextApproved": true,
+  "ownerApprovedSections": [
+    4,
+    6
+  ]
+}
