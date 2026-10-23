@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "authorizationId": "clipss2-s1-r4b-private-generation-v1",
+  "status": "OWNER_AUTHORIZED_PRIVATE_GENERATION_ONLY",
+  "ownerInstruction": "clipss2 — R4-B Release Packaging接続・非公開候補生成",
+  "authorityKind": "Explicit Owner instruction recorded locally; unsigned integrity contract",
+  "approvalScope": "R4-B-PRIVATE-CANDIDATE-ONLY",
+  "r4BGenerationAuthorized": true,
+  "binaryReleaseApproved": false,
+  "publicDistributionAllowed": false,
+  "thirdPartyTransferAllowed": false,
+  "githubReleaseAllowed": false,
+  "signingAllowed": false,
+  "legalApprovalGranted": false,
+  "sourceApprovalInherited": false,
+  "legacyPrivateFallbackAllowed": false,
+  "authorizationModel": "SEPARATE_OWNER_AUTHORIZATION_FOR_PINNED_R4A_DESIGN",
+  "designGenerationFlagMustRemain": false,
+  "productSourceRevision": "93545d458da33cef397fb77458336ea06339dcb6",
+  "packagingHead": "73c593690b46b018975f3b914da97ab334ad0e35",
+  "branch": "release/shipping-s1-v2",
+  "releaseProfile": {
+    "path": "packaging/public/profile-s1-binary-release-v1.json",
+    "size": 29156,
+    "sha256": "CD7F936F638FA634C8E335E93DB7D3566661B7F6E72C842206B620F9ECE4D29B"
+  },
+  "releaseReader": {
+    "path": "packaging/S1BinaryReleasePlan.psm1",
+    "size": 6521,
+    "sha256": "9FF55A4671609859CD288A0FDC15925D5B8B62432799DACF09491984752962C4"
+  },
+  "legacyHelpers": {
+    "path": "packaging/S1BinaryPackage.psm1",
+    "size": 16669,
+    "sha256": "D37C0B9E6572FF3DBE50A2A2E1A776D9DCD0C2183F4EE5B757F2954105C8334B"
+  },
+  "permittedOperations": [
+    "CREATE_PRIVATE_RELEASE_CANDIDATE",
+    "VALIDATE_PRIVATE_RELEASE_CANDIDATE"
+  ],
+  "outputPolicy": {
+    "allowedContainerPrefixes": [
+      "build/r4-b-release-private-",
+      "build/r4-b-package-tests-"
+    ],
+    "newRootOnly": true,
+    "existingRootAction": "REFUSE",
+    "reuseAllowed": false,
+    "preservePartialOnFailure": true
+  },
+  "inheritedOpenRights": [
+    "MS-002-L",
+    "Microsoft-downstream-conditions",
+    "final-binary-owner-approval"
+  ],
+  "limitations": "No license grant, publication, third-party transfer, signing, tag or GitHub Release operation. Hashes are not signed provenance."
+}
