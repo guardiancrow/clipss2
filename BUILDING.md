@@ -2,11 +2,32 @@
 
 対象はShipping Privacy v2 / MSVC x64 / Ninja single-config / Releaseのみです。
 Debug、通常OFF、v1、Visual Studio/Ninja Multi-Configはこの公開経路で拒否します。
-Install経路は実装済みですが、実依存install・Shipping configure・製品buildの受入は未実施です。
+旧Source-only snapshot時点では実Install/build未実施でした。その後R1で実依存Install・ValidateInstalled・Shipping configure・製品target `clipss2`のRelease buildに成功し、R2で18 PEを限定受入、R4-Dで45ファイルの非公開候補ZIPを受け入れました。
+製品build source revisionは`93545d458da33cef397fb77458336ea06339dcb6`です。文書・Packaging用の後続commitは製品再ビルドrevisionではありません。現在の候補はWindows x64 Portable、Release /MD、外部VC++ Runtime x64、未署名です。GitHub Releaseの公開は未承認です。[Portable README](packaging/binary/README-portable-s1-release-v2.md)、[Binary NOTICE](packaging/binary/THIRD-PARTY-NOTICES-S1-BINARY-RELEASE-v2.md)、[Release Notes案](docs/RELEASE-NOTES-0.1.0.md)を参照してください。
 
 想定する環境はWindows x64、Visual Studio 2022/Build ToolsのMSVC C++23とWindows SDK、CMake 3.28以降、Ninja、Git、PowerShell 7.2以降です。
-過去の別構成の参照環境はSDK 10.0.26100.0、MSVC toolset 14.44.35207/compiler 19.44.35229.0でした。新S1のtoolchain受入実績ではありません。
-SDK/Build Toolsの取得・利用条件、将来のMicrosoft再頒布条件は別途確認が必要です。
+今回のS1構築で使用したSDKは10.0.26100.0、MSVC toolsetは14.44.35207/compiler 19.44.35229.0です。使用資格は下記の既存判断を継承します。SDKの下流条件の履行と公開承認は別の残件です。
+
+## G2判断の引継ぎ（2026-10-23）
+
+記録IDは`clipss2-g2-inheritance-2026-10-23`です。承認根拠は、Owner提供の外部引継ぎメモ`clipss2-g2-handoff-2026-10-23.md`と、同日の「第3段階再開：固定契約の保護とG2判断の引継ぎ」というOwner指示です。Skillと参照資料v1.3.0に従います。本項はプロジェクト内の引継ぎ記録で、新たな法務意見でも、メモそのものを正式承認記録とみなすものでもありません。
+
+判断・承認責任者はOwner／開発者本人です。MSVC-1は法務相談を経た解釈をOwnerが採用したという引継ぎに基づきます。相談担当者の氏名、相談原記録の保全先、条文対応の詳細は本項へ提供されていないため創作せず、Owner側の原記録との対応付けを残します。同条件の採用済み判断を再審査するための要求ではありません。
+
+| 論点 | 継承する判断と適用範囲 | 未履行・適用限界 |
+| --- | --- | --- |
+| G1 | 技術確認済み。R1/R2の証拠を継承し再解析しない | 全構成・全環境の保証へ拡張しない |
+| MSVC-1 | 標準Release /MDのCRT startupについて採用済み合理的契約解釈をINTERPRETED-APPROVEDとして引き継ぎ、通常監査を終了 | Microsoftの個別明示許諾ではない。異なる静的コード・リンク構成へ自動拡張しない |
+| TOOLS-1 | 本人確認済みCommunity資格と、同じ本人・用途のBuild Tools補助利用はCLEAR | 第三者CI、別組織・共有ホストへ自動拡張しない |
+| SDK-1 | SDK 10.0.26100.0の指定パスに対する既存条件付き判断を継承 | SDK-2の履行完了を意味しない |
+| SDK-2 | CLEAR IF。Release本文・READMEの事前案内とEXE同階層のZIP内条件文書、起動時同意UIなしを優先候補とする | 文面の採用、提示・合意要求方式の責任者判断、配布者の継続義務、実物への反映・受入が未了 |
+| G3 | 公開未承認 | G2の判断継承や技術受入から公開GOを自動発行しない |
+
+射程はclipss2の個人開発、自作部分MIT、当該18 PE、標準Release /MD、Runtime非同梱、GitHub ReleasesでのPortable ZIP配布準備です。通常のcommitやAI/スレッド変更で再起票しません。契約・利用主体・MSVC/SDK・リンク構成・Microsoft由来同梱物・配布経路・下流条件の実質的変更、重要な新証拠がある場合だけ差分を確認します。
+
+[R4-D記録](docs/R4-D-RELEASE-DECISION.md)と旧profileのMS-002-L留保は当時の固定記録として維持します。今回の引継ぎで旧profile・Reader・公開承認フラグを書き換えません。G2全体の履行完了・G3の公開承認は宣言しません。
+
+## 固定入力と構築手順
 
 固定baselineは[vcpkg manifest](vcpkg.json)の04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4。
 [新config](vcpkg-configuration.json)はv2 overlayだけを選択します。公式libjxl 0.12.0由来のportとHighway/libyuvの変更は[帰属](cmake/privacy/ATTRIBUTION.md)を参照してください。
@@ -44,7 +65,7 @@ pwsh -NoProfile -File tools/derive_shipping_privacy_s1.ps1 -Mode Derive -Profile
 [Install入口](tools/build_shipping_dependencies_s1.ps1)は、上記の原sourceと派生sourceが準備・検証された後に実行します。
 **MS-003のBuild Tools使用資格確認が先です。** `-BuildToolsEligibilityConfirmed`は呼出者による確認済みの表明であり、scriptによる使用権の審査・付与ではありません。未確認ではこの引数を付けず、Installを実行しないでください。
 
-以下は確認完了後の将来実行用です。R0 Remediationでは実行していません。
+以下は資格確認済みの呼出者が、新規所有領域で再構築する場合の手順です。R0 Remediation時点では未実行、R1では実行・受入済みです。同じ本人・用途の確認済み資格判断を継承し、既存のR4-D候補のために再実行しません。
 
 ```powershell
 pwsh -NoProfile -File tools/build_shipping_dependencies_s1.ps1 -Mode Install -Profile v2 -Scope s1-v1 -Privacy ON -Configuration Release -Architecture x64 -BuildToolsEligibilityConfirmed
@@ -55,7 +76,7 @@ registry由来13件は固定checkoutのport treeに照合します。overlay由�
 [vcpkg公式の選択順](https://learn.microsoft.com/en-us/vcpkg/concepts/overlay-ports)はCLI、config、環境変数、registryです。S1ではCLIとconfigを同じ固定overlay rootに限定し、子processの継承overlay環境を除外します。追加portやroot直下の単一port定義も固定閉集合に含まれないため拒否します。
 固定checkout内のbootstrapでvcpkgを取得後、元のmanifest・v2 overlay・専用target/host tripletで実installします。Install直前と受入時にも固定入力を再検証します。
 継承されたvcpkg/Git/CMakeの上書き環境を除き、binary/asset cacheをclear、downloads/buildtrees/packages/registry cache/一時領域を新規専用rootへ限定します。旧生成物をコピーする入口はありません。
-CLIのroot指定は[vcpkg公式オプション](https://learn.microsoft.com/en-us/vcpkg/commands/common-options)に従います。実bootstrap/tool/SDKとの接続はまだ実証していません。
+CLIのroot指定は[vcpkg公式オプション](https://learn.microsoft.com/en-us/vcpkg/commands/common-options)に従います。当該S1の実bootstrap/tool/SDK接続はR1で受け入れました。別の環境・版の成功を保証するものではありません。
 
 依存領域にはUNADMITTEDの所有記録を作ります。既存vcpkg/依存/installed/製品rootは空でも再利用せず、読み取り検査後に拒否します。
 原sourceと派生sourceは既存の固定内容検証に合格したものを使います。それ以外の既存rootに対するresume、削除、上書き、自動修復は行いません。途中失敗時は原因のstageを報告し、partial outputとlogsを保全します。再試行には別途その領域の確認が必要です。
@@ -73,13 +94,14 @@ marker/receiptは自己記録の整合性確認です。ABI互換性、信頼済
 pwsh -NoProfile -File tools/build_shipping_dependencies_s1.ps1 -Mode ValidateInstalled -Profile v2 -Scope s1-v1 -Privacy ON -Configuration Release -Architecture x64 -InstalledDir "$PWD/build/vcpkg_installed-s1-v2"
 ```
 
-[preset](CMakePresets.json)のwindows-x64-shipping-v2は上記の実受入後にconfigureする入口です。このsource cutから実configure/buildは未実施です。
+[preset](CMakePresets.json)のwindows-x64-shipping-v2は上記の実受入後にconfigureする入口です。R1で上記製品revisionの実configureとRelease buildを受け入れました。
 専用rootはbuild/shipping-vcpkg-s1-v2、build/shipping-dependencies-s1-v2、build/vcpkg_installed-s1-v2、build/managed-jpegli-s1-v2、build/windows-x64-s1-v2です。
 旧f3、旧v1/v2、通常Debug/Releaseや他のinstalled/cacheをS1へ混用しません。
 
 [NOTICE検査](docs/SOURCE-S1-NOTICES.md)は独立したread-only操作です。
-source-release宣言の構造受入は実Install/build・ABI/runtimeの受入ではありません。これらは未実施/未実証です。正式source承認は特定snapshotに限り、別のOwner admissionと公開許可に従います。
+source-release宣言の構造受入と、R1/R2の実Install/build・限定runtime受入は別の証拠です。独立再ビルドのbitwise再現性や一般的なABI互換性は未実証です。正式source承認は特定snapshotに限り、別のOwner admissionと公開許可に従います。
 固定28入力と旧v2 NOTICE metadataのbytesは維持します。skcmsの権利情報は新v3 NOTICE世代のhash連鎖とPublicationView集合へ再固定しました。新しい正式公開時には全source集合の再固定とOwner判断が必要であり、旧snapshotの承認を引き継ぎません。
+raw hash固定された[Privacy README](cmake/privacy/README.md)の未実施記述は旧snapshot時点の歴史的説明として保持します。旧PublicationViewは295ファイル、第2段階HEADのtag archive対象は323ファイルです。今回の文書4件はpathを変えず更新しますが、そのbytesを含む新しい公開集合へのOwner承認は別途必要です。B区分13資料は再現性と履歴を維持するため公開する案を第一候補とし、未承認の公開操作や旧snapshot承認の継承には読み替えません。
 
 実installやcompilerを使わない検証:
 
