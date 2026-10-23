@@ -11,7 +11,7 @@ Source-only snapshot時点の検証は静的・script mode/CLI・隔離fixture�
 旧構成にあったWindows 10の限定USER-REPORTED成功や別PC成功をS1へ転用しません。
 
 R2の独立実測はWindows 11 25H2 x64 build 26200.9711、SDR/fallback経路、Runtime 14.51.36247.0です。所有HWNDのWindow Capture、772×546 PNGのFile保存、正常終了を確認しました。これを最低必要OS/Runtime版や全環境の保証にはしません。
-現在の候補はWindows x64 Portable、Release /MD、外部VC++ Runtime x64、未署名、インストーラなしです。必要環境と導入案内は[Portable README](../packaging/binary/README-portable-s1-release-v2.md)、権利表示は[Binary NOTICE](../packaging/binary/THIRD-PARTY-NOTICES-S1-BINARY-RELEASE-v2.md)を参照してください。R4-D非公開候補の受入はGitHub公開の承認ではありません。
+現在のv4非公開候補はWindows x64 Portable、Release /MD、外部VC++ Runtime x64、未署名、インストーラなしで、同じ18 PEを維持しています。必要環境と導入案内は[Portable README](../packaging/binary/README-portable-s1-release-v3.md)、権利表示は[Binary NOTICE](../packaging/binary/THIRD-PARTY-NOTICES-S1-BINARY-RELEASE-v3.md)を参照してください。非公開候補の技術受入はGitHub公開の承認ではありません。
 
 captureは実capability・target・color・topology等を確認し、不明/不整合を拒否する設計です。
 HDR/WCG、複数monitorをまたぐRegion、全driver/GPU/DPI/アクセシビリティ/codec組合せの保証はありません。

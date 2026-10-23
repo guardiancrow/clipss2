@@ -3,7 +3,7 @@
 対象はShipping Privacy v2 / MSVC x64 / Ninja single-config / Releaseのみです。
 Debug、通常OFF、v1、Visual Studio/Ninja Multi-Configはこの公開経路で拒否します。
 旧Source-only snapshot時点では実Install/build未実施でした。その後R1で実依存Install・ValidateInstalled・Shipping configure・製品target `clipss2`のRelease buildに成功し、R2で18 PEを限定受入、R4-Dで45ファイルの非公開候補ZIPを受け入れました。
-製品build source revisionは`93545d458da33cef397fb77458336ea06339dcb6`です。文書・Packaging用の後続commitは製品再ビルドrevisionではありません。現在の候補はWindows x64 Portable、Release /MD、外部VC++ Runtime x64、未署名です。GitHub Releaseの公開は未承認です。[Portable README](packaging/binary/README-portable-s1-release-v2.md)、[Binary NOTICE](packaging/binary/THIRD-PARTY-NOTICES-S1-BINARY-RELEASE-v2.md)、[Release Notes案](docs/RELEASE-NOTES-0.1.0.md)を参照してください。
+製品build source revisionは`93545d458da33cef397fb77458336ea06339dcb6`です。文書・Packaging用の後続commitは製品再ビルドrevisionではありません。その後Phase 3-Dで同じ18 PEを含む46ファイルのv4非公開候補を受け入れました。Windows x64 Portable、Release /MD、外部VC++ Runtime x64、未署名で、GitHub Releaseの公開は未承認です。[Portable README](packaging/binary/README-portable-s1-release-v3.md)、[Binary NOTICE](packaging/binary/THIRD-PARTY-NOTICES-S1-BINARY-RELEASE-v3.md)、[v4 Release Notes／本文テンプレート](docs/RELEASE-NOTES-0.1.0-V4.md)を参照してください。
 
 想定する環境はWindows x64、Visual Studio 2022/Build ToolsのMSVC C++23とWindows SDK、CMake 3.28以降、Ninja、Git、PowerShell 7.2以降です。
 今回のS1構築で使用したSDKは10.0.26100.0、MSVC toolsetは14.44.35207/compiler 19.44.35229.0です。使用資格は下記の既存判断を継承します。SDKの下流条件の履行と公開承認は別の残件です。
