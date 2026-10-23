@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "authorizationId": "clipss2-s1-sdk2-private-v1",
+  "approvalScope": "PHASE3C-SDK2-PRIVATE-CANDIDATE-ONLY",
+  "ownerInstruction": "clipss2 — Phase 3-C：SDK-2採用判断記録と新Packaging実装",
+  "candidateGenerationAuthorized": true,
+  "binaryReleaseApproved": false,
+  "publicDistributionAllowed": false,
+  "thirdPartyTransferAllowed": false,
+  "githubReleaseAllowed": false,
+  "signingAllowed": false,
+  "legalApprovalGranted": false,
+  "productSourceRevision": "93545d458da33cef397fb77458336ea06339dcb6",
+  "packagingHead": "f8cf793b6dfbda951e051b90a2147d5c3a3103e3",
+  "branch": "release/shipping-s1-v2",
+  "releaseProfile": {
+    "path": "packaging/public/profile-s1-binary-release-v3.json",
+    "size": 30008,
+    "sha256": "F08473A89016D76DF42BC236FC9D2D415B724714D674196B67F1935E27E7013D"
+  },
+  "legacyImplementation": {
+    "path": "packaging/S1BinaryFinalPackage.psm1",
+    "size": 15276,
+    "sha256": "612D8E1818876ED5CC48A515ED9F5D294D4D9F9FFF21FE45D48C30E6733F0497"
+  },
+  "legacyCLI": {
+    "path": "tools/package_s1_binary_final.ps1",
+    "size": 2093,
+    "sha256": "CF50524127B83212DA94F4B4FEF4826CCC7F649839DBE9EB4AAB8A4E32651743"
+  },
+  "outputPrefixes": [
+    "build/phase3c-sdk2-private-",
+    "build/phase3c-sdk2-tests-"
+  ],
+  "existingRootAction": "REFUSE",
+  "reuseAllowed": false,
+  "legacyFallbackAllowed": false,
+  "legalState": "SDK-2 CLEAR IF; Owner wording selected; equivalent protection and agreement method await final determination; G3 not authorized",
+  "provenance": "Unsigned local record of explicit Owner instruction, not signed provenance, license grant or publication approval"
+}

@@ -4,7 +4,7 @@
 
 対象はWindows x64 Portable、Release /MD、EXE 1本とapp-local DLL 17本、未署名、インストーラなしです。Microsoft VC++ Runtime x64は[Microsoft公式案内](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist)から利用者が外部導入し、製品ZIPへRuntime DLL・installer・OS標準DLLを同梱しません。
 製品build source revisionは`93545d458da33cef397fb77458336ea06339dcb6`です。[Portable README](../packaging/binary/README-portable-s1-release-v2.md)、[Binary NOTICE](../packaging/binary/THIRD-PARTY-NOTICES-S1-BINARY-RELEASE-v2.md)、[Release Notes案](RELEASE-NOTES-0.1.0.md)を参照してください。これらの文書とPackaging commitは製品の再ビルドを意味しません。
-固定skcmsを含むbinary配布では[licenses/skcms/LICENSE](../licenses/skcms/LICENSE)のcopyright・3条件・免責全文を配布物の付随資料に同梱し、Binary NOTICEから対応付けます。build treeの`LICENSE.skcms`だけでは配布同梱の証拠になりません。[確認範囲](SKCMS-LICENSE-REVIEW.md)を超える利用とMS-002等は別の残件です。
+今回の製品targetにはmanaged skcms objectを含まずlibjxl側もSKCMS=OFFですが、保守的な権利情報coverageとして[licenses/skcms/LICENSE](../licenses/skcms/LICENSE)のcopyright・3条件・免責全文を同梱し、Binary NOTICEから対応付けます。build treeの`LICENSE.skcms`だけでは配布同梱の証拠になりません。[確認範囲](SKCMS-LICENSE-REVIEW.md)を超える利用とMS-002等は別の残件です。
 
 製品実装ではEXE隣の既存settings.confを優先し、有効な[Portable marker見本](../packaging/clipss2.portable)を扱います。
 markerの内容はASCII clipss2-portable-v1と末尾LF。見本は実設定ではありません。
