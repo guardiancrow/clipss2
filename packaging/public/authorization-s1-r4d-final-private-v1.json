@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "authorizationId": "clipss2-s1-r4d-final-private-v1",
+  "approvalScope": "R4-D-PRIVATE-FINAL-CANDIDATE-ONLY",
+  "ownerInstruction": "clipss2 — R4-D 正式Release候補の最終化",
+  "candidateGenerationAuthorized": true,
+  "binaryReleaseApproved": false,
+  "publicDistributionAllowed": false,
+  "thirdPartyTransferAllowed": false,
+  "githubReleaseAllowed": false,
+  "signingAllowed": false,
+  "legalApprovalGranted": false,
+  "productSourceRevision": "93545d458da33cef397fb77458336ea06339dcb6",
+  "packagingHead": "2009cfec9ae43c5af79579536301de1af7650030",
+  "branch": "release/shipping-s1-v2",
+  "releaseProfile": {
+    "path": "packaging/public/profile-s1-binary-release-v2.json",
+    "size": 29265,
+    "sha256": "E5F7422666C39D3F7A67D37445A0DCCD5B65A55C4943E2F3C8C6830AC89AAC10"
+  },
+  "legacyImplementation": {
+    "path": "packaging/S1BinaryReleasePackage.psm1",
+    "size": 13969,
+    "sha256": "FA76B8A278891990018D61138E2ED9B55A54828A14F9678F8383962952D06B86"
+  },
+  "legacyCLI": {
+    "path": "tools/package_s1_binary_release.ps1",
+    "size": 2109,
+    "sha256": "8D3A670238D2E382F06E5DD39236D5C75D4157D0B278B468F6652C8DBAD463C1"
+  },
+  "outputPrefixes": [
+    "build/r4-d-final-private-",
+    "build/r4-d-final-tests-"
+  ],
+  "existingRootAction": "REFUSE",
+  "reuseAllowed": false,
+  "legacyFallbackAllowed": false,
+  "legalState": "MS-002-L NEEDS CLARIFICATION; SDK CONDITIONAL; downstream fulfillment not demonstrated",
+  "provenance": "Unsigned local record of explicit Owner instruction, not signed provenance, license grant or publication approval"
+}

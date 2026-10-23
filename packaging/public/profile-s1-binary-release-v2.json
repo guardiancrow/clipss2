@@ -1,0 +1,930 @@
+{
+  "schemaVersion": 3,
+  "profileId": "clipss2-s1-binary-release-v2",
+  "status": "FINAL_DOCUMENTS_PRIVATE_CANDIDATE_ONLY",
+  "sourceRevision": "93545d458da33cef397fb77458336ea06339dcb6",
+  "branch": "release/shipping-s1-v2",
+  "preset": "windows-x64-shipping-v2",
+  "sourceScopeId": "clipss2-source-s1-v1",
+  "binaryReleaseApproved": false,
+  "publicDistributionAllowed": false,
+  "sourceApprovalInherited": false,
+  "openRights": [
+    "MS-002-L",
+    "Microsoft-downstream-conditions",
+    "final-binary-owner-approval"
+  ],
+  "sourceInputs": {
+    "path": "cmake/privacy/source-inputs-s1-v1.json",
+    "size": 9645,
+    "sha256": "80BD9B28EF236F29E31BC12B1D6C16120C9F7E60AC0ACF4F861691C6DF5C64AB"
+  },
+  "sourceNoticeBindings": [
+    {
+      "path": "packaging/public/profiles-s1-source-release-v2.json",
+      "size": 55248,
+      "sha256": "F0DD256170A8AC302046493A5F5D529D09A12C5EF24F749D1261091E193D75B5"
+    },
+    {
+      "path": "packaging/public/notice-anchor-s1-source-release-v2.json",
+      "size": 57141,
+      "sha256": "AC04754FE84003F0C35FD0951AB3515099C6AB8D9CA24E25FF84DBF0F8E69011"
+    },
+    {
+      "path": "packaging/public/source-notices-s1-source-release-v2.json",
+      "size": 249,
+      "sha256": "170A9DB867C96B865EDC7022BDE0548284CCE35F685F60D3A318D02C838C2B3C"
+    },
+    {
+      "path": "packaging/public/profiles-s1-source-development-v3.json",
+      "size": 55727,
+      "sha256": "69A55FC63D5A11F9C7776547D8F197A3A3C41A6524A357194FD6AE952D4714C3"
+    },
+    {
+      "path": "packaging/public/notice-anchor-s1-source-development-v3.json",
+      "size": 58008,
+      "sha256": "678F676FE53BD0634818F2951E80149F7BA8DE35E0C2DFDAFB25D22D27DE2143"
+    },
+    {
+      "path": "packaging/public/source-notices-s1-source-development-v3.json",
+      "size": 258,
+      "sha256": "558D5159D788D3376A12451E45AF5C8024193C6A0C8AFD542E9F3C5702826FA0"
+    }
+  ],
+  "r2Bindings": [
+    {
+      "path": "identity.json",
+      "size": 3645,
+      "sha256": "8A79E8BB5B45308CB66841BCE7E0976ABC272FCC86CFB2E30EF5090122701049"
+    },
+    {
+      "path": "result.json",
+      "size": 1565,
+      "sha256": "6263590A05E571CDA50E93B88BE4F511159B954DB9D53AEB5D08B6059D1B5032"
+    },
+    {
+      "path": "static/pe-analysis.json",
+      "size": 482349,
+      "sha256": "DAB879593E708C66209ABC42F854A3CB767A38ABD061E7EE150747994F025AE0"
+    },
+    {
+      "path": "static/system-resolution.json",
+      "size": 20382,
+      "sha256": "1D130C5F244DE130ECB77F21CA20DF664504F66A2413833E52CA47F73C8F6A0A"
+    },
+    {
+      "path": "static/privacy-reviewed.json",
+      "size": 21349,
+      "sha256": "2BCD6D93628909E37762F764AAE00A72CCCCEFD09A6B6DCA2A4B73715B2F68F8"
+    },
+    {
+      "path": "regression/results.json",
+      "size": 4737,
+      "sha256": "D752F3EC8A349F892F9A045D49466107A36573DA9BFC18A1BE8E54131FDD0F77"
+    },
+    {
+      "path": "runtime-smoke.json",
+      "size": 1234,
+      "sha256": "E0449146B568731FA232265D8BB5088FCBD882162B08E60C6AA12C6F5EF377C7"
+    },
+    {
+      "path": "runtime-png-validation.json",
+      "size": 430,
+      "sha256": "C5B25FBE2E2D9C20741F0A4519DDDB50E34F8505F19892FAF916F8B3D4A7A89E"
+    }
+  ],
+  "runtime": {
+    "CRT": "Release /MD",
+    "bundledRuntime": false,
+    "external": [
+      "msvcp140.dll",
+      "msvcp140_atomic_wait.dll",
+      "vcruntime140.dll",
+      "vcruntime140_1.dll"
+    ],
+    "testedVersion": "14.51.36247.0"
+  },
+  "stlLicenseOrigin": {
+    "uri": "https://raw.githubusercontent.com/microsoft/STL/1f6e5b16ec02216665624c1e762f3732605cf2b4/LICENSE.txt",
+    "revision": "1f6e5b16ec02216665624c1e762f3732605cf2b4",
+    "upstreamSize": 12550,
+    "upstreamSha256": "1FC6B6DB121D4555D8F661937D7F6013693CD8FD67495D5E5D98C1D18FB83EDA",
+    "normalization": "CRLF-to-LF only; text unchanged; CRLF reconstruction must match upstream bytes"
+  },
+  "components": [
+    {
+      "id": "clipss2",
+      "sourceComponentId": "clipss2",
+      "name": "clipss2",
+      "version": "93545d458da33cef397fb77458336ea06339dcb6",
+      "kind": "product",
+      "PE": [
+        "clipss2.exe"
+      ],
+      "licenseExpression": "MIT",
+      "selectedLicense": "MIT",
+      "licensePaths": [
+        "LICENSE"
+      ],
+      "exceptions": [],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "aom",
+      "sourceComponentId": "aom",
+      "name": "aom",
+      "version": "3.15.0",
+      "kind": "dynamic",
+      "PE": [
+        "aom.dll"
+      ],
+      "licenseExpression": "LicenseRef-aom-aggregate",
+      "selectedLicense": "LicenseRef-aom-aggregate",
+      "licensePaths": [
+        "licenses/aom/copyright"
+      ],
+      "exceptions": [],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "brotli",
+      "sourceComponentId": "brotli",
+      "name": "brotli",
+      "version": "1.2.0",
+      "kind": "dynamic",
+      "PE": [
+        "brotlicommon.dll",
+        "brotlidec.dll",
+        "brotlienc.dll"
+      ],
+      "licenseExpression": "MIT",
+      "selectedLicense": "MIT",
+      "licensePaths": [
+        "licenses/brotli/copyright"
+      ],
+      "exceptions": [],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "cppwinrt",
+      "sourceComponentId": "cppwinrt",
+      "name": "C++/WinRT",
+      "version": "2.0.250303.1",
+      "kind": "embedded-header",
+      "PE": [
+        "clipss2.exe"
+      ],
+      "licenseExpression": "MIT",
+      "selectedLicense": "MIT",
+      "licensePaths": [
+        "licenses/cppwinrt/LICENSE.txt"
+      ],
+      "exceptions": [],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "jpegli",
+      "sourceComponentId": "jpegli",
+      "name": "managed jpegli",
+      "version": "031a0077f5799a6041004267fc12b956c1f52a20",
+      "kind": "embedded-static",
+      "PE": [
+        "clipss2.exe"
+      ],
+      "licenseExpression": "BSD-3-Clause",
+      "selectedLicense": "BSD-3-Clause",
+      "licensePaths": [
+        "licenses/jpegli/LICENSE",
+        "licenses/jpegli/PATENTS"
+      ],
+      "exceptions": [],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "jpegli-headers",
+      "sourceComponentId": "jpegli-headers",
+      "name": "managed libjpeg headers",
+      "version": "8ecba3647edb6dd940463fedf38ca33a8e2a73d1",
+      "kind": "embedded-header",
+      "PE": [
+        "clipss2.exe"
+      ],
+      "licenseExpression": "LicenseRef-libjpeg-headers-aggregate",
+      "selectedLicense": "LicenseRef-libjpeg-headers-aggregate",
+      "licensePaths": [
+        "licenses/jpegli-headers/LICENSE.md",
+        "licenses/jpegli-headers/README.ijg"
+      ],
+      "exceptions": [],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "lcms",
+      "sourceComponentId": "lcms",
+      "name": "lcms",
+      "version": "2.19.1#1",
+      "kind": "dynamic",
+      "PE": [
+        "lcms2-2.dll"
+      ],
+      "licenseExpression": "MIT",
+      "selectedLicense": "MIT",
+      "licensePaths": [
+        "licenses/lcms/copyright"
+      ],
+      "exceptions": [],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "libavif",
+      "sourceComponentId": "libavif",
+      "name": "libavif",
+      "version": "1.4.2#1",
+      "kind": "dynamic",
+      "PE": [
+        "avif.dll"
+      ],
+      "licenseExpression": "LicenseRef-libavif-aggregate",
+      "selectedLicense": "LicenseRef-libavif-aggregate",
+      "licensePaths": [
+        "licenses/libavif/copyright"
+      ],
+      "exceptions": [],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "libjpeg-turbo",
+      "sourceComponentId": "libjpeg-turbo",
+      "name": "libjpeg-turbo",
+      "version": "3.2.0",
+      "kind": "dynamic",
+      "PE": [
+        "jpeg62.dll",
+        "turbojpeg.dll"
+      ],
+      "licenseExpression": "LicenseRef-libjpeg-turbo-aggregate",
+      "selectedLicense": "LicenseRef-libjpeg-turbo-aggregate",
+      "licensePaths": [
+        "licenses/libjpeg-turbo/copyright",
+        "licenses/libjpeg-turbo/README.ijg"
+      ],
+      "exceptions": [],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "libjxl-root",
+      "sourceComponentId": "libjxl-root",
+      "name": "libjxl",
+      "version": "0.12.0",
+      "kind": "dynamic",
+      "PE": [
+        "jxl.dll",
+        "jxl_cms.dll",
+        "jxl_threads.dll"
+      ],
+      "licenseExpression": "BSD-3-Clause",
+      "selectedLicense": "BSD-3-Clause",
+      "licensePaths": [
+        "licenses/libjxl/copyright",
+        "licenses/libjxl/PATENTS"
+      ],
+      "exceptions": [],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "libpng",
+      "sourceComponentId": "libpng",
+      "name": "libpng",
+      "version": "1.6.58",
+      "kind": "dynamic",
+      "PE": [
+        "libpng16.dll"
+      ],
+      "licenseExpression": "libpng-2.0",
+      "selectedLicense": "libpng-2.0",
+      "licensePaths": [
+        "licenses/libpng/copyright"
+      ],
+      "exceptions": [],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "libwebp",
+      "sourceComponentId": "libwebp",
+      "name": "libwebp",
+      "version": "1.6.0#3",
+      "kind": "dynamic",
+      "PE": [
+        "libwebp.dll",
+        "libsharpyuv.dll"
+      ],
+      "licenseExpression": "BSD-3-Clause",
+      "selectedLicense": "BSD-3-Clause",
+      "licensePaths": [
+        "licenses/libwebp/copyright"
+      ],
+      "exceptions": [],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "libyuv",
+      "sourceComponentId": "libyuv",
+      "name": "libyuv",
+      "version": "1916",
+      "kind": "dynamic",
+      "PE": [
+        "libyuv.dll"
+      ],
+      "licenseExpression": "BSD-3-Clause",
+      "selectedLicense": "BSD-3-Clause",
+      "licensePaths": [
+        "licenses/libyuv/copyright",
+        "licenses/libyuv/PATENTS"
+      ],
+      "exceptions": [],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "zlib",
+      "sourceComponentId": "zlib",
+      "name": "zlib",
+      "version": "1.3.2#2",
+      "kind": "dynamic",
+      "PE": [
+        "z.dll"
+      ],
+      "licenseExpression": "Zlib",
+      "selectedLicense": "Zlib",
+      "licensePaths": [
+        "licenses/zlib/copyright"
+      ],
+      "exceptions": [],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "highway-v2-reference",
+      "sourceComponentId": "highway-v2-reference",
+      "name": "highway-v2-reference",
+      "version": "1.4.0",
+      "kind": "dynamic",
+      "PE": [
+        "hwy.dll"
+      ],
+      "licenseExpression": "Apache-2.0 OR BSD-3-Clause",
+      "selectedLicense": "Apache-2.0",
+      "licensePaths": [
+        "licenses/highway-vcpkg/copyright",
+        "licenses/apache-2.0/LICENSE.txt"
+      ],
+      "exceptions": [
+        "CC0-1.0: hwy/contrib/random/random-inl.h; dual license original retained"
+      ],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "highway-managed-v2-reference",
+      "sourceComponentId": "highway-managed-v2-reference",
+      "name": "highway-managed-v2-reference",
+      "version": "1.3.0 / 271a9a0ed9de1232d9117f1572c3fe28f8542ec1",
+      "kind": "embedded-static",
+      "PE": [
+        "clipss2.exe"
+      ],
+      "licenseExpression": "Apache-2.0 OR BSD-3-Clause",
+      "selectedLicense": "Apache-2.0",
+      "licensePaths": [
+        "licenses/highway-managed/LICENSE",
+        "licenses/apache-2.0/LICENSE.txt"
+      ],
+      "exceptions": [
+        "CC0-1.0: hwy/contrib/random/random-inl.h; dual license original retained"
+      ],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "skcms-reference",
+      "sourceComponentId": "skcms-reference",
+      "name": "managed skcms",
+      "version": "96d9171c94b937a1b5f0293de7309ac16311b722",
+      "kind": "coverage-only",
+      "PE": [],
+      "licenseExpression": "BSD-3-Clause",
+      "selectedLicense": "BSD-3-Clause",
+      "licensePaths": [
+        "licenses/skcms/LICENSE"
+      ],
+      "exceptions": [],
+      "rights": "existing-terms-retained-not-binary-approval"
+    },
+    {
+      "id": "msvc-stl-header-coverage",
+      "sourceComponentId": null,
+      "name": "Microsoft STL headers",
+      "version": "14.44.35207 header labels; upstream vs-2022-17.14 license reference",
+      "kind": "conservative-header-coverage",
+      "PE": [
+        "aom.dll",
+        "avif.dll",
+        "brotlicommon.dll",
+        "brotlidec.dll",
+        "brotlienc.dll",
+        "clipss2.exe",
+        "hwy.dll",
+        "jpeg62.dll",
+        "jxl_cms.dll",
+        "jxl_threads.dll",
+        "jxl.dll",
+        "lcms2-2.dll",
+        "libpng16.dll",
+        "libsharpyuv.dll",
+        "libwebp.dll",
+        "libyuv.dll",
+        "turbojpeg.dll",
+        "z.dll"
+      ],
+      "licenseExpression": "Apache-2.0 WITH LLVM-exception",
+      "selectedLicense": "Apache-2.0 WITH LLVM-exception",
+      "licensePaths": [
+        "licenses/msvc-stl/LICENSE.txt"
+      ],
+      "exceptions": [
+        "Not an exact full installed-header/source correspondence proof; does not cover CRT startup/SDK"
+      ],
+      "rights": "limited-header-license-reference"
+    },
+    {
+      "id": "msvc-sdk-embedded-pending",
+      "sourceComponentId": "microsoft-build-runtime-reference",
+      "name": "Microsoft CRT startup / SDK / external VC++ Runtime",
+      "version": "MSVC 14.44.35207; compiler 19.44.35229.0; SDK 10.0.26100.0",
+      "kind": "embedded-and-external-pending",
+      "PE": [
+        "aom.dll",
+        "avif.dll",
+        "brotlicommon.dll",
+        "brotlidec.dll",
+        "brotlienc.dll",
+        "clipss2.exe",
+        "hwy.dll",
+        "jpeg62.dll",
+        "jxl_cms.dll",
+        "jxl_threads.dll",
+        "jxl.dll",
+        "lcms2-2.dll",
+        "libpng16.dll",
+        "libsharpyuv.dll",
+        "libwebp.dll",
+        "libyuv.dll",
+        "turbojpeg.dll",
+        "z.dll"
+      ],
+      "licenseExpression": "LicenseRef-Microsoft-pending",
+      "selectedLicense": null,
+      "licensePaths": [],
+      "exceptions": [],
+      "rights": "MS-002-UNRESOLVED"
+    }
+  ],
+  "files": [
+    {
+      "path": "LICENSE",
+      "size": 1069,
+      "sha256": "9DEC821FCE9F4AF492B61770A1009CF66876C53A6B878DC04ED1E7DD9456AB52",
+      "source": "LICENSE",
+      "kind": "product-license"
+    },
+    {
+      "path": "README.md",
+      "size": 3961,
+      "sha256": "1076D7785B5C1C89531D5F8BB51A24ADEB367358851007F3EF4E4F055F733A2B",
+      "source": "packaging/binary/README-portable-s1-release-v2.md",
+      "kind": "documentation"
+    },
+    {
+      "path": "THIRD-PARTY-NOTICES.md",
+      "size": 5152,
+      "sha256": "F3C6AE3DE199ACC810213421928B6F251AC4FBF8BD4007F159E0816F7645A334",
+      "source": "packaging/binary/THIRD-PARTY-NOTICES-S1-BINARY-RELEASE-v2.md",
+      "kind": "notice"
+    },
+    {
+      "path": "aom.dll",
+      "source": "build/windows-x64-s1-v2/aom.dll",
+      "kind": "PE",
+      "size": 10183168,
+      "sha256": "576607D2AF859D8E033913B8A665920B78B742E2C1D4626BC7F950AFE48A67D9"
+    },
+    {
+      "path": "avif.dll",
+      "source": "build/windows-x64-s1-v2/avif.dll",
+      "kind": "PE",
+      "size": 220672,
+      "sha256": "D3849B654D81EADC8A067EBA7D7490E8A9C1CF14FD62B92B9051F8C97127886A"
+    },
+    {
+      "path": "brotlicommon.dll",
+      "source": "build/windows-x64-s1-v2/brotlicommon.dll",
+      "kind": "PE",
+      "size": 137728,
+      "sha256": "BCEA0EFD4A0700E7B9F334E4B0DEE9B3917CB2ACE710DC452BEE56132814A55E"
+    },
+    {
+      "path": "brotlidec.dll",
+      "source": "build/windows-x64-s1-v2/brotlidec.dll",
+      "kind": "PE",
+      "size": 52224,
+      "sha256": "B7F4E2C038CE66224874658DBEF54400478A7BE1EFDF73D7A32375F5CCD9BBDC"
+    },
+    {
+      "path": "brotlienc.dll",
+      "source": "build/windows-x64-s1-v2/brotlienc.dll",
+      "kind": "PE",
+      "size": 678912,
+      "sha256": "8E257EC2D7C3137C4979ED892B1806F96A2448449172D2994B5CD14A8E4BC7B3"
+    },
+    {
+      "path": "clipss2.exe",
+      "source": "build/windows-x64-s1-v2/clipss2.exe",
+      "kind": "PE",
+      "size": 802816,
+      "sha256": "0EBDB18FAE13D02486DD5C18F85132BE58F803369DED125EAEB26F62A8F7D9F1"
+    },
+    {
+      "path": "clipss2.portable",
+      "size": 20,
+      "sha256": "DEFFE74D089379C55278091601473AE215B6DF6D321036313A41B122EE80E5C5",
+      "source": "packaging/clipss2.portable",
+      "kind": "marker"
+    },
+    {
+      "path": "hwy.dll",
+      "source": "build/windows-x64-s1-v2/hwy.dll",
+      "kind": "PE",
+      "size": 58880,
+      "sha256": "8479650348087B25DE2718ADF9E13FD1CA8C13501EB3D5CD6F0020BAF6FC4304"
+    },
+    {
+      "path": "jpeg62.dll",
+      "source": "build/windows-x64-s1-v2/jpeg62.dll",
+      "kind": "PE",
+      "size": 694272,
+      "sha256": "42C49C5E3AC566FD1E893A679512E40A9823609E6B4D66E041F9517B1C068545"
+    },
+    {
+      "path": "jxl.dll",
+      "source": "build/windows-x64-s1-v2/jxl.dll",
+      "kind": "PE",
+      "size": 3079168,
+      "sha256": "035C3A52BC87CEC581E85D7B73B1EC54D3AB314081F9C0C3DE0C4ECA30FCC2C9"
+    },
+    {
+      "path": "jxl_cms.dll",
+      "source": "build/windows-x64-s1-v2/jxl_cms.dll",
+      "kind": "PE",
+      "size": 118272,
+      "sha256": "C525211ED7974ABCA746CD698170D4CF55FEDFF63B7963214CB4DE6E3565F51D"
+    },
+    {
+      "path": "jxl_threads.dll",
+      "source": "build/windows-x64-s1-v2/jxl_threads.dll",
+      "kind": "PE",
+      "size": 25088,
+      "sha256": "E7B4FB547E60C915DDDA95FDE5EFE3C469EEEEE033AD7F0731FDC47F4712EF5B"
+    },
+    {
+      "path": "lcms2-2.dll",
+      "source": "build/windows-x64-s1-v2/lcms2-2.dll",
+      "kind": "PE",
+      "size": 377344,
+      "sha256": "8493E839BFE0DC43D800635CCB80D0586093AABE8860E823E6CC49287D1E8BEA"
+    },
+    {
+      "path": "libpng16.dll",
+      "source": "build/windows-x64-s1-v2/libpng16.dll",
+      "kind": "PE",
+      "size": 198656,
+      "sha256": "03BAD49F96881699228143168E02FA7A1408067F97284531B8447FC3DBAD76F1"
+    },
+    {
+      "path": "libsharpyuv.dll",
+      "source": "build/windows-x64-s1-v2/libsharpyuv.dll",
+      "kind": "PE",
+      "size": 25600,
+      "sha256": "83FAD4625928A8DC0DF767B6A8A0A31A0904E4216C36C23E56B81DF6BA9A3D2F"
+    },
+    {
+      "path": "libwebp.dll",
+      "source": "build/windows-x64-s1-v2/libwebp.dll",
+      "kind": "PE",
+      "size": 372224,
+      "sha256": "7FB8668AA7B1C32C21082AF003AD78C3FED3F687CEB241EC8CB566F55FC3F3BD"
+    },
+    {
+      "path": "libyuv.dll",
+      "source": "build/windows-x64-s1-v2/libyuv.dll",
+      "kind": "PE",
+      "size": 325120,
+      "sha256": "E3B1DE7158F3479B3FE1E5F04E162A09FE24A947B6EE0F6604CB26C926A1EB80"
+    },
+    {
+      "path": "licenses/aom/copyright",
+      "size": 10823,
+      "sha256": "797958A3C220F1FD96AB1BE1ECF61F57615593D74B0B170941AE1A309AE554A0",
+      "source": "licenses/aom/copyright",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/apache-2.0/LICENSE.txt",
+      "size": 11358,
+      "sha256": "CFC7749B96F63BD31C3C42B5C471BF756814053E847C10F3EB003417BC523D30",
+      "source": "licenses/apache-2.0/LICENSE.txt",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/brotli/copyright",
+      "size": 1084,
+      "sha256": "3D180008E36922A4E8DAEC11C34C7AF264FED5962D07924AEA928C38E8663C94",
+      "source": "licenses/brotli/copyright",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/cppwinrt/LICENSE.txt",
+      "size": 1159,
+      "sha256": "F60485948865406BBC0998B4062B1280887D3083304D69BA1DBD5FCC8C24F59C",
+      "source": "licenses/cppwinrt/LICENSE.txt",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/highway-managed/LICENSE",
+      "size": 21155,
+      "sha256": "D208152E2777FFD0126EACC1BD21C0320D69E4E6B622D21A2A12A47E8EF73763",
+      "source": "licenses/highway-managed/LICENSE",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/highway-vcpkg/copyright",
+      "size": 20785,
+      "sha256": "E340270D4F64384569A91D546ACB5B094D69CE47F0C015DB77ABB74DC6F815AF",
+      "source": "licenses/highway-vcpkg/copyright",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/jpegli-headers/LICENSE.md",
+      "size": 5345,
+      "sha256": "4A39A8FDAD00D0F0D0555D35B393DC982BA8153D3AA98E2C3B8AF739A5926227",
+      "source": "licenses/jpegli-headers/LICENSE.md",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/jpegli-headers/README.ijg",
+      "size": 12990,
+      "sha256": "0517B9B6EA15193CC91ADA5E3C4FE168C1D57BFB9DD62F58D307F8A5A8B805CD",
+      "source": "licenses/jpegli-headers/README.ijg",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/jpegli/LICENSE",
+      "size": 1535,
+      "sha256": "2C783D8D5D952BD0726292E56AD1F3F247F370667809497A8020B8C2915BA470",
+      "source": "licenses/jpegli/LICENSE",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/jpegli/PATENTS",
+      "size": 1355,
+      "sha256": "B85F464F29D8CA92D63AAD39B91C166B38F18B7214344BB805D7CCD60AC705BB",
+      "source": "licenses/jpegli/PATENTS",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/lcms/copyright",
+      "size": 1080,
+      "sha256": "6DBD60437F8EF91D8DE1F08AD75882547FD4931BFCC3566A0735F28DB1484D31",
+      "source": "licenses/lcms/copyright",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/libavif/copyright",
+      "size": 20415,
+      "sha256": "165ABF92CC04B39E80D29CADEA7A6A7E8FDDF59407D4AD2616507A7EBE8216F9",
+      "source": "licenses/libavif/copyright",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/libjpeg-turbo/README.ijg",
+      "size": 12799,
+      "sha256": "75815E3BF6484201A3C3D17A1BBF10F2E8E3237F84DF10A2357EA896DB2A81D6",
+      "source": "licenses/libjpeg-turbo/README.ijg",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/libjpeg-turbo/copyright",
+      "size": 6077,
+      "sha256": "BA6BCEEBCBA0FDD35488477C2CCA8C4632CE82C74DBFBC87D886CE6FC4433579",
+      "source": "licenses/libjpeg-turbo/copyright",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/libjxl/PATENTS",
+      "size": 1333,
+      "sha256": "91915F8AE056A68A3C5BDF05D9F6F78BB6903E27A8CA3A8434C9E4AC87300575",
+      "source": "licenses/libjxl/PATENTS",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/libjxl/copyright",
+      "size": 1508,
+      "sha256": "8405932022A556380C2D8C272EFF154A923FEB197233F348CE5F7334FB0A5EDE",
+      "source": "licenses/libjxl/copyright",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/libpng/copyright",
+      "size": 5345,
+      "sha256": "BDB0A645EA18C60507D0368379B1AC5474B92255FCC2D115E07486A7672BA526",
+      "source": "licenses/libpng/copyright",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/libwebp/copyright",
+      "size": 3017,
+      "sha256": "050B5BA2C8EB0BD3B996E12EF79312A1C62237F2DE1B3C609843F00BB74744F3",
+      "source": "licenses/libwebp/copyright",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/libyuv/PATENTS",
+      "size": 1387,
+      "sha256": "4DA84211F947C6F9F7DD8FBCE513E1522E01833407AE732B8C9A2BBB75FED495",
+      "source": "licenses/libyuv/PATENTS",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/libyuv/copyright",
+      "size": 1506,
+      "sha256": "2B2CC1180C7E6988328AD2033B04B80117419DB9C4C584918BBB3CFEC7E9364F",
+      "source": "licenses/libyuv/copyright",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/msvc-stl/LICENSE.txt",
+      "size": 12331,
+      "sha256": "7C68A47568BD633F7A71EE5E2038660A2CC62CE8A5405999E2B69FAB3F37469C",
+      "source": "packaging/binary/msvc-stl-LICENSE.txt",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/skcms/LICENSE",
+      "size": 1635,
+      "sha256": "E59BB5C5C6BA426A9AC4BA9FE667AD14C5166B12AA25BE8AF1D122B14FBE2E36",
+      "source": "licenses/skcms/LICENSE",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "licenses/zlib/copyright",
+      "size": 1002,
+      "sha256": "E32FF4E00D9D94930537635291DA39E7E612703334BF6FDE8C7F1686FE8A45A2",
+      "source": "licenses/zlib/copyright",
+      "kind": "license-or-patent"
+    },
+    {
+      "path": "turbojpeg.dll",
+      "source": "build/windows-x64-s1-v2/turbojpeg.dll",
+      "kind": "PE",
+      "size": 986624,
+      "sha256": "5E0793534B3F392D0C69FE9DF0FF5B1ECC9B6EF796896B61755D0A463CB6F2A2"
+    },
+    {
+      "path": "z.dll",
+      "source": "build/windows-x64-s1-v2/z.dll",
+      "kind": "PE",
+      "size": 91136,
+      "sha256": "4F20F0C839B543D4EC2DED41AB6F5008EB482C5B60BD1E75DFE512B7F8D1F057"
+    }
+  ],
+  "PECount": 18,
+  "licenseCount": 23,
+  "zipName": "clipss2-0.1.0-windows-x64-portable.zip",
+  "zipEntryDate": "2026-10-23T09:00:00+09:00",
+  "profileScope": "R4-D-PRIVATE-FINAL-CANDIDATE",
+  "packagingBaseRevision": "2009cfec9ae43c5af79579536301de1af7650030",
+  "privateApprovalInherited": false,
+  "parentProfile": {
+    "path": "packaging/public/profile-s1-binary-release-v1.json",
+    "size": 29156,
+    "sha256": "CD7F936F638FA634C8E335E93DB7D3566661B7F6E72C842206B620F9ECE4D29B"
+  },
+  "distributionPolicy": {
+    "ownerApproved": true,
+    "approvalSource": "Owner R4-A instruction",
+    "approvalScope": "DISTRIBUTION_METHOD_ONLY",
+    "format": "Windows-native-portable-ZIP",
+    "channel": "GitHub-Releases",
+    "firstPartyLicense": "MIT",
+    "thirdPartyNotices": "Separate-NOTICE-and-original-LICENSE-PATENTS",
+    "preserveAcceptedPE": 18,
+    "CRT": "Release /MD",
+    "runtimeArchitecture": "x64",
+    "runtimeDelivery": "External-Microsoft-VC++-Runtime",
+    "bundleRuntime": false,
+    "autoInstallRuntime": false,
+    "installer": false,
+    "standaloneEULAPlanned": false,
+    "clickConsentPlanned": false,
+    "additionalTermsOnlyIfNeedEstablished": true,
+    "initialSigningPlan": "UNSIGNED_FINAL_CANDIDATE",
+    "finalSigningDecision": true,
+    "publishZipSHA256": true,
+    "downloadImpliesConsent": false,
+    "signatureStatus": "UNSIGNED",
+    "publicationApproved": false
+  },
+  "microsoftStatus": {
+    "skillVersion": "1.1.0",
+    "migrationReevaluation": "Previously completed once; inherited",
+    "MS001": "CONDITIONAL-NONBUNDLING",
+    "MS003": "PRIOR-OWNER-DECLARATION-AND-TERMS-DECISION-RETAINED",
+    "MS002T": "VERIFIED-STANDARD-CRT-STARTUP",
+    "MS002L": "NEEDS CLARIFICATION",
+    "MS002SDK": "CONDITIONAL-TARGET-PATHS-IDENTIFIED",
+    "downstreamConditions": "NEEDS CLARIFICATION",
+    "residualRisk": "OWNER-DECISION-PENDING-NOT-A-LICENSE-GRANT",
+    "microsoftInquiryMandatory": false,
+    "technicalPassGrantsRights": false,
+    "ownerRiskAcceptanceWaivesConditions": false,
+    "redistributionGrantVerified": false,
+    "downstreamFulfillmentVerified": false,
+    "ownerResidualRiskAccepted": false
+  },
+  "r3Bindings": [
+    {
+      "path": "result.json",
+      "size": 2180,
+      "sha256": "8C1A3DEDB21D0EC960EEEA3A3136DF0D167B4109829489CBE1DCD72D2886A6E0"
+    },
+    {
+      "path": "candidate/acceptance.json",
+      "size": 7789,
+      "sha256": "6F36B51375CA8D1699EC84966800E0F511E63EE4F714314ED8D22D8B28263803"
+    },
+    {
+      "path": "candidate/clipss2-s1-v2-93545d4-private-candidate.zip",
+      "size": 7964542,
+      "sha256": "6F7029885A9FFD9E84AE8BA9AEFB14B8BCCF3165AC7D07E456C72715944E763D"
+    }
+  ],
+  "r3InventorySha256": "9A2D8C6908BE180C0604B5215CAAA23661A17CFB86EF81E96D5358754C28DAD9",
+  "otherPC": {
+    "status": "USER_REPORTED_PASS",
+    "reportSource": "Owner R4-A instruction",
+    "artifact": "R3-private-candidate",
+    "zipSha256": "6F7029885A9FFD9E84AE8BA9AEFB14B8BCCF3165AC7D07E456C72715944E763D",
+    "successfulScope": [
+      "ZIP-extraction",
+      "EXE-launch",
+      "capture",
+      "save"
+    ],
+    "independentlyVerified": false,
+    "OSVersion": null,
+    "runtimeVersion": null,
+    "captureMode": null,
+    "saveFormat": null,
+    "onDeviceHashesVerified": false,
+    "exhaustiveFeatureAcceptance": false
+  },
+  "decisionRecord": {
+    "path": "docs/R4-D-RELEASE-DECISION.md",
+    "size": 10105,
+    "sha256": "FA5785617DE650D1FE509CD3EE7363D19325AEE1F032C81C86382C12FB3FC65C"
+  },
+  "candidateAuthorizationRecord": "packaging/public/authorization-s1-r4d-final-private-v1.json",
+  "thirdPartyTransferAllowed": false,
+  "legalApprovalGranted": false,
+  "releaseProposal": {
+    "version": "0.1.0",
+    "tag": "v0.1.0",
+    "status": "PROPOSED_OWNER_ADOPTION_PENDING",
+    "ownerAdopted": false,
+    "tagCreated": false,
+    "remoteCollisionChecked": false,
+    "tagTarget": "Final reviewed Packaging commit to be determined; not the product rebuild revision"
+  },
+  "r4bBindings": [
+    {
+      "path": "result.json",
+      "size": 2285,
+      "sha256": "0A9AAE9CF2BAE9A9500313F9D80770201B192B58173C40907C92FA72FAEB5ABA"
+    },
+    {
+      "path": "candidate/acceptance.json",
+      "size": 8769,
+      "sha256": "60BB43861C7DAFF3A6ADAB8150AF4D3B2A02D8C6BE0F6E6D575082D67AAFE167"
+    },
+    {
+      "path": "candidate/clipss2-s1-v2-93545d4-release-candidate.zip",
+      "size": 7965309,
+      "sha256": "1C084936A34BD1C82F3BFB1A0FDEDFAAA7C2B75CCBCDADC997A73E0A97302C50"
+    }
+  ]
+}
