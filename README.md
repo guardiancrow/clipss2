@@ -1,3 +1,5 @@
+[日本語](README.md) | [English](README.en.md)
+
 # clipss2 — v0.1.0
 
 Windows向けのスクリーンキャプチャツールです。Windows x64 Portable版の **[v0.1.0をGitHub Releasesで公開しています](https://github.com/guardiancrow/clipss2/releases/tag/v0.1.0)**。
