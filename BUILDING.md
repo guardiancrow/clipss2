@@ -1,5 +1,8 @@
 # S1 構築入口と検証ガイド
 
+v0.1.1公開候補の新しい構築経路は[SEC-BR2](docs/SEC-BR2-BUILD.md)を参照してください。
+SEC-BR1が固定した旧versionの入力・検証証拠は保持し、新versionを独立した契約で構築します。
+
 Brotli CVE-2026-111497対応の新しいローカル構築経路は
 [Phase SEC-BR1](docs/SEC-BR1-BROTLI.md)を参照してください。
 以下の固定S1/v2手順と過去の受入記録はBrotli 1.2.0の歴史的契約として保持しています。

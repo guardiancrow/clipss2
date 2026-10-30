@@ -1,5 +1,9 @@
 # Copyright (c) 2026 guardiancrow. MIT.
 # No default profile, normal-OFF path or legacy dispatcher in S1.
+if(CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-br2")
+    include("${CMAKE_CURRENT_LIST_DIR}/security/sec-br2/ShippingPrivacy.cmake")
+    return()
+endif()
 if(CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-br1")
     include("${CMAKE_CURRENT_LIST_DIR}/security/sec-br1/ShippingPrivacy.cmake")
     return()

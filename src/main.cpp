@@ -89,6 +89,9 @@ int main(int argc, char** argv)
         if (argc == 2 && mode == "--help")
         {
             std::cout << "clipss2: no arguments starts the tray resident.\n"
+#ifdef CLIPSS2_PRODUCT_VERSION
+                      << "Version: " CLIPSS2_PRODUCT_VERSION "\n"
+#endif
                       << "Usage: clipss2 [--resident|--settings|--capture-window|--capture-region|"
                          "--capture-monitor|--capture-window-clipboard|--help]\n"
                       << "Resident hotkey: Ctrl+Shift+F11. No capture occurs until requested and confirmed.\n";
