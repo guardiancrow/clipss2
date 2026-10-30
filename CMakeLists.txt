@@ -651,6 +651,15 @@ if(BUILD_TESTING)
     add_test(NAME capture_worker_client COMMAND clipss2_capture_worker_client_test)
 endif()
 
+if(BUILD_TESTING AND CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-br1")
+    find_package(unofficial-brotli CONFIG REQUIRED)
+    add_executable(clipss2_brotli_sec_br1_test tests/brotli_sec_br1_test.cpp)
+    target_link_libraries(clipss2_brotli_sec_br1_test PRIVATE
+        unofficial::brotli::brotlidec unofficial::brotli::brotlienc)
+    clipss2_configure_cpp_target(clipss2_brotli_sec_br1_test)
+    add_test(NAME brotli_sec_br1 COMMAND clipss2_brotli_sec_br1_test)
+endif()
+
 if(BUILD_TESTING AND CLIPSS2_SHIPPING_PRIVACY)
     add_executable(clipss2_privacy_diagnostics_test tests/privacy_diagnostics_test.cpp)
     target_include_directories(clipss2_privacy_diagnostics_test PRIVATE
