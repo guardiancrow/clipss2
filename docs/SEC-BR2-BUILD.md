@@ -52,3 +52,24 @@ Microsoft条件文書は承認済みv4の条文本体を保持して対象versio
 v0.1.0のG3承認や実機受入をv0.1.1へ自動継承しません。
 
 新旧contract testsと利用可能なCTest、package検証の実結果・手動受入項目はSEC-BR2検証記録で区別します。
+
+## 固定候補のPackaging
+
+`packaging/public/profile-sec-br2-v1.json`は今回のbuild source、243 source bindings、
+18 PE、23原文、rendered文書を固定した候補profileです。旧v0.1.0 profile/authorizationの
+生成許可・PEを流用しません。新moduleは既存のcanonical ZIP形式を47ファイルへ適用し、
+余剰entry、重複、traversal、link属性、timestamp/hash不一致を拒否します。
+
+```powershell
+pwsh -NoProfile -File tools/package_security_release_sec_br2.ps1 -Mode PlanOnly
+pwsh -NoProfile -File tools/package_security_release_sec_br2.ps1 -Mode CreateCandidate
+pwsh -NoProfile -File tools/package_security_release_sec_br2.ps1 -Mode ValidateCandidate
+```
+
+CreateCandidateは固定 `build/sec-br2/candidate/` が存在すれば空でも拒否します。
+payload・ZIP・expanded treeを検証後、最後にacceptance receiptを書きます。途中失敗は保全し、
+削除・上書き・自動resumeしません。自己記録のhashは署名・公開承認ではありません。
+
+この固定profileを別buildのhashに合わせて再利用しません。再buildでidentityが変わる場合は
+新しいcandidate/profileと検証が必要です。今回の測定値は[検証記録](SEC-BR2-VALIDATION.md)、
+手動受入と次phaseは[checklist](SEC-BR2-OWNER-ACCEPTANCE.md)を参照してください。
