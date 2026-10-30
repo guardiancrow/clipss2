@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 
 project(
     clipss2
-    VERSION 0.1.0
+    VERSION 0.1.1
     LANGUAGES CXX
 )
 
@@ -278,6 +278,12 @@ set(CLIPSS2_AUDIT_SOURCES
     src/platform/windows/wgc_item_reuse_audit.h
 )
 add_executable(clipss2 ${CLIPSS2_PRODUCT_SOURCES})
+if(CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-br2")
+    enable_language(RC)
+    configure_file(src/platform/windows/product_version.rc.in clipss2-version.rc @ONLY)
+    target_sources(clipss2 PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/clipss2-version.rc")
+    target_compile_definitions(clipss2 PRIVATE CLIPSS2_PRODUCT_VERSION="${PROJECT_VERSION}")
+endif()
 
 target_include_directories(clipss2 PRIVATE src)
 target_compile_definitions(clipss2 PRIVATE CLIPSS2_AUDIT_FEATURES=0)
@@ -649,6 +655,15 @@ if(BUILD_TESTING)
     target_compile_definitions(clipss2_capture_worker_client_test PRIVATE CLIPSS2_AUDIT_FEATURES=1)
     clipss2_configure_cpp_target(clipss2_capture_worker_client_test)
     add_test(NAME capture_worker_client COMMAND clipss2_capture_worker_client_test)
+endif()
+
+if(BUILD_TESTING AND CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-br[12]$")
+    find_package(unofficial-brotli CONFIG REQUIRED)
+    add_executable(clipss2_brotli_sec_br1_test tests/brotli_sec_br1_test.cpp)
+    target_link_libraries(clipss2_brotli_sec_br1_test PRIVATE
+        unofficial::brotli::brotlidec unofficial::brotli::brotlienc)
+    clipss2_configure_cpp_target(clipss2_brotli_sec_br1_test)
+    add_test(NAME brotli_sec_br1 COMMAND clipss2_brotli_sec_br1_test)
 endif()
 
 if(BUILD_TESTING AND CLIPSS2_SHIPPING_PRIVACY)

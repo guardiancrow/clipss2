@@ -2,6 +2,9 @@
 
 # clipss2 — v0.1.0
 
+作業ブランチでは[Brotli修正を含むv0.1.1候補](docs/SEC-BR2-BUILD.md)を準備しています。
+v0.1.1は未公開で、以下の既存v0.1.0 Release・ZIPを変更するものではありません。
+
 Windows向けのスクリーンキャプチャツールです。Windows x64 Portable版の **[v0.1.0をGitHub Releasesで公開しています](https://github.com/guardiancrow/clipss2/releases/tag/v0.1.0)**。
 
 ## ダウンロードと導入

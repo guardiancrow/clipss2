@@ -2,6 +2,9 @@
 
 # clipss2 — v0.1.0
 
+This work branch prepares a [v0.1.1 candidate with the Brotli fix](docs/SEC-BR2-BUILD.md).
+v0.1.1 is not published; the existing v0.1.0 Release and ZIP below are unchanged.
+
 clipss2 is a screen capture tool for Windows. **[v0.1.0 is available on GitHub Releases](https://github.com/guardiancrow/clipss2/releases/tag/v0.1.0)** as a Windows x64 Portable ZIP.
 
 ## Download and setup

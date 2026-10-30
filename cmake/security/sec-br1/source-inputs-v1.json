@@ -1,0 +1,292 @@
+{
+  "schemaVersion": 1,
+  "inputId": "clipss2-source-inputs-sec-br1-v1",
+  "sourceScopeId": "clipss2-source-sec-br1-v1",
+  "parentSourceInputsSha256": "80BD9B28EF236F29E31BC12B1D6C16120C9F7E60AC0ACF4F861691C6DF5C64AB",
+  "builtinBaseline": "04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4",
+  "targetTriplet": "x64-windows-shipping-privacy",
+  "hostTriplet": "x64-windows",
+  "overlayRoots": [
+    "vcpkg-overlays/security-sec-br1",
+    "vcpkg-overlays/shipping-privacy-v2"
+  ],
+  "brotliSourceRevision": "db24a98aed38a16de78cc05ca15cdd8dc2a0d92d",
+  "brotliSourceArchiveSha512": "460591287d428c8b5a8a2766b5b424d14501fcda12c7118b8f3cc4bfae44b90ac75ca156557f07b6e22542612724d904533e5f70019be07dbbb604c46f03ab69",
+  "packages": [
+    {
+      "name": "aom",
+      "version": "3.15.0",
+      "portTree": "df942faaf742f480ae1749b4cd1ae5beb8b292b4",
+      "role": "target",
+      "upstream": [
+        "git+https://aomedia.googlesource.com/aom@de4c1d1edc49723a78954d30a83690aa1937422f"
+      ]
+    },
+    {
+      "name": "brotli",
+      "version": "1.2.1",
+      "portTree": "0702c3d1505dae90ff22bcbdc68921c74bb8651f",
+      "role": "target",
+      "upstream": [
+        "git+https://github.com/google/brotli@v1.2.1"
+      ]
+    },
+    {
+      "name": "highway",
+      "version": "1.4.0",
+      "portTree": "4a44183703a0d4f07d01e3731d7bb50ab11d4f6c",
+      "role": "target",
+      "upstream": [
+        "git+https://github.com/google/highway@1.4.0"
+      ]
+    },
+    {
+      "name": "lcms",
+      "version": "2.19.1#1",
+      "portTree": "18ab2c77128f44e6439741effc3f62ccaa9f36f7",
+      "role": "target",
+      "upstream": [
+        "git+https://github.com/mm2/Little-CMS@lcms2.19.1"
+      ]
+    },
+    {
+      "name": "libavif",
+      "version": "1.4.2#1",
+      "portTree": "cad3f5196a32c420fb9aebfc2a8a5876e5c36129",
+      "role": "target",
+      "upstream": [
+        "git+https://github.com/AOMediaCodec/libavif@v1.4.2"
+      ]
+    },
+    {
+      "name": "libjpeg-turbo",
+      "version": "3.2.0",
+      "portTree": "c7d2d8cbb868863a698862a0da02b4af225f3c72",
+      "role": "target",
+      "upstream": [
+        "git+https://github.com/libjpeg-turbo/libjpeg-turbo@3.2.0"
+      ]
+    },
+    {
+      "name": "libjxl",
+      "version": "0.12.0",
+      "portTree": "e503da30de672f62e17484da045558945bf3cfb7",
+      "role": "target",
+      "upstream": [
+        "git+https://github.com/libjxl/libjxl@v0.12.0"
+      ]
+    },
+    {
+      "name": "libpng",
+      "version": "1.6.58",
+      "portTree": "909d98e06046a0901fd11300b3d725d6a80d27bf",
+      "role": "target",
+      "upstream": [
+        "git+https://github.com/pnggroup/libpng@v1.6.58"
+      ]
+    },
+    {
+      "name": "libwebp",
+      "version": "1.6.0#3",
+      "portTree": "c2ed152baa0795e889f73476fd0bc8e35dafd40b",
+      "role": "target",
+      "upstream": [
+        "git+https://github.com/webmproject/libwebp@v1.6.0"
+      ]
+    },
+    {
+      "name": "libyuv",
+      "version": "1916",
+      "portTree": "557f40e7241d91a80b55f849a18376613c45f13a",
+      "role": "target",
+      "upstream": [
+        "git+https://chromium.googlesource.com/libyuv/libyuv@d98915a654d3564e4802a0004add46221c4e4348"
+      ]
+    },
+    {
+      "name": "zlib",
+      "version": "1.3.2#2",
+      "portTree": "f4f43a5a505cda1a0d1ff056be1fdba9e566242e",
+      "role": "target",
+      "upstream": [
+        "git+https://github.com/madler/zlib@v1.3.2"
+      ]
+    },
+    {
+      "name": "pkgconf",
+      "version": "3.0.3",
+      "portTree": "767be39a6f55d757c60a42e0ef801c687e02e382",
+      "role": "host-tool",
+      "upstream": [
+        "git+https://github.com/pkgconf/pkgconf@pkgconf-3.0.3"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "version": "2025-08-07",
+      "portTree": "16b9390dfeaca6df7288ba3f827e40e48e5fc942",
+      "role": "host-tool",
+      "upstream": []
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "version": "2026-07-21",
+      "portTree": "51befcb03097f8d19c1c59f9ec3625e69d85322a",
+      "role": "host-tool",
+      "upstream": []
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "version": "2025-05-29",
+      "portTree": "d6510f888dd526c7828f6b973349e7f30be51254",
+      "role": "host-tool",
+      "upstream": []
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "version": "1.9.0#10",
+      "portTree": "86a0d388e3e72719eadc392e359ee80f2f8d8a16",
+      "role": "host-tool",
+      "upstream": []
+    }
+  ],
+  "files": [
+    {
+      "path": "cmake/security/sec-br1/.gitattributes",
+      "size": 8,
+      "sha256": "705FD4D6451A31D36B3DF7DE96F83F30AC976C9B4A6D1E51671D8E2F33E2D0DA"
+    },
+    {
+      "path": "cmake/security/sec-br1/ShippingPrivacy.cmake",
+      "size": 2700,
+      "sha256": "D9DC63C4D5A40FD745513F8740E1FAA6616ACE07DB89F8FD60636B084ADF5246"
+    },
+    {
+      "path": "cmake/security/sec-br1/vcpkg-configuration.json",
+      "size": 127,
+      "sha256": "66911D63D693CB6D6F801448EC841687ECAB4ABEAE156915B3A65FC56BAF008B"
+    },
+    {
+      "path": "cmake/security/sec-br1/vcpkg.json",
+      "size": 630,
+      "sha256": "B6A2179F27BDE3728069A1AAE046DF05DC8A668A07F15BF73748CC2436785C62"
+    },
+    {
+      "path": "cmake/ShippingPrivacy.cmake",
+      "size": 2337,
+      "sha256": "A452C40E1F83E3F90A196EA8C3037454E1D9F24BB8CE65249A68C6AE9353AFC6"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "size": 31364,
+      "sha256": "822576C6165BE71A34A48205C7CBA1EA18578D4509EDA16010A3F47DED2FA33D"
+    },
+    {
+      "path": "licenses/brotli/copyright",
+      "size": 1084,
+      "sha256": "3D180008E36922A4E8DAEC11C34C7AF264FED5962D07924AEA928C38E8663C94"
+    },
+    {
+      "path": "licenses/vcpkg/LICENSE.txt",
+      "size": 1073,
+      "sha256": "1EE376FC340E0AA6AD6A3581C94126E741468705096AC92263048A21DAA86460"
+    },
+    {
+      "path": "tools/S1DependencyInstall.ps1",
+      "size": 15815,
+      "sha256": "C3F4A66F6A868D2B04249925ED4210844C6692D7D3DA110C532398A623D5BE14"
+    },
+    {
+      "path": "tools/S1SourceContracts.psm1",
+      "size": 20817,
+      "sha256": "ADFCF1F2EDB38B6C28398C3A210BA824F7BE5152673CDE7E165B72B510C2D111"
+    },
+    {
+      "path": "tools/ShippingPrivacyS1.ps1",
+      "size": 6950,
+      "sha256": "6C7CB83B9D5430FB98F4956F1DF5F0C0D865F41F7C2B1E283C0B12962313C4DB"
+    },
+    {
+      "path": "tools/ShippingProfileS1.ps1",
+      "size": 13420,
+      "sha256": "B1A0DF3577A34897A5D0B4FF61EC8D6E2A2BBFB8562DA1F8BE08996EFA3872E1"
+    },
+    {
+      "path": "vcpkg-overlays/security-sec-br1/.gitattributes",
+      "size": 8,
+      "sha256": "705FD4D6451A31D36B3DF7DE96F83F30AC976C9B4A6D1E51671D8E2F33E2D0DA"
+    },
+    {
+      "path": "vcpkg-overlays/security-sec-br1/brotli/install.patch",
+      "size": 1931,
+      "sha256": "186701B1F2032CBD5A243EAAFC51960BAC057A2F561A7A9715637FD2FD38EA51"
+    },
+    {
+      "path": "vcpkg-overlays/security-sec-br1/brotli/pkgconfig.patch",
+      "size": 494,
+      "sha256": "EC57A7BE5DFFD5EC9C444A71FCBC2332CF17FA9A6A147762244001587BEA4F25"
+    },
+    {
+      "path": "vcpkg-overlays/security-sec-br1/brotli/portfile.cmake",
+      "size": 1269,
+      "sha256": "6C2B9C32BAA3EE1D0BDF9335FA2BBAD06C386334472D0185994831A2C78007CB"
+    },
+    {
+      "path": "vcpkg-overlays/security-sec-br1/brotli/usage",
+      "size": 282,
+      "sha256": "2FC37651DF1D64D9134A1AA6597DE5F927EFE1B5138A243BB87BA746ACA04416"
+    },
+    {
+      "path": "vcpkg-overlays/security-sec-br1/brotli/vcpkg.json",
+      "size": 468,
+      "sha256": "D9BEAAD00EF254444A5AD2C2768F643E48E29EC596C321202CC1C8CA187073EB"
+    }
+  ],
+  "runtimeDlls": [
+    "aom.dll",
+    "avif.dll",
+    "brotlicommon.dll",
+    "brotlidec.dll",
+    "brotlienc.dll",
+    "hwy.dll",
+    "jpeg62.dll",
+    "jxl.dll",
+    "jxl_cms.dll",
+    "jxl_threads.dll",
+    "lcms2-2.dll",
+    "libpng16.dll",
+    "libsharpyuv.dll",
+    "libwebp.dll",
+    "libwebpdecoder.dll",
+    "libwebpdemux.dll",
+    "libyuv.dll",
+    "turbojpeg.dll",
+    "z.dll"
+  ],
+  "outputPolicy": {
+    "vcpkg": "build/sec-br1-r1/vcpkg",
+    "dependencies": "build/sec-br1-r1/dependencies",
+    "installed": "build/sec-br1-r1/installed",
+    "derived": "build/sec-br1-r1/managed-jpegli",
+    "product": "build/sec-br1-r1/product"
+  },
+  "productRuntimeDlls": [
+    "aom.dll",
+    "avif.dll",
+    "brotlicommon.dll",
+    "brotlidec.dll",
+    "brotlienc.dll",
+    "hwy.dll",
+    "jpeg62.dll",
+    "jxl.dll",
+    "jxl_cms.dll",
+    "jxl_threads.dll",
+    "lcms2-2.dll",
+    "libpng16.dll",
+    "libsharpyuv.dll",
+    "libwebp.dll",
+    "libyuv.dll",
+    "turbojpeg.dll",
+    "z.dll"
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "inputId": "clipss2-sec-br2-build-inputs-v1",
+  "version": "0.1.1",
+  "parentSourceCommit": "d5ded1bfc0ee3bd44d0dcb11cd5f0bbccc8c35ed",
+  "br1ContractView": "build/sec-br2/br1-source",
+  "dependencySourceInputsSha256": "EF0EB35F031CE4424408709D0871C2A72F0FBF109A08C7295F911F40B4FFFE32",
+  "productRoot": "build/sec-br2/product",
+  "dependencyEvidence": [
+    {
+      "path": "build/sec-br1-r1/installed/share/clipss2-sec-br1-installed-v1.json",
+      "size": 272,
+      "sha256": "56116DE94EAC39F8B5D7179629ABE0E78C1C2A205542257688268F0239CC688D"
+    },
+    {
+      "path": "build/sec-br1-r1/installed/share/clipss2-sec-br1-install-receipt-v1.json",
+      "size": 87054,
+      "sha256": "0D84E144C82AA74208CF57B93271D1C33EF0724643E24C947E21338EFD617D35"
+    }
+  ],
+  "files": [
+    {
+      "path": "CMakeLists.txt",
+      "size": 31715,
+      "sha256": "E7011084511A59B97110E710B1726C2AFA47E72276872922052ED26D717E4519"
+    },
+    {
+      "path": "cmake/ShippingPrivacy.cmake",
+      "size": 2487,
+      "sha256": "D0136E564FAF461ED8BC26B91FEF9B3D481A1CAEDF5DEC68BF2BFA40E8ADE32A"
+    },
+    {
+      "path": "src/main.cpp",
+      "size": 6700,
+      "sha256": "1C73E25736BC270733A4A746F41A184658E88AE7492799430660FDCCFB13D0D5"
+    },
+    {
+      "path": "src/platform/windows/product_version.rc.in",
+      "size": 919,
+      "sha256": "79D4DF6C11F830E8127624DF1B1F2D3D85FD44A681D8F5CA180BC6B8180A52E1"
+    },
+    {
+      "path": "cmake/security/sec-br2/.gitattributes",
+      "size": 8,
+      "sha256": "705FD4D6451A31D36B3DF7DE96F83F30AC976C9B4A6D1E51671D8E2F33E2D0DA"
+    },
+    {
+      "path": "cmake/security/sec-br2/ShippingPrivacy.cmake",
+      "size": 2714,
+      "sha256": "C063D43EFEC38E9BBDE5C6BF72B282EBBD1F67DA3AC47757B2AE38BD5782287B"
+    },
+    {
+      "path": "cmake/security/sec-br2/br1-preimages/CMakeLists.txt",
+      "size": 31364,
+      "sha256": "822576C6165BE71A34A48205C7CBA1EA18578D4509EDA16010A3F47DED2FA33D"
+    },
+    {
+      "path": "cmake/security/sec-br2/br1-preimages/cmake/ShippingPrivacy.cmake",
+      "size": 2337,
+      "sha256": "A452C40E1F83E3F90A196EA8C3037454E1D9F24BB8CE65249A68C6AE9353AFC6"
+    },
+    {
+      "path": "tools/build_security_release_sec_br2.ps1",
+      "size": 1070,
+      "sha256": "E1ADD2A92C4EFBD46AD8B7E671E38BDDD68C4CE75F3527B33A70598F0E4024F6"
+    },
+    {
+      "path": "cmake/security/sec-br1/source-inputs-v1.json",
+      "size": 8770,
+      "sha256": "EF0EB35F031CE4424408709D0871C2A72F0FBF109A08C7295F911F40B4FFFE32"
+    },
+    {
+      "path": "tools/ShippingProfileSecBR1.ps1",
+      "size": 16531,
+      "sha256": "ADEF17A7FB317E033EA5C8CE4DDFF3A5CFED3205C75247D98CB034EBA0AF07B0"
+    }
+  ],
+  "binaryReleaseApproved": false,
+  "sourceApprovalInherited": false
+}

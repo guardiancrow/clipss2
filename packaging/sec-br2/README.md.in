@@ -1,0 +1,32 @@
+# clipss2 0.1.1 — Windows x64 Portable release candidate
+
+これはBrotli 1.2.1へのセキュリティ保守更新のローカル公開候補です。正式公開・Owner受入は未完了です。機能変更を目的とするReleaseではありません。
+
+## 使用・再配布前の条件案内
+
+使用・再配布の前に、EXEと同階層の[MICROSOFT-COMPONENT-TERMS.txt](MICROSOFT-COMPONENT-TERMS.txt)を確認してください。配布者は、同文書で限定したCovered SDK Codeの受領者・再配布者に成分限定条件への合意を求めます。自作MITと独立した第三者OSSの権利は維持されます。提示・合意要求・有効な合意成立は別で、ダウンロード・展開・実行だけを明示的合意とは扱いません。
+
+## 環境と導入
+
+- Windows x64、D3D11、Windows.Graphics.Captureを使用します。
+- Microsoft Visual C++ v14 Runtime x64が外部前提です。必要な場合は[Microsoft公式案内](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist)から別途導入してください。Runtime DLL・installer・OS DLLを同梱・自動導入しません。
+- 未署名です。hashは内容照合用で、発行者認証ではありません。
+- ZIP全体を新規の書込み可能な専用folderへ展開し、EXE 1本・app-local DLL 17本・`clipss2.portable`と同梱文書を保持してください。
+
+`clipss2.exe --help`でCLIとversionを確認できます。通常起動は常駐mode、`--settings`は設定UIです。Window / Region / Monitor、PNG / JPEG / WebP / AVIF / JPEG XL、File / Clipboard / Bothを備えます。
+
+Portable設定はEXE隣の`settings.conf`、既定画像先は`captures`です。利用者の設定・画像をZIPへ含めていません。更新時は製品を終了し、既存の設定・画像を別途保全してください。旧folderへの上書き・自動移行は前提にしません。
+
+## 確認範囲とOwner受入
+
+今回のローカルbuild、contract tests、画像codec tests、PE/import/hash・ZIP構造の結果は別添の候補検証記録に記載します。旧v0.1.0の実機・別PC受入をこの新EXEへ継承していません。
+通常の常駐・設定・選択UI、所有対象への実capture、Clipboard実書込み、必要な別PC/OS/GPU/DPI/HDR等はOwnerの手動確認項目です。未実施項目や全環境を保証しません。
+
+## ライセンスと識別
+
+自作部分は[MIT LICENSE](LICENSE)。完全な第三者表示は[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)と`licenses/`にあります。Microsoft・第三者成分を一律MITとは扱いません。
+
+Version 0.1.1、Shipping Privacy v2 / SEC-BR2、MSVC x64 Release /MD。
+製品build source commit: `{{BUILD_SOURCE_COMMIT}}`。
+依存契約はSEC-BR1、Brotli 1.2.1、libjxl 0.12.0。他package versionは維持しています。
+同梱`BUILD-IDENTITY.json`がsource/build入力と18 PEのhashを記録します。自己記録の整合性情報であり、署名・公開承認を発行するものではありません。
