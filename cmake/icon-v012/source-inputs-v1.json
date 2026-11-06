@@ -1,0 +1,1132 @@
+{
+  "schemaVersion": 1,
+  "inputId": "clipss2-icon-v012-inputs-v1",
+  "scope": "icon-v012",
+  "version": "0.1.2",
+  "parentSourceCommit": "7dc253259f62b136ef58d1bd0655da06247ec0c7",
+  "dependencyInputsSha256": "EF0EB35F031CE4424408709D0871C2A72F0FBF109A08C7295F911F40B4FFFE32",
+  "installedReceiptSha256": "0D84E144C82AA74208CF57B93271D1C33EF0724643E24C947E21338EFD617D35",
+  "installedMarkerSha256": "56116DE94EAC39F8B5D7179629ABE0E78C1C2A205542257688268F0239CC688D",
+  "files": [
+    {
+      "path": "cmake/IconRelease.cmake",
+      "size": 4213,
+      "sha256": "5BEE11D9C8859B54AB4C228710A1FA690E9B75CEBA16E9EC0486C655B5753210"
+    },
+    {
+      "path": "cmake/LibjxlPackage.cmake",
+      "size": 980,
+      "sha256": "9BF8D7B991D338C15A2BC7B1EBECAA61FD08F547AF92E3072B480F2390290618"
+    },
+    {
+      "path": "cmake/LibjxlSmoke.cmake",
+      "size": 294,
+      "sha256": "9613965FE919BBF250B34749EF717B8F7BEBE0843311DF3E4F8CB373703C51BF"
+    },
+    {
+      "path": "cmake/ManagedJpegli.cmake",
+      "size": 3778,
+      "sha256": "B6D62D822ECC81FAF57494C69A48F9CEF727B73E4E7A71615CB1069D47D984A3"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "size": 32867,
+      "sha256": "EED9B0457D05B6D22A6DBE66A5AF8415E658ACD9E983D74BDB1FEA58F1B63039"
+    },
+    {
+      "path": "src/audit/artifact_directory.h",
+      "size": 758,
+      "sha256": "20964CA10EC47F430D18E382D8CBC3CADB654189F725C183655548825EEE788D"
+    },
+    {
+      "path": "src/audit/audit_policy.h",
+      "size": 600,
+      "sha256": "8132C9C696C850CB1ADECA08E3284A51A3D770FE74C4D16F67DEBD4D902D10A7"
+    },
+    {
+      "path": "src/audit/jpeg_output_audit.cpp",
+      "size": 8841,
+      "sha256": "9CE4F9A3DA5CC8AC0947D25E2E61BB463AC3B2A2CAB6F6270CD4B74BC9078878"
+    },
+    {
+      "path": "src/audit/jpeg_output_audit.h",
+      "size": 635,
+      "sha256": "9A33AF5FF0B24144DFE62E69D8C17AB12BF17AF9EB0744FCCDCA4270626BD49B"
+    },
+    {
+      "path": "src/capture/capture_destination.cpp",
+      "size": 1882,
+      "sha256": "729A3FD65B5C8E57A07714E8EDE9DD11C52FDE3E8170CC7CFDF71EB5699860EB"
+    },
+    {
+      "path": "src/capture/capture_destination.h",
+      "size": 2328,
+      "sha256": "6504E58ACBC770C83278C350FC2786855C5F1E8B850725F9CEA63B5D9E2ED7FE"
+    },
+    {
+      "path": "src/capture/capture_image_output.cpp",
+      "size": 12334,
+      "sha256": "4656F1BBADC0F87A041C7FB597CA50DE615BB9A66780A3AA6D832B6E0050EAC6"
+    },
+    {
+      "path": "src/capture/capture_image_output.h",
+      "size": 2285,
+      "sha256": "D9DC7AC5C3F5586C0955A35C47E6CC76CEB9FAC291D5AE53F72E3ED177175691"
+    },
+    {
+      "path": "src/capture/file_compression.h",
+      "size": 2438,
+      "sha256": "D025B52F371385771F6D5C1AB4CD9C416C553DE78F21B70D8B9C530B11FC9726"
+    },
+    {
+      "path": "src/codec/avif/avif_codec.cpp",
+      "size": 7369,
+      "sha256": "7A63A218F7649C99490905B352A5D334B73900A9F24A221007EFA165CE9DB04F"
+    },
+    {
+      "path": "src/codec/avif/avif_codec.h",
+      "size": 1091,
+      "sha256": "A96D5EF2BA89CE5FF8710A850DCDF4EAF5648DCBA8905AF678A93AD88A4E4E05"
+    },
+    {
+      "path": "src/codec/avif/avif_lossy_validator.cpp",
+      "size": 9356,
+      "sha256": "9ECD211181806DCAAB7E699D093A2B8CD343383D5318DB75EC321223B3636346"
+    },
+    {
+      "path": "src/codec/avif/avif_lossy_validator.h",
+      "size": 391,
+      "sha256": "DC7EF2C2F870AA096BEDDE8BAA44ED698FE990FD899D0250FF33CEE89560694B"
+    },
+    {
+      "path": "src/codec/avif/avif_validator.cpp",
+      "size": 3535,
+      "sha256": "F274D7EC2D554F3CFB02EB4063A31BBFC2710EB335B6E299BDC2C92043B02A08"
+    },
+    {
+      "path": "src/codec/avif/avif_validator.h",
+      "size": 559,
+      "sha256": "CC2211FB1A847EA582C94A1F38068894ACF0787D5F33E6A3007F1A309DF3B785"
+    },
+    {
+      "path": "src/codec/jpeg/jpeg_backend_policy.cpp",
+      "size": 13940,
+      "sha256": "145BE793677A4F9D834A387E2683E25D6CA776404D14E6C9DC786CD7B216D2BD"
+    },
+    {
+      "path": "src/codec/jpeg/jpeg_backend_policy.h",
+      "size": 4794,
+      "sha256": "E2815B4F2DBF725CAE573374ECFE3169C64474B560DC6CF9830FAA35905DCBC6"
+    },
+    {
+      "path": "src/codec/jpeg/jpeg_codec_internal.h",
+      "size": 1127,
+      "sha256": "53CA9643FCAE9EAE369E41743BB2E0128FDEB638BE75206E2E6DC0EDABD73E69"
+    },
+    {
+      "path": "src/codec/jpeg/jpeg_codec.cpp",
+      "size": 6476,
+      "sha256": "B18B44367F531699DAB45E3617642CAB48D3793426A7A27BF3DD787D76B0E6F5"
+    },
+    {
+      "path": "src/codec/jpeg/jpeg_codec.h",
+      "size": 1678,
+      "sha256": "2F8BBDF21DAD0922F19B96A148699EE182D4930B9D0688D6F46CB2F87387D167"
+    },
+    {
+      "path": "src/codec/jpeg/jpeg_flatten.cpp",
+      "size": 2856,
+      "sha256": "D5C98911648D188D3EB931EFCC01CD926A3E959EBA5B4C07CF19D52AEF359669"
+    },
+    {
+      "path": "src/codec/jpeg/jpeg_managed_backend.cpp",
+      "size": 3553,
+      "sha256": "99AFE8EE460B78FBC13347030F155D090F423EF4D1E6BCDF300553E474D80BB7"
+    },
+    {
+      "path": "src/codec/jpeg/jpeg_managed_backend.h",
+      "size": 480,
+      "sha256": "899E12114231E0E2565CDFD7D34F21012EB87523D55701ACD341BDB9E81D585A"
+    },
+    {
+      "path": "src/codec/jpeg/jpeg_product_selection.h",
+      "size": 1482,
+      "sha256": "01A0E00375CB8AF7D593835018035DAB45539E45EED620A4A5FEDB52F3D444D4"
+    },
+    {
+      "path": "src/codec/jpeg/jpeg_validator.cpp",
+      "size": 13151,
+      "sha256": "9EC1F8AA7870CD065AFCECA728ACE585178D8961D1E2A6730B1B6CF7D2E3D2FB"
+    },
+    {
+      "path": "src/codec/jpeg/jpeg_validator.h",
+      "size": 2861,
+      "sha256": "79C45198B2EC990484AE653BF566A80B6782F80868C9E4817B5DD80CF35F5722"
+    },
+    {
+      "path": "src/codec/jpeg/jpegli_backend.cpp",
+      "size": 4319,
+      "sha256": "2B622F6EB792CEEC78C55F60B09E98A5FB7B568A57CB81F6682C8E6A5534289B"
+    },
+    {
+      "path": "src/codec/jxl/jxl_codec.cpp",
+      "size": 12496,
+      "sha256": "A041135AA4279300A6ED530718EC926911B72130FBA2391F6244DD15EE088F96"
+    },
+    {
+      "path": "src/codec/jxl/jxl_codec.h",
+      "size": 857,
+      "sha256": "C2B747759A04B032261539ED0268E20189875DB9F960D6FEE83C391901868A0D"
+    },
+    {
+      "path": "src/codec/jxl/jxl_internal.h",
+      "size": 390,
+      "sha256": "1C4E4FCA7966120DDAF34396EC10B2EA4CFE1A805EED4637806522E7EB299E69"
+    },
+    {
+      "path": "src/codec/jxl/jxl_lossy_validator.cpp",
+      "size": 507,
+      "sha256": "F7792255E0E0B51FB06540EA7B84BCD7F07EED0111B51500C66C07E8B0118DFF"
+    },
+    {
+      "path": "src/codec/jxl/jxl_lossy_validator.h",
+      "size": 373,
+      "sha256": "031FDAEF1D18ACD86A534E0703CFC73626B77CF5056A414A82FE9BDAF683AA2D"
+    },
+    {
+      "path": "src/codec/jxl/jxl_validator.cpp",
+      "size": 1056,
+      "sha256": "440DE75BA57703EC90EEAD769030CA02621823E2F39588E6B189D3C2FCF1FE4F"
+    },
+    {
+      "path": "src/codec/jxl/jxl_validator.h",
+      "size": 478,
+      "sha256": "789E696DBEF5FE7706A0DCD5434F9927024CBC4A3E1968E3618F505CE41866EB"
+    },
+    {
+      "path": "src/codec/lossy_profile.h",
+      "size": 845,
+      "sha256": "52528F354827D0F0C3A64D0E7FFBA1079A3B54712B13F84197919EC82450E33C"
+    },
+    {
+      "path": "src/codec/lossy_validation.h",
+      "size": 2056,
+      "sha256": "CEB42C9F34649AFCCCC2A0230D46FF50CBC526734EDEF5B3F4601B76430D5647"
+    },
+    {
+      "path": "src/codec/png/png_codec.cpp",
+      "size": 12221,
+      "sha256": "35457DB85A0D01738A6971DEE44C22AF38E5FF97FC152A7A28CB0510D1A28A52"
+    },
+    {
+      "path": "src/codec/png/png_codec.h",
+      "size": 807,
+      "sha256": "E2A11690F7827EF5A82CEBEBA5F2C177525934CBFB6C98636102339C50F63D3E"
+    },
+    {
+      "path": "src/codec/png/png_validator.cpp",
+      "size": 7685,
+      "sha256": "FEF1DC8BD7002804276F1A18AF203E49FB9E9DAFF9F0159B9D8C35B4E4041D67"
+    },
+    {
+      "path": "src/codec/png/png_validator.h",
+      "size": 556,
+      "sha256": "BF0F9E603453FBC46EF06B7213F54D742AD78590D05D48F0F370CA07EF78CC6D"
+    },
+    {
+      "path": "src/codec/webp/webp_codec.cpp",
+      "size": 5918,
+      "sha256": "258688410B3C4D6F89BA4629036E80C2A557629BA85A3567A9AA87557587B39A"
+    },
+    {
+      "path": "src/codec/webp/webp_codec.h",
+      "size": 789,
+      "sha256": "00AF8664C2212936B09BB5B2CE8DE4E333052AA71061EBA0D99D1585ED725494"
+    },
+    {
+      "path": "src/codec/webp/webp_validator.cpp",
+      "size": 3834,
+      "sha256": "DAB5BA5E13FC9AB527BC308E37158EA7CB70DEF25D4AF47D7E5D11F8ABD9517B"
+    },
+    {
+      "path": "src/codec/webp/webp_validator.h",
+      "size": 591,
+      "sha256": "4311458D4E1600E2DA8DBC46D38261E42AAC83A296AAC14D9BE2A8A2A9CB1376"
+    },
+    {
+      "path": "src/image/alpha_diagnostics.cpp",
+      "size": 6031,
+      "sha256": "F8DAE9D1713BC9476D25BAB707B7CF04AD5BB9688B80F2D6C914E87F80B0D984"
+    },
+    {
+      "path": "src/image/alpha_diagnostics.h",
+      "size": 1498,
+      "sha256": "17C81D2AB5298450A0EB170DD5A1554CB7577DC55D7C7534C602E5F8F9C6E74B"
+    },
+    {
+      "path": "src/image/cpu_image.cpp",
+      "size": 1579,
+      "sha256": "3FA583AA845CFCB96F17638B163F6BEF864ED831CDF3255F2F502D629D9D781C"
+    },
+    {
+      "path": "src/image/cpu_image.h",
+      "size": 570,
+      "sha256": "B4FA2665B9F14E9EA616617191F06FF5DD36EAEF73302D50C6CEC786BF8A8DDC"
+    },
+    {
+      "path": "src/image/fp16_diagnostics.cpp",
+      "size": 5299,
+      "sha256": "B02E48EF44E780C983A4D30297AACCA2ED73C6D02BDE42F2F4226324CAABD6F2"
+    },
+    {
+      "path": "src/image/fp16_diagnostics.h",
+      "size": 903,
+      "sha256": "C65FC0E4F80F27DB89BCDE06FFEFE5E9E7FBD7087ACF5A544F6852C09A2B912B"
+    },
+    {
+      "path": "src/image/image_file_format.h",
+      "size": 1875,
+      "sha256": "E626A3B604846ABB9F5659F135FC74B283269D8385EAEA0F1B8A637EDC0A6B33"
+    },
+    {
+      "path": "src/image/row_copy.cpp",
+      "size": 1601,
+      "sha256": "6F20F9EF85026B0AA1E647A4EAD0C9D82FEBF7F87E5D68F3FB9030B143C47B8B"
+    },
+    {
+      "path": "src/image/row_copy.h",
+      "size": 282,
+      "sha256": "D471AD939D86A99D0663B75BCB4C299190DC2C20AC6AA85B0F280392DED46572"
+    },
+    {
+      "path": "src/image/srgb_transfer.cpp",
+      "size": 804,
+      "sha256": "18760576926E60CCA9BE2BBFCE24D4456FB153DEEBB1C06416AF667AAC49E30E"
+    },
+    {
+      "path": "src/image/srgb_transfer.h",
+      "size": 330,
+      "sha256": "691046D5E56CDD38F89694634BC97614024F226973FB1B0496E78D2F6951A80A"
+    },
+    {
+      "path": "src/main.cpp",
+      "size": 6700,
+      "sha256": "1C73E25736BC270733A4A746F41A184658E88AE7492799430660FDCCFB13D0D5"
+    },
+    {
+      "path": "src/platform/windows/alpha_capture_audit.cpp",
+      "size": 22301,
+      "sha256": "AAD6C06094E3D01943F5B108CF4EE76C7103851CB3B9319B363C75BE202222BF"
+    },
+    {
+      "path": "src/platform/windows/alpha_capture_audit.h",
+      "size": 141,
+      "sha256": "568F2B5BF54C9AEBC627EDCCC27EFE9E2993CFCF74B92C49F5E2A2FA1BEB44B4"
+    },
+    {
+      "path": "src/platform/windows/app_icon.h",
+      "size": 2441,
+      "sha256": "57D11EF0715BB721772F524414A6D60572E05093CC55AE9996048B12D09F63A3"
+    },
+    {
+      "path": "src/platform/windows/app_icon.rc.in",
+      "size": 232,
+      "sha256": "C528E39C1FE36BE7B74E76FBCD5F97D8EBFAACF64D5977947C2CD6D332C97FAE"
+    },
+    {
+      "path": "src/platform/windows/app_resources.h",
+      "size": 147,
+      "sha256": "00B458B6E1BC1864D74BC2CE789985952A7E4B7B4F2266D9EE1F02F6BFA63905"
+    },
+    {
+      "path": "src/platform/windows/assets/clipss2.ico",
+      "size": 31789,
+      "sha256": "A68ACCA46F1DFB4D92CD9DBF3253FAA19253DFEA73810BF937355CA4ACA4DA48"
+    },
+    {
+      "path": "src/platform/windows/assets/clipss2.svg",
+      "size": 1033,
+      "sha256": "15E150B97FAB493E980C5C4F0DAA68FAD2C6CFFA6AF762CC0BA4ACC15E2D638A"
+    },
+    {
+      "path": "src/platform/windows/assets/generate.mjs",
+      "size": 15476,
+      "sha256": "A7009E280AEB9F6FF868F229A93E7AB2DFA35E920794E025EA7B08B3976B7F68"
+    },
+    {
+      "path": "src/platform/windows/assets/README.md",
+      "size": 4674,
+      "sha256": "9EFAF666E1BEB372DD2E8E3B55B102E5FFE96768A9A796560EA1C476481BB2EE"
+    },
+    {
+      "path": "src/platform/windows/assets/validate.ps1",
+      "size": 3012,
+      "sha256": "71315082EE77B8AD213B32F00A8B23D781A4819E691D4BBA04B66ECB9DA70287"
+    },
+    {
+      "path": "src/platform/windows/capture_border_audit.cpp",
+      "size": 4487,
+      "sha256": "A5977ED1419B63C761FA21B720075CF49E8A757C16F9BEA26E69C89CFDDA3E1B"
+    },
+    {
+      "path": "src/platform/windows/capture_border_audit.h",
+      "size": 87,
+      "sha256": "2AF5D4998CA105339CE413DF2D82223BD43ACCAC5DF7D1F7A18169C52FDAFEE8"
+    },
+    {
+      "path": "src/platform/windows/capture_border_policy.cpp",
+      "size": 1200,
+      "sha256": "FB206790A10937486CCF083AE45135E410BF1B1AC341502D4A16D883D8B7A8F4"
+    },
+    {
+      "path": "src/platform/windows/capture_border_policy.h",
+      "size": 782,
+      "sha256": "F853B1B5CC5A788F7C39E2B38ACA1886B0BCA39D4C969F1FD7023F6E23FAF751"
+    },
+    {
+      "path": "src/platform/windows/capture_reuse_model.cpp",
+      "size": 1086,
+      "sha256": "F29174810FDECE205F5E59656B00FF3161458D356076BB71B6A557BADCE67360"
+    },
+    {
+      "path": "src/platform/windows/capture_reuse_model.h",
+      "size": 709,
+      "sha256": "9F94A9E80F766C292F8B18D5229604C251941CC26601A30D749FC4DB9BFA565A"
+    },
+    {
+      "path": "src/platform/windows/capture_source.h",
+      "size": 3507,
+      "sha256": "C997C44589FF5559E7CCA27B52F7C37D1C7216CC79B7E832460F1BFDBBA09323"
+    },
+    {
+      "path": "src/platform/windows/capture_window_policy.h",
+      "size": 1268,
+      "sha256": "80E20AFB6FD7FCE0329971BAF5FC904374E3A8BAF0C0C31A6C4EA315E4078E05"
+    },
+    {
+      "path": "src/platform/windows/capture_window.cpp",
+      "size": 28213,
+      "sha256": "5F0E309148B7BCD6CF073F4B09A3F72253938C3AEBBD2CD471BFFA86CC365919"
+    },
+    {
+      "path": "src/platform/windows/capture_window.h",
+      "size": 1533,
+      "sha256": "B8CECC200F23DD88161B0C69E22E18E9CEFA4F42F0AB6C19B38D12E263097CAA"
+    },
+    {
+      "path": "src/platform/windows/capture_worker_audit.cpp",
+      "size": 12866,
+      "sha256": "C76091F93748F0D1E1B99F8110D1D3728051A2641E50A32A9F0FE49F195EA41C"
+    },
+    {
+      "path": "src/platform/windows/capture_worker_audit.h",
+      "size": 133,
+      "sha256": "869AC1D1979D6071A35E33D20DD1E4CC01EE26D6E59CA2635FD0E46987330B72"
+    },
+    {
+      "path": "src/platform/windows/capture_worker_client.cpp",
+      "size": 13083,
+      "sha256": "EF64134D8187712CAFC1FDD46739A322FEEB6584B2FFA0BBDAB73B80C32975E8"
+    },
+    {
+      "path": "src/platform/windows/capture_worker_client.h",
+      "size": 1540,
+      "sha256": "63EF269E6D215C68D56EBADF9734E37B16B565B47D6C77CC9EDF02C490DAF4F4"
+    },
+    {
+      "path": "src/platform/windows/capture_worker_diagnostics.h",
+      "size": 1696,
+      "sha256": "94FCFEF33F6E3D4F684616D406A1AB2340A960ABE2EBDFA131337F5FE779570A"
+    },
+    {
+      "path": "src/platform/windows/capture_worker_product.cpp",
+      "size": 1488,
+      "sha256": "73F17DA56717B799FCA8959897DA89CEA0585356DF41CEE72813CEC66CF6EBE7"
+    },
+    {
+      "path": "src/platform/windows/capture_worker_product.h",
+      "size": 821,
+      "sha256": "B1F59AEB3BA5EB5B77CE3850827E9B8F9E6B4CBF2296B46AD8A2D22EF1EC95CB"
+    },
+    {
+      "path": "src/platform/windows/capture_worker_protocol.cpp",
+      "size": 15660,
+      "sha256": "16CD761048E428226704F166A0F999BECCBCB600509BAD196BFCAD8401D7A2E8"
+    },
+    {
+      "path": "src/platform/windows/capture_worker_protocol.h",
+      "size": 2135,
+      "sha256": "B904C40DC3F93F1FECE0961BD896C5508B234EC266F43C81DC164E357E63D995"
+    },
+    {
+      "path": "src/platform/windows/capture_worker.cpp",
+      "size": 8355,
+      "sha256": "DA066A9B4C50B806A9DF236FA153592A6ADE0D2256D9014D9A50F6AE0C4E2515"
+    },
+    {
+      "path": "src/platform/windows/capture_worker.h",
+      "size": 173,
+      "sha256": "35CCB86DD47CD81DD3FB179F524A61E96995D53174622AD69835188589DCD94B"
+    },
+    {
+      "path": "src/platform/windows/clipboard_image.cpp",
+      "size": 9734,
+      "sha256": "304C68504CDC6B856ADE9E2B21AC28B1AD1B2A3AAEB165E59B0874DB14B79B12"
+    },
+    {
+      "path": "src/platform/windows/clipboard_image.h",
+      "size": 1373,
+      "sha256": "7E34BBDFBD107169EE42ECCD2486C04172259F32702172BBC85D06635B2ECC55"
+    },
+    {
+      "path": "src/platform/windows/clipss2.exe.manifest",
+      "size": 608,
+      "sha256": "FA4440605EC573F758223E8BFD09CFC05B9DCA3D69CEB17AC9C05F0CDB4B4E46"
+    },
+    {
+      "path": "src/platform/windows/color_self_test.cpp",
+      "size": 15938,
+      "sha256": "27AEBE708F25C53B07AA2186B1057FA9616A2660FB6580D7474584DA3921299F"
+    },
+    {
+      "path": "src/platform/windows/color_self_test.h",
+      "size": 254,
+      "sha256": "E99DB0A77F06AF4E8436498D2A42D3328B610FB8E7781A78D6E115EF55A59089"
+    },
+    {
+      "path": "src/platform/windows/d3d_device_internal.h",
+      "size": 427,
+      "sha256": "9DA27C252CEBAC63D4AE0A05BD12A2263D323B520D7CE66AE54E73BEF2521EFB"
+    },
+    {
+      "path": "src/platform/windows/d3d_device.cpp",
+      "size": 3410,
+      "sha256": "CEE0C3F28979BF0F48F6EFBCE3937C1A6AF3E15FAF33BB9D89CC49AF5FDDFBD1"
+    },
+    {
+      "path": "src/platform/windows/d3d_device.h",
+      "size": 668,
+      "sha256": "86014633591D6D7E12889A5A410CE80D43A1E35C4DDB4025BF493795F5265853"
+    },
+    {
+      "path": "src/platform/windows/display_color_audit.cpp",
+      "size": 3869,
+      "sha256": "8D584F1B2C3A626B7F7B3A65C00058F454B05465505D103582E89AF2C22F6ED4"
+    },
+    {
+      "path": "src/platform/windows/display_color_audit.h",
+      "size": 86,
+      "sha256": "3E41304F86172FE0397BD20652313D3C9558ED471617F094BE631E9CD934C73C"
+    },
+    {
+      "path": "src/platform/windows/display_color_fallback.cpp",
+      "size": 14631,
+      "sha256": "A03AF3A5E8F69AAF2711D571225ACB03D7EF85C22DFD64FA3301817EA9424A2B"
+    },
+    {
+      "path": "src/platform/windows/display_color_fallback.h",
+      "size": 325,
+      "sha256": "6556DEE50CDBD1493C1F31006A11F0F62E3D61D217E48B134646C3E15D9F9F38"
+    },
+    {
+      "path": "src/platform/windows/display_color_note.h",
+      "size": 652,
+      "sha256": "A4C7DDC0F85E9638E9C30AF19153A8073C266F954D1A938EDEAF037E78AFF8FE"
+    },
+    {
+      "path": "src/platform/windows/display_color_policy.h",
+      "size": 1446,
+      "sha256": "1DB7EBAD62D83C01DD67424EB9D15A20011F0B8CB809C312912800023B53716C"
+    },
+    {
+      "path": "src/platform/windows/display_color.cpp",
+      "size": 7736,
+      "sha256": "713B69E773C51FBABFA26B9884E2F87FEAE4F4EF5B02C01EAA6A43CBD085AA28"
+    },
+    {
+      "path": "src/platform/windows/display_color.h",
+      "size": 1064,
+      "sha256": "C8EE238D59D2253DF3357526D76752A94308F6DA6902B36A1178766108F1A159"
+    },
+    {
+      "path": "src/platform/windows/display_monitor.cpp",
+      "size": 4289,
+      "sha256": "5D34163A4173C25FE4CA299489A10CAE9F50448F8ECAE245BEA46F4277361EE1"
+    },
+    {
+      "path": "src/platform/windows/display_monitor.h",
+      "size": 870,
+      "sha256": "BC211BABF97E2C1FA66CF815067B6097A82946C5A32ECD6CCB09880A4E0F6F38"
+    },
+    {
+      "path": "src/platform/windows/error_diagnostics.cpp",
+      "size": 8765,
+      "sha256": "99131691BB35A5D17DD0395E1B078DCD6C4A2AC8AB4BC94E0A0380C2585FB4B1"
+    },
+    {
+      "path": "src/platform/windows/error_diagnostics.h",
+      "size": 2130,
+      "sha256": "D968B1548BD578B888EBD4C2E06427F2906D49E345F3790E5770A7ABBA442D0D"
+    },
+    {
+      "path": "src/platform/windows/file_publication.cpp",
+      "size": 10173,
+      "sha256": "9B8B97112355AC890E1CCA7642AC15AD525FDD20EE22DB7BE141D92AB7C1E504"
+    },
+    {
+      "path": "src/platform/windows/file_publication.h",
+      "size": 906,
+      "sha256": "74246CBA70340A05984ED11127C6CF891B3695F2AB8D244E7EB60F19FCB51B18"
+    },
+    {
+      "path": "src/platform/windows/foreground_capture_target.cpp",
+      "size": 1130,
+      "sha256": "102C9FBAD53D4F63044C42311A1F8E94E889D42E9C01DFC838727D40446D1086"
+    },
+    {
+      "path": "src/platform/windows/foreground_capture_target.h",
+      "size": 245,
+      "sha256": "6C003B34713B25F9BF046AEBE5501F0744AAD13F5CE943EAF8252F989C86BC7F"
+    },
+    {
+      "path": "src/platform/windows/frame_geometry.h",
+      "size": 3916,
+      "sha256": "B351EBEBECFADDEFCBB714ED0560C9822E3497883BF9016F1BC93C433E831B83"
+    },
+    {
+      "path": "src/platform/windows/handle_isolation_model.cpp",
+      "size": 2047,
+      "sha256": "8BD51B9531ACF061E32E2397965E97641DC4567D346DF58927A87C5C3AC3BF42"
+    },
+    {
+      "path": "src/platform/windows/handle_isolation_model.h",
+      "size": 872,
+      "sha256": "E219A2B4B1A73C30A0C612ECC65332FBF8E4E39CFE3F61769601D1420559A9BB"
+    },
+    {
+      "path": "src/platform/windows/lossy_worker_audit.cpp",
+      "size": 13940,
+      "sha256": "92CBEC21A5E0099C072360C1C7432F6BBF602E1E7C84BC41FD529BD040B3D031"
+    },
+    {
+      "path": "src/platform/windows/lossy_worker_audit.h",
+      "size": 247,
+      "sha256": "D6087CC4F407818AA0C040A927F96D6840C954B262EB2991CEF0A43E05E5D6CE"
+    },
+    {
+      "path": "src/platform/windows/monitor_capture_source.cpp",
+      "size": 3703,
+      "sha256": "19794C0F09D7C9CB7EC662B3827FF67230D6190938C2B466267F656ABD5E94F0"
+    },
+    {
+      "path": "src/platform/windows/monitor_capture_source.h",
+      "size": 303,
+      "sha256": "63D964A749299BD9E7ABE3DB8274AAC93FAD935EDA93C284ECC5D4CA2478C835"
+    },
+    {
+      "path": "src/platform/windows/monitor_selection_navigation.h",
+      "size": 481,
+      "sha256": "70CE235F9618C69546ED62F7B0604388EA96B8BF574A1781C90D11BC7DAF4A10"
+    },
+    {
+      "path": "src/platform/windows/one_frame_capture.cpp",
+      "size": 16529,
+      "sha256": "DF82D7885C475523E1F66F24AA2983F155A2976E0F5FA994967D5108D96DB913"
+    },
+    {
+      "path": "src/platform/windows/one_frame_capture.h",
+      "size": 1549,
+      "sha256": "7DA4C69A2B168543ABA1F4D015154660DDDF7DD5F32E1203D2A23EAFBCA0546F"
+    },
+    {
+      "path": "src/platform/windows/output_storage.cpp",
+      "size": 11399,
+      "sha256": "08DFE1F54DCF52C8C58DCCFAB5EE0317F6B72FD1C21207ED20D803A58C4A8287"
+    },
+    {
+      "path": "src/platform/windows/output_storage.h",
+      "size": 1879,
+      "sha256": "F84690D498D1031B1E9D422025EA2EEFE9B6D13C6859EE051A9C5D01A07490C2"
+    },
+    {
+      "path": "src/platform/windows/portable_settings_marker.h",
+      "size": 337,
+      "sha256": "7A515840E179D252883D6F18B9CC58DEEC934CF9B018AFA07886A60662C46BFB"
+    },
+    {
+      "path": "src/platform/windows/product_settings.cpp",
+      "size": 18962,
+      "sha256": "BE4BBE4D41363EC223305F5E74733BD91245ECB46DB93DE31F4694EC2470F97C"
+    },
+    {
+      "path": "src/platform/windows/product_settings.h",
+      "size": 3393,
+      "sha256": "60DB8F2D3E0839DFABF14C56AA9DDD14F547D33293F5AB1EF341DD59261916BA"
+    },
+    {
+      "path": "src/platform/windows/product_version.rc.in",
+      "size": 919,
+      "sha256": "79D4DF6C11F830E8127624DF1B1F2D3D85FD44A681D8F5CA180BC6B8180A52E1"
+    },
+    {
+      "path": "src/platform/windows/readback_wait.cpp",
+      "size": 769,
+      "sha256": "7131B4F283EB2A3935776E311C4990D3DFF4E6380B65087C482FA525B9CBA124"
+    },
+    {
+      "path": "src/platform/windows/readback_wait.h",
+      "size": 348,
+      "sha256": "39EE06208D9C98EFBA0BCD2C141BCD82DC6A8FC89AF8CE354AE0123D8338B974"
+    },
+    {
+      "path": "src/platform/windows/region_selector_ui.cpp",
+      "size": 23240,
+      "sha256": "CE0BD07136605C4213F86F7E36B836E94D10DDA05A3E2CE87303511356A27D7F"
+    },
+    {
+      "path": "src/platform/windows/region_selector_ui.h",
+      "size": 712,
+      "sha256": "E610A4E2F763998A4A75E4FC51CBCEFBD2C8859E6FB99BA167A7EF4C36E42D56"
+    },
+    {
+      "path": "src/platform/windows/resident_mode.cpp",
+      "size": 24954,
+      "sha256": "AD6B56479C22FD4256978F79FE2E463D3916E54C0F2DA4EABEA34DBFAA37FE52"
+    },
+    {
+      "path": "src/platform/windows/resident_mode.h",
+      "size": 1162,
+      "sha256": "CECE9914900C6B38872235942CA0DC682183328326E35B6E6C8E962CB3F1A004"
+    },
+    {
+      "path": "src/platform/windows/resident_state.cpp",
+      "size": 1707,
+      "sha256": "B22C56EEA07876E07A1D710B899B1DBABCF997C6DF9065CBC9E9AA381C5E935B"
+    },
+    {
+      "path": "src/platform/windows/resident_state.h",
+      "size": 1072,
+      "sha256": "A91B935BEB9D774F17F12F0775519123A03CCFB98824F395329B8067EDC5FBDC"
+    },
+    {
+      "path": "src/platform/windows/resource_counters.cpp",
+      "size": 6753,
+      "sha256": "A0C62B1DB96586508C88BE02689267D9B763D7A2A373A8EB7F99CC8E86330592"
+    },
+    {
+      "path": "src/platform/windows/resource_counters.h",
+      "size": 1174,
+      "sha256": "AAEF528C030F0C7A7ECC3CE9D1D10B3E549E76FCD4E0BD0FEF23BA2E02BE93EE"
+    },
+    {
+      "path": "src/platform/windows/resource_lifetime_audit.cpp",
+      "size": 7927,
+      "sha256": "C6385A0CF625650AEBFD7BBC6E09A89576A8542DD63D29F827E6563331EBF67A"
+    },
+    {
+      "path": "src/platform/windows/resource_lifetime_audit.h",
+      "size": 144,
+      "sha256": "6A1F950249220F5320C2C928CA74A716C20D8F6CD71E043D9DBF2B44B8321665"
+    },
+    {
+      "path": "src/platform/windows/resource_lifetime_model.cpp",
+      "size": 3487,
+      "sha256": "D02836F810537D8F27B41973C63E9C70F15F27F96126940C48F677DFB11EFAD5"
+    },
+    {
+      "path": "src/platform/windows/resource_lifetime_model.h",
+      "size": 1012,
+      "sha256": "A179FDDBF1A0279612A24E4595DED6283F0C9A02E218516827ED4F53CC8F1D6E"
+    },
+    {
+      "path": "src/platform/windows/selector_window_resources.h",
+      "size": 3990,
+      "sha256": "6448DEB7E42418FF3BD528CFBF3CCF495D1ADE163357DF5B52AD950170A42BE8"
+    },
+    {
+      "path": "src/platform/windows/settings_layout.h",
+      "size": 2679,
+      "sha256": "B3420C50B627D2D38B6AA26653438D5A126DFBA993C1661BFBE5D2E66BC84BCE"
+    },
+    {
+      "path": "src/platform/windows/settings_location.cpp",
+      "size": 5736,
+      "sha256": "6D42086A2F2D8D99F6D838B7C1E490011648B9E814617C3893E06074B09F009F"
+    },
+    {
+      "path": "src/platform/windows/settings_location.h",
+      "size": 1439,
+      "sha256": "985343E446C535CCD9BB9F2AE81743D784F7443D60FBF9887D3E27832B54835A"
+    },
+    {
+      "path": "src/platform/windows/settings_ui.cpp",
+      "size": 69172,
+      "sha256": "E6FFEBC9E7BD6830B8DC2F1A764A7800DBB2D39C2EE0C6BEBD894293BF4C666A"
+    },
+    {
+      "path": "src/platform/windows/settings_ui.h",
+      "size": 552,
+      "sha256": "268E8AFAA06914EFB098CE2B2936EFE34192393889E5319D1CC9AA294DE21A3E"
+    },
+    {
+      "path": "src/platform/windows/storage_preferences.h",
+      "size": 1803,
+      "sha256": "C2530675EB0BF616EAE69C891C5381526EE93430C508ADBB45AC38E713DDDB03"
+    },
+    {
+      "path": "src/platform/windows/texture_readback.cpp",
+      "size": 9409,
+      "sha256": "FF519D16016DCAFDD527281823AC73942E533F0836062DE80ECF6C27101D113D"
+    },
+    {
+      "path": "src/platform/windows/texture_readback.h",
+      "size": 809,
+      "sha256": "5C4A37BE86D1F2185EEADB19D6085CA13C1D0259FE2CF50FFF603B75D1FBA7CC"
+    },
+    {
+      "path": "src/platform/windows/tray_icon.cpp",
+      "size": 10667,
+      "sha256": "DC5E62ACCD9EE0A44FC638A8AB6A023E4579096516A5B0EA364683B8602963E7"
+    },
+    {
+      "path": "src/platform/windows/tray_icon.h",
+      "size": 2026,
+      "sha256": "859E36B86099C36A17018E2096AB267220FA9F10B84B08347CA97565ECAE34BC"
+    },
+    {
+      "path": "src/platform/windows/ui_localization.cpp",
+      "size": 11432,
+      "sha256": "E8796F5F2F16EFFAE0E74C32AF5963018A51A87236BD60567F987911A0C7E491"
+    },
+    {
+      "path": "src/platform/windows/ui_localization.h",
+      "size": 3018,
+      "sha256": "AEE34CA6C4791B59483AA799F411FACF82671975AFB9B56C9ECFABBFDC7A684A"
+    },
+    {
+      "path": "src/platform/windows/unicode_diagnostics.cpp",
+      "size": 3674,
+      "sha256": "9E33541EFD67AA1A9F52B713D52193E4D0BD80AE75ED8E9B1A8526144E9DC5A5"
+    },
+    {
+      "path": "src/platform/windows/unicode_diagnostics.h",
+      "size": 427,
+      "sha256": "34B5DA3D384A6CB2CF9716076612765F08F05C83DED7B11E66841144828B3DD5"
+    },
+    {
+      "path": "src/platform/windows/wgc_handle_isolation_audit.cpp",
+      "size": 27212,
+      "sha256": "0EFC7CF901ACB7DF55EADBACB34A5A862B27FB5C6CCBD6B1137C2E325A834903"
+    },
+    {
+      "path": "src/platform/windows/wgc_handle_isolation_audit.h",
+      "size": 153,
+      "sha256": "7F27B1A0D24A75BA0CCB58FBB2DD5A96CFA8B1D5D88CFE84CEF83B7753117703"
+    },
+    {
+      "path": "src/platform/windows/wgc_item_reuse_audit.cpp",
+      "size": 32360,
+      "sha256": "58B0A8979AAFE9EC787ECA132F2F76DD79287035FA88BBAF58EF499548EE1A85"
+    },
+    {
+      "path": "src/platform/windows/wgc_item_reuse_audit.h",
+      "size": 147,
+      "sha256": "51A7CA77276929507BE5033D6CB1A826E771B23B98AC62D746959C64049AAABD"
+    },
+    {
+      "path": "src/platform/windows/window_candidate_self_test.cpp",
+      "size": 6785,
+      "sha256": "A2D123CA55574DA8DB1DD1E3006267B1A3C5C2869DE67EBCA4EA225FE2734BDD"
+    },
+    {
+      "path": "src/platform/windows/window_candidate_self_test.h",
+      "size": 93,
+      "sha256": "B34A1FDD83DEFE7E4910C434985F129F421CB48B13A8ADEFDDF9B2383E5E2B4B"
+    },
+    {
+      "path": "src/platform/windows/window_candidates.cpp",
+      "size": 6299,
+      "sha256": "E931AD4FDDD1792A7591EAA81ECD7D73A1BC6117B35FC3786CE628723AE4CCBD"
+    },
+    {
+      "path": "src/platform/windows/window_candidates.h",
+      "size": 3885,
+      "sha256": "C4B49DB22F50F47707128FB6A06842B6B7F42BBAE30C1E6F23D5B77A77A33124"
+    },
+    {
+      "path": "src/platform/windows/window_selection_input.cpp",
+      "size": 6812,
+      "sha256": "DE94C60739888CFF528A23913499D7F90A86772952FEE6230344287E1F3277A1"
+    },
+    {
+      "path": "src/platform/windows/window_selection_input.h",
+      "size": 5447,
+      "sha256": "C4611F0BD3B0BC5A2EA9747D4D546B485FEEDDB44355DA562DED79D90754BDBB"
+    },
+    {
+      "path": "src/platform/windows/window_selection.cpp",
+      "size": 6133,
+      "sha256": "BA6488C63E8692234599184D3E50DD88B1D4B19685A9D69B3D3295524940BDE0"
+    },
+    {
+      "path": "src/platform/windows/window_selector_ui.cpp",
+      "size": 51709,
+      "sha256": "70EE4E909336E8C34978F0B4673CC6F22AB1F5864BC09ED01E9C96FC12F2DFA7"
+    },
+    {
+      "path": "src/platform/windows/window_selector_ui.h",
+      "size": 731,
+      "sha256": "77B2CA910A6F5D93C060431E61305DF913695659841D9F93261B6BB31BDD620B"
+    },
+    {
+      "path": "src/platform/windows/window_target_validation.cpp",
+      "size": 4595,
+      "sha256": "52F78ECF4250DB3AEC906D1E1530B113B7E299B2D63267A6BA1848FB1AF48A78"
+    },
+    {
+      "path": "src/platform/windows/window_target_validation.h",
+      "size": 767,
+      "sha256": "622F138F74B7F7461E0CDECE4752EFA1479E5A21381C0DC2342E7915F2EE4C5C"
+    },
+    {
+      "path": "tests/alpha_diagnostics_test.cpp",
+      "size": 7050,
+      "sha256": "0BFB7E32D759F6C8E85FF3834AEBCF9E636E70ACD0A0222CE29CE58C3DFEDB95"
+    },
+    {
+      "path": "tests/app_icon_test.cpp",
+      "size": 2766,
+      "sha256": "4B01A0302AD401A67B67899D948A4A64A23F37FDF3C80C98852864AC4761DEB8"
+    },
+    {
+      "path": "tests/avif_codec_test.cpp",
+      "size": 5835,
+      "sha256": "1D6245136DA1CC67F7186374FEE8CFE7CFF8618767FD5ED84D064F50F89B0014"
+    },
+    {
+      "path": "tests/brotli_sec_br1_test.cpp",
+      "size": 2053,
+      "sha256": "4C851F42C26B1EB7574C53849A8483A64D45CE2829A56F6AE8A039A687ADBE63"
+    },
+    {
+      "path": "tests/capture_border_policy_test.cpp",
+      "size": 976,
+      "sha256": "369A2A5492F71BACF6254470292DC5C7DD0E30D08371F9BF45D0EBCC3D38C4D7"
+    },
+    {
+      "path": "tests/capture_destination_test.cpp",
+      "size": 2493,
+      "sha256": "C85373AC4998334CB0AFF8638E17ED3A0D096DA7FDF1182FD91756A14D574A82"
+    },
+    {
+      "path": "tests/capture_image_output_test.cpp",
+      "size": 18913,
+      "sha256": "FEC5938C3A47142746B1199D3116B570295194D835258CA553303E5A96F62689"
+    },
+    {
+      "path": "tests/capture_stage_diagnostics_test.cpp",
+      "size": 19488,
+      "sha256": "70F823E69144F78497F61576B6B731740D1FC50C63C6EA5F70459E94ABBF9665"
+    },
+    {
+      "path": "tests/capture_window_policy_test.cpp",
+      "size": 2397,
+      "sha256": "EF3285BB034F9E095756C6124D7699540B4581013D08B96B71A91B65D25366AC"
+    },
+    {
+      "path": "tests/capture_worker_client_test.cpp",
+      "size": 3396,
+      "sha256": "09918A99499189724891568F2786502FF8B223DF4300D70F5B5001607D627F2B"
+    },
+    {
+      "path": "tests/capture_worker_product_test.cpp",
+      "size": 5662,
+      "sha256": "BC2C6B26082D4DB242BEF823158E9B17BA2B05D99029E665FAC13E9AD8F59EEA"
+    },
+    {
+      "path": "tests/capture_worker_protocol_test.cpp",
+      "size": 14346,
+      "sha256": "E53308D03797199CABABE7F07DC1064DAB213BA0A8F9505773910E513F9BEAEA"
+    },
+    {
+      "path": "tests/clipboard_image_test.cpp",
+      "size": 3408,
+      "sha256": "B7755ABDF842A1E031B1CB1D9177FAB10750DBFCF86479FA94E42FD72253237E"
+    },
+    {
+      "path": "tests/console_lifecycle_test.cpp",
+      "size": 5602,
+      "sha256": "0B8DAE6020396CDF1A544F51F32A359D2B41CF4CC28A5533FDA2B0649CB48F2F"
+    },
+    {
+      "path": "tests/fp16_diagnostics_test.cpp",
+      "size": 2923,
+      "sha256": "54B41565EEE5F8C6C2518A38914A5C2154DD119AC713AF4B46D3E28CE84D87CF"
+    },
+    {
+      "path": "tests/frame_geometry_test.cpp",
+      "size": 10505,
+      "sha256": "0021A17270E0B70EB66C56EA5AD5722BC44A4AF106792E0B0AA4961A92091A6D"
+    },
+    {
+      "path": "tests/icon_v012_contract_test.ps1",
+      "size": 2832,
+      "sha256": "DB00B419958490E3AD9D831955B113534EA8BCB03E3065DE64B7296888AF0C26"
+    },
+    {
+      "path": "tests/jpeg_alpha_flatten_test.cpp",
+      "size": 3800,
+      "sha256": "EFFD7D04085A06348456F59089F5DE56FFC5FB2D3546BA6E09A07BCD84A42AA8"
+    },
+    {
+      "path": "tests/jpeg_backend_policy_test.cpp",
+      "size": 14837,
+      "sha256": "2105DB459EE9F44F7DBD2B974A20F8AB334F9E4E1DBF89ED3D5A8B040DA0B6D4"
+    },
+    {
+      "path": "tests/jpeg_encoder_test.cpp",
+      "size": 9381,
+      "sha256": "A028D61A8820E111F0A903156CD87EE0F17FB43F7734A0242F10458E1079699E"
+    },
+    {
+      "path": "tests/jpeg_validator_test.cpp",
+      "size": 9606,
+      "sha256": "FCD586DD406629F945BF7B96DAE6A4AAB59764552315AD4CDCEF67145D3F1A3A"
+    },
+    {
+      "path": "tests/jpegli_backend_test.cpp",
+      "size": 8702,
+      "sha256": "60F2A8679D512D9E4E5E5C04BADA793BAB1460A1F1BEFD40ED2AFCAEBAD07EB3"
+    },
+    {
+      "path": "tests/jxl_codec_test.cpp",
+      "size": 9410,
+      "sha256": "04A2C54802B3ED2765B3DAD5B3CF891FB0FB4A7C66F4FA22AC88F87C9F1C02CB"
+    },
+    {
+      "path": "tests/libjxl_smoke.cpp",
+      "size": 1895,
+      "sha256": "8C74202A21D475FD603446C2E0FAAAD68A009888ED7DB58779CD3359E17F8349"
+    },
+    {
+      "path": "tests/output_storage_test.cpp",
+      "size": 26625,
+      "sha256": "194D7A0C05E88B85827E4559577DC556FC584F43AD4B9E4A5E2878D5856C4FD6"
+    },
+    {
+      "path": "tests/png_codec_test.cpp",
+      "size": 2434,
+      "sha256": "5EC9F81FDCBD7785DB0698717149048ACB83847B6B8C60C0661EEE08F95D16D0"
+    },
+    {
+      "path": "tests/privacy_diagnostics_test.cpp",
+      "size": 3866,
+      "sha256": "271E73F8D1B0C807AF097973E6C3CA7B5C65C21A8F00F314B78194A7C47F40EF"
+    },
+    {
+      "path": "tests/product_settings_test.cpp",
+      "size": 20591,
+      "sha256": "2BCB60BA48D07D7CE23BCA3401BF3F7DEF55DD075811921D281EB2C112CB9616"
+    },
+    {
+      "path": "tests/region_geometry_test.cpp",
+      "size": 4569,
+      "sha256": "8B727858685D414F0058544EC432BF2388D6A3D1C71602219AF1C6D754EA610D"
+    },
+    {
+      "path": "tests/resident_state_test.cpp",
+      "size": 3336,
+      "sha256": "A8E5B97CD5C7B58A09CAC2AC8E9FC482898B717C556ECF1C9A9CBA3B90336BBF"
+    },
+    {
+      "path": "tests/robustness_test.cpp",
+      "size": 5652,
+      "sha256": "8C14C831DAE3B5B18230D2A6AD18AB7CFACFFAF6784E49999C3D1F44F66B973D"
+    },
+    {
+      "path": "tests/row_copy_test.cpp",
+      "size": 2534,
+      "sha256": "407BAC9AC03D2A862E9863243AC12FD2816EF2FB13FA82A1D04137D673F8A7BC"
+    },
+    {
+      "path": "tests/settings_location_test.cpp",
+      "size": 10920,
+      "sha256": "1A2B8EB9A501C1133F31847B9E616358A34550BF3D4FA27B731B25C669C59ACE"
+    },
+    {
+      "path": "tests/shipping_policy_test.cpp",
+      "size": 2860,
+      "sha256": "C621FC23E9CBA4F385FFBD4730B422A60C9C4093264F0BA4D2D82131B22BEA9C"
+    },
+    {
+      "path": "tests/srgb_transfer_test.cpp",
+      "size": 1412,
+      "sha256": "875A4AB9F62D5D32EAD54643E46871D24A4CEB41D88BA9B02BE736FC4D77F3EB"
+    },
+    {
+      "path": "tests/tray_icon_test.cpp",
+      "size": 2862,
+      "sha256": "151BB874C14D92BAB8AED59E14F71D576C76BB20002ECA7765693C21831D59DD"
+    },
+    {
+      "path": "tests/ui_localization_test.cpp",
+      "size": 8036,
+      "sha256": "CE32C7A8B910716F4667AAEFE81068B116AAE8E33AC64DDA3577641D761F8FF1"
+    },
+    {
+      "path": "tests/unicode_diagnostics_test.cpp",
+      "size": 3573,
+      "sha256": "8D96B72AFC43193F65BADDB64C7EDAF01EAC4BD737C2E112C4596D27B6F14A68"
+    },
+    {
+      "path": "tests/webp_codec_test.cpp",
+      "size": 7916,
+      "sha256": "DEEF6A41E9C152443BFB214A7114300594B3EEE64297624F8544C82897A28C7A"
+    },
+    {
+      "path": "tests/window_selection_test.cpp",
+      "size": 16709,
+      "sha256": "13106E11228F49A39B12D1CCDBF3998A78AC4CB0333B999E57850BFAAE12E0BF"
+    },
+    {
+      "path": "tools/build_icon_v012.ps1",
+      "size": 1269,
+      "sha256": "B95B9786D891E8CCF13F3CFAC3AE8A0FC3F2711AD5D6C8296683417C848B8FBC"
+    },
+    {
+      "path": "tools/IconV012.psm1",
+      "size": 13493,
+      "sha256": "EEA8D89D3F2A7D9531E1C306D8C95E2C462A20F71219B18470C463F22A3CABBB"
+    },
+    {
+      "path": "tools/S1SourceContracts.psm1",
+      "size": 20817,
+      "sha256": "ADFCF1F2EDB38B6C28398C3A210BA824F7BE5152673CDE7E165B72B510C2D111"
+    },
+    {
+      "path": "tools/ShippingPrivacyS1.ps1",
+      "size": 6950,
+      "sha256": "6C7CB83B9D5430FB98F4956F1DF5F0C0D865F41F7C2B1E283C0B12962313C4DB"
+    },
+    {
+      "path": "tools/ShippingProfileS1.ps1",
+      "size": 13420,
+      "sha256": "B1A0DF3577A34897A5D0B4FF61EC8D6E2A2BBFB8562DA1F8BE08996EFA3872E1"
+    },
+    {
+      "path": "tools/ShippingProfileSecBR1.ps1",
+      "size": 16531,
+      "sha256": "ADEF17A7FB317E033EA5C8CE4DDFF3A5CFED3205C75247D98CB034EBA0AF07B0"
+    },
+    {
+      "path": "tools/ShippingProfileSecBR2.ps1",
+      "size": 7164,
+      "sha256": "7E3F4F1EB5055ABA4D98EE765FD8F0402932B2483D6EE3CF530164656F7FE082"
+    },
+    {
+      "path": "tools/verify_app_icon.ps1",
+      "size": 5816,
+      "sha256": "983D5E257CA411BA634B57876642B16FBF1204562D2D98EE12118AA1BB2FFCD9"
+    }
+  ]
+}

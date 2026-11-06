@@ -1,15 +1,16 @@
 [日本語](README.md) | [English](README.en.md)
 
-# clipss2 — v0.1.0
+# clipss2 — v0.1.1 / v0.1.2候補
 
-作業ブランチでは[Brotli修正を含むv0.1.1候補](docs/SEC-BR2-BUILD.md)を準備しています。
-v0.1.1は未公開で、以下の既存v0.1.0 Release・ZIPを変更するものではありません。
+v0.1.1は公開済みです。このブランチでは[オリジナルアプリアイコンを導入するv0.1.2候補](docs/ICON-3-V012.md)を準備しています。
+v0.1.2は未公開・Owner受入待ちで、既存の公開Release・ZIPを変更しません。
 
-Windows向けのスクリーンキャプチャツールです。Windows x64 Portable版の **[v0.1.0をGitHub Releasesで公開しています](https://github.com/guardiancrow/clipss2/releases/tag/v0.1.0)**。
+Windows向けのスクリーンキャプチャツールです。Windows x64 Portable版の **[v0.1.1をGitHub Releasesで公開しています](https://github.com/guardiancrow/clipss2/releases/tag/v0.1.1)**。
+v0.1.1はBrotli 1.2.1を使用するセキュリティ保守更新です。v0.1.0のBrotli 1.2.0に対するCVE-2026-111497対応を維持し、v0.1.2でも依存versionを変更しません。通常の製品経路での悪用実証や悪用不能の証明を意味しません。
 
 ## ダウンロードと導入
 
-取得・利用・再配布前に、Releaseページの条件案内、[Microsoft対象コード限定条件](packaging/binary/MICROSOFT-COMPONENT-TERMS-v4.txt)、[Portable README](packaging/binary/README-portable-s1-release-v3.md)を確認してください。権利表示は[Binary NOTICE](packaging/binary/THIRD-PARTY-NOTICES-S1-BINARY-RELEASE-v3.md)を参照してください。
+取得・利用・再配布前に、[v0.1.1 Releaseページ](https://github.com/guardiancrow/clipss2/releases/tag/v0.1.1)の案内と[Microsoft対象コード限定条件](https://github.com/guardiancrow/clipss2/blob/8ab9885dd2af78145491258691429793a2099807/packaging/sec-br2/MICROSOFT-COMPONENT-TERMS.txt)を確認してください。ZIP内のREADME、完全NOTICE、原LICENSE/PATENTSも保持してください。
 
 - Windows x64 Portable、Release /MD、インストーラなしの構成です。
 - **Microsoft VC++ Runtime x64は外部導入**です。必要に応じて[Microsoft公式案内](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist)から導入してください。Runtime DLL・installer・Windows標準DLLは同梱しません。
@@ -19,10 +20,17 @@ ReleaseページからZIPを取得し、全体を新しい書込み可能なフ�
 
 | 公開ZIP | 内容 |
 | --- | --- |
-| ファイル名 | `clipss2-0.1.0-windows-x64-portable.zip` |
-| サイズ | 7,968,423 bytes |
-| 構成 | EXE 1本・DLL 17本、Portable marker、製品LICENSE、第三者NOTICE・必要なLICENSE/PATENTS、Microsoft対象コード限定条件等の46ファイル |
-| SHA-256 | `3803495B4798C6B7D6B30BC0A0E08495FC275DB4E0A576A78CCD60BEBBF0FECC` |
+| ファイル名 | `clipss2-0.1.1-windows-x64-portable.zip` |
+| サイズ | 7,970,478 bytes |
+| 構成 | EXE 1本・DLL 17本、第三者原文23点、Portable marker、LICENSE、README、完全NOTICE、Microsoft条件文書、BUILD-IDENTITYの47ファイル |
+| SHA-256 | `A13DF0E714A061C367548DD5296C3C2D1A7CBCE81E2030FE2BB8C9AD1DE02169` |
+
+## v0.1.1の公開とv0.1.2の変更
+
+v0.1.1のtag対象Source commitは`8ab9885dd2af78145491258691429793a2099807`、製品build sourceは`6c4f48f8908746a7b06ab046ab715a51cbab86f8`です。後続Packaging/documentation commitを製品build revisionとは扱いません。
+2026-10-30の公開記録にはOwnerのPortable展開・起動終了、設定、Window Capture/PNG、JPEG XL可逆/非可逆、Clipboardと貼付け、JPEG/WebP/AVIFの6項目PASSが記録されています。別PC、Region/Monitor、HDR等の未検証範囲を解消したとは扱いません。
+
+v0.1.2候補は独自アイコンをEXE、設定UI、通知領域へ導入します。SVG/ICOは独自制作で、外部ロゴの流用はありません。既存CLI・設定互換性とcodec機能を維持します。ICON-2のOwner確認はデザイン・識別性とExplorerの詳細/小/大表示（100%/200% DPI）であり、新しいv0.1.2 ZIPの実機受入は別途必要です。
 
 ## 実装機能と確認済み範囲
 
@@ -32,11 +40,11 @@ ReleaseページからZIPを取得し、全体を新しい書込み可能なフ�
 - PNG / JPEG / WebP / AVIF / JPEG XLへの保存。
 - File / Clipboard / Both出力、設定保存、Portable marker。
 
-R2の実機受入は、Windows 11 25H2 x64 build 26200.9711、SDR/fallback経路、Runtime 14.51.36247.0での所有HWNDのWindow Capture、772×546 PNGのFile保存、正常終了等に限定されます。限定Regressionは12件成功、失敗0件です。この実測値を最低必要OS/Runtime版とは断定しません。
+旧v0.1.0 R2の実機受入は、Windows 11 25H2 x64 build 26200.9711、SDR/fallback経路、Runtime 14.51.36247.0での所有HWNDのWindow Capture、772×546 PNGのFile保存、正常終了等に限定されます。限定Regressionは12件成功、失敗0件です。この実測値を最低必要OS/Runtime版とは断定しません。
 
 同じ18 PEを含む以前のR3候補について、別PCでの展開・起動・キャプチャ・保存成功がユーザーから報告されています。OS/Runtime版、capture mode、保存形式、現地hash照合は未記録で、公開ZIP全体の別PC検証ではありません。
 
-常駐・設定・選択GUI全体、Clipboard実書込み、Region/Monitor、全codec・全profile、Windows 10、HDR/WCG、全GPU/DPI/driver等の組合せは受入済みではありません。R2の限定した動作・Privacy・依存関係の確認は、全環境・全機能、一般的なABI互換性、独立再ビルドのbitwise再現性の保証ではありません。過去の別構成・旧f3の実績も新S1の成功には読み替えません。
+上記の各versionで報告された確認項目以外、Region/Monitor、全codec/profileの組合せ、Windows 10、HDR/WCG、全GPU/DPI/driver等を一律に受入済みとは扱いません。過去の限定した動作・Privacy・依存関係の確認は、全環境・全機能、一般的なABI互換性、独立再ビルドのbitwise再現性の保証ではありません。
 
 [操作の実装仕様（旧Source時点の文書）](docs/USAGE.md)、[OS/APIと未検証範囲](docs/SUPPORT.md)、[Portable運用・公開準備の記録](docs/PORTABLE-RELEASE.md)も参照してください。
 
@@ -64,7 +72,7 @@ GitHub自動生成のSource archiveはtag時点の343ファイルのSource tree�
 
 ## 開発・公開履歴と固定契約
 
-最初のS1公開は **source-only** で、製品バイナリを含まないsnapshotでした。その後、R1の実依存構築・Release build、R2の限定技術受入、R4-Dの45ファイルの非公開候補ZIP受入を経て、Phase 3-DでMicrosoft対象コード限定条件を含む46ファイルのv4候補を受け入れました。これが今回の公開ZIPであり、R4-Dの45ファイルZIPとv3候補・固定契約は当時の記録として保全します。
+最初のS1公開は **source-only** で、製品バイナリを含まないsnapshotでした。その後、R1の実依存構築・Release build、R2の限定技術受入、R4-Dの45ファイルの非公開候補ZIP受入を経て、Phase 3-DでMicrosoft対象コード限定条件を含む46ファイルのv4候補を受け入れました。これがv0.1.0公開ZIPであり、旧候補・固定契約は当時の記録として保全します。
 
 旧schema2のsource承認宣言は、Ownerが明示承認した特定のsource集合とGit tree/commitのsnapshotにだけ適用します。同宣言のbinary非承認・空のbinaryProfilesや、Source Readerの承認フラグは旧Source契約の範囲を表し、別途Owner承認・公開後検証を完了したv0.1.0 Binary Releaseの未承認を意味しません。
 

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 
 project(
     clipss2
-    VERSION 0.1.1
+    VERSION 0.1.2
     LANGUAGES CXX
 )
 
@@ -19,7 +19,9 @@ if(MSVC)
     string(REPLACE "/EHsc" "/EHs" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 endif()
 
-if(CLIPSS2_PUBLICATION_SCOPE STREQUAL "icon-local")
+if(CLIPSS2_PUBLICATION_SCOPE STREQUAL "icon-v012")
+    include(cmake/IconRelease.cmake)
+elseif(CLIPSS2_PUBLICATION_SCOPE STREQUAL "icon-local")
     include(cmake/IconLocal.cmake)
 else()
     include(cmake/ShippingPrivacy.cmake)
@@ -675,7 +677,7 @@ if(BUILD_TESTING)
     add_test(NAME capture_worker_client COMMAND clipss2_capture_worker_client_test)
 endif()
 
-if(BUILD_TESTING AND CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-br[12]$")
+if(BUILD_TESTING AND CLIPSS2_PUBLICATION_SCOPE MATCHES "^(sec-br[12]|icon-v012)$")
     find_package(unofficial-brotli CONFIG REQUIRED)
     add_executable(clipss2_brotli_sec_br1_test tests/brotli_sec_br1_test.cpp)
     target_link_libraries(clipss2_brotli_sec_br1_test PRIVATE
