@@ -1,0 +1,431 @@
+{
+  "schemaVersion": 1,
+  "profileId": "clipss2-icon-v012-package-rc1",
+  "version": "0.1.2",
+  "buildId": "clipss2-0.1.2-icon-rc1",
+  "productSourceCommit": "0c6731e15576dace9f5ecacadd5ea9006cca7ae2",
+  "productSourceTree": "e5c23cffbfabead1ecf04d7ae75810c8734f2235",
+  "inputSha256": "B7EEE6B375C281B6BE4084E613C257194FD90E94AF2125B1DED131F801188097",
+  "runRoot": "build/icon-phase3/rc1",
+  "zipName": "clipss2-0.1.2-windows-x64-portable.zip",
+  "zipTimestamp": "2026-11-06T00:00:00+09:00",
+  "binaryReleaseApproved": false,
+  "publicDistributionAllowed": false,
+  "ownerAcceptance": "PENDING",
+  "sourceApprovalInherited": false,
+  "sourceBindings": [
+    {
+      "sha256": "CC55A634E4D2931C0CD016C25130B2CDA9742E6C8C20CD06C55E75BA04A42865",
+      "path": "packaging/icon-v012/README.md.in",
+      "size": 2874
+    },
+    {
+      "sha256": "CBDAD869E9D1F21F4DCAEF9265D673F665A050912DACC139C626683B8630B291",
+      "path": "packaging/icon-v012/THIRD-PARTY-NOTICES.md.in",
+      "size": 5750
+    },
+    {
+      "sha256": "B5C000D9FD26E40229C80368AEB862D2FD80F5D1031AF914B3216ECD58F085A1",
+      "path": "packaging/icon-v012/MICROSOFT-COMPONENT-TERMS.txt",
+      "size": 8447
+    },
+    {
+      "sha256": "20FCAF8C34343A1D67C50163F39E102791826FEDEEE9BCD9390341C28397DB11",
+      "path": "packaging/IconV012Package.psm1",
+      "size": 13184
+    },
+    {
+      "sha256": "9ACD2F99AB3F560AA31178404CD0DBE2E17C68CFDCB930FD9ED2D9879DAAF23D",
+      "path": "packaging/SecBR2Package.psm1",
+      "size": 14985
+    },
+    {
+      "sha256": "5B42B256050731F5B7291110C9BE9059FDED84E0BEF00EFC84E9CDAE7BF45B81",
+      "path": "tools/package_icon_v012.ps1",
+      "size": 963
+    },
+    {
+      "sha256": "9DEC821FCE9F4AF492B61770A1009CF66876C53A6B878DC04ED1E7DD9456AB52",
+      "path": "LICENSE",
+      "size": 1069
+    }
+  ],
+  "files": [
+    {
+      "sha256": "07F02E73EDC16149F3E25FBFBA9D4312600E5A078C7ABE6AB5245A3967817F34",
+      "size": 10183168,
+      "rendered": false,
+      "path": "aom.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/aom.dll"
+    },
+    {
+      "sha256": "BF7AE695174E70F7018934B1A5E844184B20122C70FDBFA24562FB129635F0A8",
+      "size": 220672,
+      "rendered": false,
+      "path": "avif.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/avif.dll"
+    },
+    {
+      "sha256": "31A88D04504896E82A035B03F5ECA60DEE97789707BEC4ECFA1D2BC223340643",
+      "size": 137728,
+      "rendered": false,
+      "path": "brotlicommon.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/brotlicommon.dll"
+    },
+    {
+      "sha256": "72C3B73E4BFAF02BD09A770E4382C5CDF7764FAFC735118E7D18B6B785810502",
+      "size": 52224,
+      "rendered": false,
+      "path": "brotlidec.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/brotlidec.dll"
+    },
+    {
+      "sha256": "D82A81EFA007A8C28D1CD067E446BFC1A60310694934E5F45636DD42AC9EDF3C",
+      "size": 678912,
+      "rendered": false,
+      "path": "brotlienc.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/brotlienc.dll"
+    },
+    {
+      "source": "build/icon-phase3/rc1/BUILD-IDENTITY.json",
+      "size": 50734,
+      "path": "BUILD-IDENTITY.json",
+      "sha256": "6EC861376047B3168D6049F950D61CD1F419ED8B2B02D7D5EB30967B74631BB5",
+      "rendered": false,
+      "kind": "document"
+    },
+    {
+      "sha256": "6D56315C3798AEEF3CEB9C3AEC52D3E195E142035DB5BA8D0E8372770C9A22F4",
+      "size": 839168,
+      "rendered": false,
+      "path": "clipss2.exe",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/clipss2.exe"
+    },
+    {
+      "source": "packaging/clipss2.portable",
+      "size": 20,
+      "path": "clipss2.portable",
+      "sha256": "DEFFE74D089379C55278091601473AE215B6DF6D321036313A41B122EE80E5C5",
+      "rendered": false,
+      "kind": "document"
+    },
+    {
+      "sha256": "8F7F4C8B0FCF958F84B9547982C1262FD965225A6A8FA4065E5EFCAF0458241A",
+      "size": 58880,
+      "rendered": false,
+      "path": "hwy.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/hwy.dll"
+    },
+    {
+      "sha256": "7A3EBA082559A0C5BA68005D8D6389774F0A29B228F40C5A699BF322963E7A02",
+      "size": 694272,
+      "rendered": false,
+      "path": "jpeg62.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/jpeg62.dll"
+    },
+    {
+      "sha256": "89A56A06A4638DD6D7F0D02D8F4A441FB8971C88A558E2B529B5318C30A77F63",
+      "size": 118272,
+      "rendered": false,
+      "path": "jxl_cms.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/jxl_cms.dll"
+    },
+    {
+      "sha256": "5FB6A2692A6C6D0FDADAAD48FB755072A57D1FBAD37913611EC37DDBC4CBBAFE",
+      "size": 25088,
+      "rendered": false,
+      "path": "jxl_threads.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/jxl_threads.dll"
+    },
+    {
+      "sha256": "6D424FDC2DF8FD64777D2E670883F570CE4680A308AF1F13905BD068CAFBC767",
+      "size": 3079168,
+      "rendered": false,
+      "path": "jxl.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/jxl.dll"
+    },
+    {
+      "sha256": "D7DF04FA9D27B0C8056A959B44C4631BC4F9D1C23A9519FDB3E4441397A98906",
+      "size": 377344,
+      "rendered": false,
+      "path": "lcms2-2.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/lcms2-2.dll"
+    },
+    {
+      "sha256": "BC4EBB9D11C9772446A308F61E1597D3EAAAD5045164A151B810D58A4B75F334",
+      "size": 198656,
+      "rendered": false,
+      "path": "libpng16.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/libpng16.dll"
+    },
+    {
+      "sha256": "23F047208028AD7FE6F9EEEE2D5C0519313037880B86E59EBD8016172950A590",
+      "size": 25600,
+      "rendered": false,
+      "path": "libsharpyuv.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/libsharpyuv.dll"
+    },
+    {
+      "sha256": "6A1FA44C62C6449688798CA3A493F35215DB19ABC18023D69B2EF407B460C1E1",
+      "size": 372224,
+      "rendered": false,
+      "path": "libwebp.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/libwebp.dll"
+    },
+    {
+      "sha256": "F6E814F1C6ACE1C1748E4F6FAFE2344D5FA021A8896631650A14F07A2175AF2F",
+      "size": 325120,
+      "rendered": false,
+      "path": "libyuv.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/libyuv.dll"
+    },
+    {
+      "source": "LICENSE",
+      "size": 1069,
+      "path": "LICENSE",
+      "sha256": "9DEC821FCE9F4AF492B61770A1009CF66876C53A6B878DC04ED1E7DD9456AB52",
+      "rendered": false,
+      "kind": "document"
+    },
+    {
+      "sha256": "797958A3C220F1FD96AB1BE1ECF61F57615593D74B0B170941AE1A309AE554A0",
+      "size": 10823,
+      "rendered": false,
+      "path": "licenses/aom/copyright",
+      "kind": "license-or-patent",
+      "source": "licenses/aom/copyright"
+    },
+    {
+      "sha256": "CFC7749B96F63BD31C3C42B5C471BF756814053E847C10F3EB003417BC523D30",
+      "size": 11358,
+      "rendered": false,
+      "path": "licenses/apache-2.0/LICENSE.txt",
+      "kind": "license-or-patent",
+      "source": "licenses/apache-2.0/LICENSE.txt"
+    },
+    {
+      "sha256": "3D180008E36922A4E8DAEC11C34C7AF264FED5962D07924AEA928C38E8663C94",
+      "size": 1084,
+      "rendered": false,
+      "path": "licenses/brotli/copyright",
+      "kind": "license-or-patent",
+      "source": "licenses/brotli/copyright"
+    },
+    {
+      "sha256": "F60485948865406BBC0998B4062B1280887D3083304D69BA1DBD5FCC8C24F59C",
+      "size": 1159,
+      "rendered": false,
+      "path": "licenses/cppwinrt/LICENSE.txt",
+      "kind": "license-or-patent",
+      "source": "licenses/cppwinrt/LICENSE.txt"
+    },
+    {
+      "sha256": "D208152E2777FFD0126EACC1BD21C0320D69E4E6B622D21A2A12A47E8EF73763",
+      "size": 21155,
+      "rendered": false,
+      "path": "licenses/highway-managed/LICENSE",
+      "kind": "license-or-patent",
+      "source": "licenses/highway-managed/LICENSE"
+    },
+    {
+      "sha256": "E340270D4F64384569A91D546ACB5B094D69CE47F0C015DB77ABB74DC6F815AF",
+      "size": 20785,
+      "rendered": false,
+      "path": "licenses/highway-vcpkg/copyright",
+      "kind": "license-or-patent",
+      "source": "licenses/highway-vcpkg/copyright"
+    },
+    {
+      "sha256": "4A39A8FDAD00D0F0D0555D35B393DC982BA8153D3AA98E2C3B8AF739A5926227",
+      "size": 5345,
+      "rendered": false,
+      "path": "licenses/jpegli-headers/LICENSE.md",
+      "kind": "license-or-patent",
+      "source": "licenses/jpegli-headers/LICENSE.md"
+    },
+    {
+      "sha256": "0517B9B6EA15193CC91ADA5E3C4FE168C1D57BFB9DD62F58D307F8A5A8B805CD",
+      "size": 12990,
+      "rendered": false,
+      "path": "licenses/jpegli-headers/README.ijg",
+      "kind": "license-or-patent",
+      "source": "licenses/jpegli-headers/README.ijg"
+    },
+    {
+      "sha256": "2C783D8D5D952BD0726292E56AD1F3F247F370667809497A8020B8C2915BA470",
+      "size": 1535,
+      "rendered": false,
+      "path": "licenses/jpegli/LICENSE",
+      "kind": "license-or-patent",
+      "source": "licenses/jpegli/LICENSE"
+    },
+    {
+      "sha256": "B85F464F29D8CA92D63AAD39B91C166B38F18B7214344BB805D7CCD60AC705BB",
+      "size": 1355,
+      "rendered": false,
+      "path": "licenses/jpegli/PATENTS",
+      "kind": "license-or-patent",
+      "source": "licenses/jpegli/PATENTS"
+    },
+    {
+      "sha256": "6DBD60437F8EF91D8DE1F08AD75882547FD4931BFCC3566A0735F28DB1484D31",
+      "size": 1080,
+      "rendered": false,
+      "path": "licenses/lcms/copyright",
+      "kind": "license-or-patent",
+      "source": "licenses/lcms/copyright"
+    },
+    {
+      "sha256": "165ABF92CC04B39E80D29CADEA7A6A7E8FDDF59407D4AD2616507A7EBE8216F9",
+      "size": 20415,
+      "rendered": false,
+      "path": "licenses/libavif/copyright",
+      "kind": "license-or-patent",
+      "source": "licenses/libavif/copyright"
+    },
+    {
+      "sha256": "BA6BCEEBCBA0FDD35488477C2CCA8C4632CE82C74DBFBC87D886CE6FC4433579",
+      "size": 6077,
+      "rendered": false,
+      "path": "licenses/libjpeg-turbo/copyright",
+      "kind": "license-or-patent",
+      "source": "licenses/libjpeg-turbo/copyright"
+    },
+    {
+      "sha256": "75815E3BF6484201A3C3D17A1BBF10F2E8E3237F84DF10A2357EA896DB2A81D6",
+      "size": 12799,
+      "rendered": false,
+      "path": "licenses/libjpeg-turbo/README.ijg",
+      "kind": "license-or-patent",
+      "source": "licenses/libjpeg-turbo/README.ijg"
+    },
+    {
+      "sha256": "8405932022A556380C2D8C272EFF154A923FEB197233F348CE5F7334FB0A5EDE",
+      "size": 1508,
+      "rendered": false,
+      "path": "licenses/libjxl/copyright",
+      "kind": "license-or-patent",
+      "source": "licenses/libjxl/copyright"
+    },
+    {
+      "sha256": "91915F8AE056A68A3C5BDF05D9F6F78BB6903E27A8CA3A8434C9E4AC87300575",
+      "size": 1333,
+      "rendered": false,
+      "path": "licenses/libjxl/PATENTS",
+      "kind": "license-or-patent",
+      "source": "licenses/libjxl/PATENTS"
+    },
+    {
+      "sha256": "BDB0A645EA18C60507D0368379B1AC5474B92255FCC2D115E07486A7672BA526",
+      "size": 5345,
+      "rendered": false,
+      "path": "licenses/libpng/copyright",
+      "kind": "license-or-patent",
+      "source": "licenses/libpng/copyright"
+    },
+    {
+      "sha256": "050B5BA2C8EB0BD3B996E12EF79312A1C62237F2DE1B3C609843F00BB74744F3",
+      "size": 3017,
+      "rendered": false,
+      "path": "licenses/libwebp/copyright",
+      "kind": "license-or-patent",
+      "source": "licenses/libwebp/copyright"
+    },
+    {
+      "sha256": "2B2CC1180C7E6988328AD2033B04B80117419DB9C4C584918BBB3CFEC7E9364F",
+      "size": 1506,
+      "rendered": false,
+      "path": "licenses/libyuv/copyright",
+      "kind": "license-or-patent",
+      "source": "licenses/libyuv/copyright"
+    },
+    {
+      "sha256": "4DA84211F947C6F9F7DD8FBCE513E1522E01833407AE732B8C9A2BBB75FED495",
+      "size": 1387,
+      "rendered": false,
+      "path": "licenses/libyuv/PATENTS",
+      "kind": "license-or-patent",
+      "source": "licenses/libyuv/PATENTS"
+    },
+    {
+      "sha256": "7C68A47568BD633F7A71EE5E2038660A2CC62CE8A5405999E2B69FAB3F37469C",
+      "size": 12331,
+      "rendered": false,
+      "path": "licenses/msvc-stl/LICENSE.txt",
+      "kind": "license-or-patent",
+      "source": "packaging/binary/msvc-stl-LICENSE.txt"
+    },
+    {
+      "sha256": "E59BB5C5C6BA426A9AC4BA9FE667AD14C5166B12AA25BE8AF1D122B14FBE2E36",
+      "size": 1635,
+      "rendered": false,
+      "path": "licenses/skcms/LICENSE",
+      "kind": "license-or-patent",
+      "source": "licenses/skcms/LICENSE"
+    },
+    {
+      "sha256": "E32FF4E00D9D94930537635291DA39E7E612703334BF6FDE8C7F1686FE8A45A2",
+      "size": 1002,
+      "rendered": false,
+      "path": "licenses/zlib/copyright",
+      "kind": "license-or-patent",
+      "source": "licenses/zlib/copyright"
+    },
+    {
+      "source": "packaging/icon-v012/MICROSOFT-COMPONENT-TERMS.txt",
+      "size": 8447,
+      "path": "MICROSOFT-COMPONENT-TERMS.txt",
+      "sha256": "B5C000D9FD26E40229C80368AEB862D2FD80F5D1031AF914B3216ECD58F085A1",
+      "rendered": false,
+      "kind": "document"
+    },
+    {
+      "source": "packaging/icon-v012/README.md.in",
+      "size": 2891,
+      "path": "README.md",
+      "sha256": "34ED1317507386999772FD811A16C8D0B1D6E467F058A65D3A635DB6E391CC18",
+      "rendered": true,
+      "kind": "document"
+    },
+    {
+      "source": "packaging/icon-v012/THIRD-PARTY-NOTICES.md.in",
+      "size": 5767,
+      "path": "THIRD-PARTY-NOTICES.md",
+      "sha256": "973E9F802D5D0EB5F5AA7584E74B71345F52787554218D0CCC065245D2E5FE20",
+      "rendered": true,
+      "kind": "document"
+    },
+    {
+      "sha256": "BF1B33DC608004BD892AA9759D086A1F46A89A3287BF4E19ECBD9B0AFBEBDF2A",
+      "size": 986624,
+      "rendered": false,
+      "path": "turbojpeg.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/turbojpeg.dll"
+    },
+    {
+      "sha256": "ED59ADD93A990038BE7137DA5064201826583E5929336661BFE685ADD1D9982A",
+      "size": 91136,
+      "rendered": false,
+      "path": "z.dll",
+      "kind": "PE",
+      "source": "build/icon-phase3/rc1/product/z.dll"
+    }
+  ]
+}

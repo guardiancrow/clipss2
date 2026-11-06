@@ -1,4 +1,10 @@
-# S1 構築入口と検証ガイド
+# 構築入口と検証ガイド
+
+現在のv0.1.2未公開候補は[ICON-3の独立Source/Build/Packaging手順](docs/ICON-3-V012.md)を使用します。
+`icon-v012` は新規のsource-bound Release候補scopeです。`icon-local` は開発検証用です。
+公開済みv0.1.1のSource/Binary identityや、以下の歴史的S1/SEC-BR1/SEC-BR2固定契約は更新しません。
+
+## 歴史的S1構築入口
 
 v0.1.1公開候補の新しい構築経路は[SEC-BR2](docs/SEC-BR2-BUILD.md)を参照してください。
 SEC-BR1が固定した旧versionの入力・検証証拠は保持し、新versionを独立した契約で構築します。

@@ -65,6 +65,18 @@ function Read-IconPackageProfile($Root,$DependencyRoot) {
     $null=Test-IconProduct $Root (Join-Path $Root $p.runRoot) $DependencyRoot
     $build=Get-Content -LiteralPath (Join-Path $Root "$($p.runRoot)/BUILD-IDENTITY.json") -Raw|ConvertFrom-Json -AsHashtable
     if($build.sourceCommit -cne $p.productSourceCommit -or $build.sourceTree -cne $p.productSourceTree -or $build.inputsSha256 -cne $p.inputSha256){throw 'ICON-012:PackageBuildBinding'}
+    $plan=Read-IconInputs $Root
+    $expectedBindings=@($plan.inputs.files|ForEach-Object path)
+    $actualBindings=@($build.sourceBindings|ForEach-Object path)
+    if($expectedBindings.Count -ne $actualBindings.Count -or @($actualBindings|Sort-Object -Unique).Count -ne $actualBindings.Count -or
+        @($actualBindings|Where-Object {$_ -cnotin $expectedBindings}).Count){throw 'ICON-012:BuildSourceClosure'}
+    foreach($binding in $build.sourceBindings){$known=@($plan.inputs.files|Where-Object path -CEQ $binding.path)[0];if($binding.sha256 -cne $known.sha256 -or $binding.size -ne $known.size){throw 'ICON-012:BuildSourceBinding'}}
+    if($build.sourceCommit -notmatch '^[0-9a-f]{40}$' -or (Get-IconGit $Root @('rev-parse',"$($build.sourceCommit)^{tree}")) -cne $build.sourceTree){throw 'ICON-012:BuildSourceTree'}
+    $inputBlob=Get-IconGit $Root @('rev-parse',"$($build.sourceCommit):cmake/icon-v012/source-inputs-v1.json")
+    if($inputBlob -cne (Get-IconGit $Root @('hash-object','--no-filters',(Join-Path $Root 'cmake/icon-v012/source-inputs-v1.json')))){throw 'ICON-012:CommittedInputs'}
+    $owner=Get-Content -LiteralPath (Join-Path $Root "$($p.runRoot)/owner.json") -Raw|ConvertFrom-Json -AsHashtable
+    if($owner.sourceCommit -cne $build.sourceCommit -or $build.binaries.Count -ne 18 -or $build.configuration -cne 'MSVC x64 Release /MD' -or
+        $build.runtimeBundled -isnot [bool] -or $build.runtimeBundled -or $build.releaseApproved -isnot [bool] -or $build.releaseApproved -or $build.ownerAcceptance -cne 'PENDING'){throw 'ICON-012:BuildReceipt'}
     if($p.files.Count -ne 47 -or @($p.files|Where-Object kind -CEQ PE).Count -ne 18 -or @($p.files|Where-Object kind -CEQ 'license-or-patent').Count -ne 23){throw 'ICON-012:PackageCount'}
     foreach($binding in $p.sourceBindings) {
         $file=Join-Path $Root $binding.path
