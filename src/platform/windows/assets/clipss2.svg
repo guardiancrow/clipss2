@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="plate-blue" x1="16" y1="16" x2="240" y2="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#164D83"/>
+      <stop offset="1" stop-color="#123761"/>
+    </linearGradient>
+  </defs>
+  <!-- 16-unit transparent inset; 224-unit plate; 48-unit corner radius. -->
+  <rect id="plate" x="16" y="16" width="224" height="224" rx="48" fill="url(#plate-blue)"/>
+  <!-- 24-unit strokes, 48-unit arms; opposing ends leave a 32-unit gap.
+       Butt caps keep the open capture frame distinct at 16 px. -->
+  <g fill="none" stroke-width="24" stroke-linecap="butt" stroke-linejoin="round">
+    <path id="frame-top-left" stroke="#F4F8FC" d="M 112 64 H 64 V 112"/>
+    <path id="frame-top-right" stroke="#54D6EC" d="M 144 64 H 192 V 112"/>
+    <path id="frame-bottom-left" stroke="#54D6EC" d="M 64 144 V 192 H 112"/>
+    <path id="frame-bottom-right" stroke="#F4F8FC" d="M 144 192 H 192 V 144"/>
+  </g>
+</svg>

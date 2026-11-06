@@ -1,0 +1,27 @@
+# clipss2 0.1.2 — Windows x64 Portable candidate
+
+**LOCAL CANDIDATE / OWNER ACCEPTANCE PENDING / NOT PUBLISHED**
+
+## 使用・再配布前の条件案内
+
+取得・利用・再配布前に、EXEと同じ階層の[MICROSOFT-COMPONENT-TERMS.txt](MICROSOFT-COMPONENT-TERMS.txt)を確認してください。Covered SDK Codeの受領者・再配布者に対象成分の条件への合意を求めます。自作MITおよび独立した第三者OSSの権利は維持します。提示、合意要求、有効な合意成立は別で、ダウンロード・展開・実行のみを明示的合意とは扱いません。
+
+## 変更内容・起動
+
+独自のキャプチャフレームアイコンをEXE、設定UI、通知領域に導入しました。Brotli 1.2.1、libjxl 0.12.0、他の依存version、CLI、設定互換性とcodec機能は維持しています。
+
+- Windows x64 Portable、MSVC Release /MD、未署名。hashは発行者認証ではありません。
+- Microsoft VC++ Runtime x64は外部導入です。[Microsoft公式案内](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist)を参照してください。Runtime DLL、installer、OS DLL、Debug CRTは同梱しません。
+- ZIP全体を新しい書込み可能な専用folderへ展開し、EXE 1本、DLL 17本、`clipss2.portable`、文書・licensesを保持してください。既存の設定・画像・旧版へ上書きしません。
+- `clipss2.exe --help` はVersion 0.1.2を表示します。通常起動は常駐mode、`--settings`は設定UIです。
+- Portable設定はEXE隣の`settings.conf`、既定の保存先は`captures`です。このZIPに利用者の設定やキャプチャ画像は含まれません。
+
+## 権利・identity・受入
+
+自作コードと独自アイコンは[MIT LICENSE](LICENSE)。第三者成分の完全表示は[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)と`licenses/`の原文・特許条項を参照してください。Microsoftや第三者の成分を一律MITとは扱いません。
+
+製品build source commit: `{{BUILD_SOURCE_COMMIT}}`。
+Build ID: `clipss2-0.1.2-icon-rc1`。新規scope `icon-v012` / Shipping Privacy v2。
+`BUILD-IDENTITY.json` はsource入力、固定依存のreceipt/marker、18 PEの内容を記録します。後続のPackaging/documentation commitは製品の再build revisionではありません。自己記録は署名・公開承認を与えません。
+
+この候補の実機受入は未完了です。ICON-2でのデザイン/Explorerの100%/200%確認や、旧版のcapture/Clipboard受入を新しいZIPへ自動継承しません。設定、タスクバー/Alt+Tab、通知領域、Window Capture、JPEG XL可逆/非可逆、Clipboardと他アプリへの貼付け、他形式、テーマ/DPIの確認をOwnerが行います。別PC/OS/GPU/HDRや全環境の動作を保証しません。

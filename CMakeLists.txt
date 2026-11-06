@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 
 project(
     clipss2
-    VERSION 0.1.1
+    VERSION 0.1.2
     LANGUAGES CXX
 )
 
@@ -19,7 +19,13 @@ if(MSVC)
     string(REPLACE "/EHsc" "/EHs" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 endif()
 
-include(cmake/ShippingPrivacy.cmake)
+if(CLIPSS2_PUBLICATION_SCOPE STREQUAL "icon-v012")
+    include(cmake/IconRelease.cmake)
+elseif(CLIPSS2_PUBLICATION_SCOPE STREQUAL "icon-local")
+    include(cmake/IconLocal.cmake)
+else()
+    include(cmake/ShippingPrivacy.cmake)
+endif()
 find_package(PNG REQUIRED)
 find_package(libjpeg-turbo 3 CONFIG REQUIRED)
 find_package(WebP CONFIG REQUIRED)
@@ -278,12 +284,15 @@ set(CLIPSS2_AUDIT_SOURCES
     src/platform/windows/wgc_item_reuse_audit.h
 )
 add_executable(clipss2 ${CLIPSS2_PRODUCT_SOURCES})
-if(CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-br2")
-    enable_language(RC)
-    configure_file(src/platform/windows/product_version.rc.in clipss2-version.rc @ONLY)
-    target_sources(clipss2 PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/clipss2-version.rc")
-    target_compile_definitions(clipss2 PRIVATE CLIPSS2_PRODUCT_VERSION="${PROJECT_VERSION}")
-endif()
+enable_language(RC)
+configure_file(src/platform/windows/product_version.rc.in clipss2-version.rc @ONLY)
+configure_file(src/platform/windows/app_icon.rc.in clipss2-icon.rc @ONLY)
+set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/clipss2-icon.rc" PROPERTIES
+    OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/platform/windows/assets/clipss2.ico;${CMAKE_CURRENT_SOURCE_DIR}/src/platform/windows/app_resources.h")
+target_sources(clipss2 PRIVATE
+    "${CMAKE_CURRENT_BINARY_DIR}/clipss2-version.rc"
+    "${CMAKE_CURRENT_BINARY_DIR}/clipss2-icon.rc")
+target_compile_definitions(clipss2 PRIVATE CLIPSS2_PRODUCT_VERSION="${PROJECT_VERSION}")
 
 target_include_directories(clipss2 PRIVATE src)
 target_compile_definitions(clipss2 PRIVATE CLIPSS2_AUDIT_FEATURES=0)
@@ -338,6 +347,14 @@ if(CLIPSS2_BUILD_LOSSY_EVAL)
 endif()
 
 if(BUILD_TESTING)
+    add_executable(clipss2_app_icon_test tests/app_icon_test.cpp
+        "${CMAKE_CURRENT_BINARY_DIR}/clipss2-icon.rc")
+    target_include_directories(clipss2_app_icon_test PRIVATE src)
+    target_compile_definitions(clipss2_app_icon_test PRIVATE
+        UNICODE _UNICODE WIN32_LEAN_AND_MEAN NOMINMAX)
+    target_link_libraries(clipss2_app_icon_test PRIVATE user32 gdi32)
+    clipss2_configure_cpp_target(clipss2_app_icon_test)
+    add_test(NAME app_icon COMMAND clipss2_app_icon_test)
     # Same sources, explicit test policy; never selected by portable packaging.
     add_executable(clipss2_shipping_policy_test tests/shipping_policy_test.cpp
         src/platform/windows/capture_worker_protocol.cpp src/platform/windows/output_storage.cpp)
@@ -357,6 +374,9 @@ if(BUILD_TESTING)
     clipss2_configure_cpp_target(clipss2_ui_windows_audit)
 
     add_executable(clipss2_audit_fixture ${CLIPSS2_PRODUCT_SOURCES} ${CLIPSS2_AUDIT_SOURCES})
+    target_sources(clipss2_audit_fixture PRIVATE
+        "${CMAKE_CURRENT_BINARY_DIR}/clipss2-version.rc"
+        "${CMAKE_CURRENT_BINARY_DIR}/clipss2-icon.rc")
     target_include_directories(clipss2_audit_fixture PRIVATE src)
     target_compile_definitions(clipss2_audit_fixture PRIVATE
         CLIPSS2_AUDIT_FEATURES=1 UNICODE _UNICODE WIN32_LEAN_AND_MEAN NOMINMAX)
@@ -657,7 +677,7 @@ if(BUILD_TESTING)
     add_test(NAME capture_worker_client COMMAND clipss2_capture_worker_client_test)
 endif()
 
-if(BUILD_TESTING AND CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-br[12]$")
+if(BUILD_TESTING AND CLIPSS2_PUBLICATION_SCOPE MATCHES "^(sec-br[12]|icon-v012)$")
     find_package(unofficial-brotli CONFIG REQUIRED)
     add_executable(clipss2_brotli_sec_br1_test tests/brotli_sec_br1_test.cpp)
     target_link_libraries(clipss2_brotli_sec_br1_test PRIVATE
