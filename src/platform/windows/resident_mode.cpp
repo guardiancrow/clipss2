@@ -346,6 +346,15 @@ private:
         }
         switch (message)
         {
+        case WM_SETTINGCHANGE:
+        case WM_DISPLAYCHANGE:
+        case WM_DPICHANGED:
+        {
+            std::string diagnostic;
+            if (tray_.lifecycle_active() && !tray_.refresh_icon(diagnostic) && !diagnostic.empty())
+                write_stderr_utf8("Tray icon refresh failed: " + diagnostic + "; resident remains active\n");
+            return DefWindowProcW(window, message, word, parameter);
+        }
         case WM_HOTKEY:
             if (static_cast<int>(word) != capture_hotkey_id) return 0;
             request_capture(CaptureRequestSource::hotkey);

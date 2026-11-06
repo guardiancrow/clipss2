@@ -1,6 +1,7 @@
 #include "audit/audit_policy.h"
 #include "platform/windows/settings_ui.h"
 
+#include "platform/windows/app_icon.h"
 #include "platform/windows/error_diagnostics.h"
 #include "platform/windows/output_storage.h"
 #include "platform/windows/settings_location.h"
@@ -84,6 +85,13 @@ public:
         : settings_(settings), owner_(owner), pending_(settings.preferences()),
           language_(resolve_ui_language(settings.preferences().ui_language)) {}
 
+    ~SettingsWindow()
+    {
+        // Also detach the borrowed icon handles before their owners unwind
+        // if the modal loop exits through an exception.
+        if (window_ && IsWindow(window_)) (void)DestroyWindow(window_);
+    }
+
     SettingsWindow(const SettingsWindow&) = delete;
     SettingsWindow& operator=(const SettingsWindow&) = delete;
 
@@ -111,7 +119,7 @@ public:
             throw std::runtime_error("Register Settings content failed.");
 
         window_ = CreateWindowExW(
-            WS_EX_CONTROLPARENT, settings_window_class_name,
+            WS_EX_CONTROLPARENT | WS_EX_APPWINDOW, settings_window_class_name,
             ui_string(language_, UiStringId::settings_title).data(),
             WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU,
             CW_USEDEFAULT, CW_USEDEFAULT, 1, 1, owner_, nullptr, instance, this);
@@ -221,7 +229,10 @@ private:
     {
         switch (message)
         {
-        case WM_CREATE: create_controls(); return 0;
+        case WM_CREATE:
+            icons_.apply(window, GetDpiForWindow(window));
+            create_controls();
+            return 0;
         case WM_COMMAND:
             if ((HIWORD(word) == EN_SETFOCUS || HIWORD(word) == CBN_SETFOCUS || HIWORD(word) == BN_SETFOCUS) && parameter)
                 reveal(reinterpret_cast<HWND>(parameter));
@@ -245,6 +256,7 @@ private:
             scroll_to(scroll_position_ - GET_WHEEL_DELTA_WPARAM(word) / WHEEL_DELTA * scaled(72, dpi_)); return 0;
         case WM_DPICHANGED:
         {
+            icons_.apply(window, HIWORD(word));
             const auto* suggested = reinterpret_cast<RECT*>(parameter);
             apply_dpi(HIWORD(word), nullptr, suggested);
             return 0;
@@ -893,6 +905,7 @@ private:
             SendMessageW(language_combo_, CB_GETDROPPEDSTATE, 0, 0) != 0;
     }
 
+    WindowApplicationIcons icons_;
     ProductSettings& settings_;
     HWND owner_{};
     HWND window_{};

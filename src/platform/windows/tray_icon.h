@@ -1,5 +1,7 @@
 #pragma once
 
+#include "platform/windows/app_icon.h"
+
 #include <windows.h>
 #include <shellapi.h>
 
@@ -44,6 +46,7 @@ public:
     [[nodiscard]] bool notify_startup(std::string& diagnostic);
     [[nodiscard]] bool restore_after_taskbar_created(
         std::string& diagnostic) noexcept;
+    [[nodiscard]] bool refresh_icon(std::string& diagnostic) noexcept;
     [[nodiscard]] bool remove(std::string& diagnostic) noexcept;
     [[nodiscard]] TrayCommand show_context_menu(
         POINT anchor, bool capture_enabled, std::string& diagnostic);
@@ -60,7 +63,7 @@ private:
     [[nodiscard]] bool set_version(std::string& diagnostic) noexcept;
 
     HWND owner_{};
-    HICON shared_icon_{};
+    ApplicationIcon icon_;
     bool lifecycle_active_{};
     HMENU audit_active_menu_{}; // Borrowed only while show_context_menu owns PopupMenu.
     UINT audit_menu_command_{};

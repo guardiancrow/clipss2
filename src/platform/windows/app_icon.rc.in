@@ -1,0 +1,5 @@
+// Copyright (c) 2026 guardiancrow. MIT.
+#pragma code_page(65001)
+#include "@CMAKE_CURRENT_SOURCE_DIR@/src/platform/windows/app_resources.h"
+
+IDI_CLIPSS2_APP ICON "@CMAKE_CURRENT_SOURCE_DIR@/src/platform/windows/assets/clipss2.ico"

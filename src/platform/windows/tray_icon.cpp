@@ -114,12 +114,8 @@ void TrayIcon::add(HWND owner)
     if (owner == nullptr || lifecycle_active_)
         throw std::logic_error("Tray icon add requested with invalid ownership state.");
     owner_ = owner;
-    // LoadIcon with a predefined resource returns a shared icon. It must not be
-    // passed to DestroyIcon.
-    shared_icon_ = LoadIconW(nullptr, IDI_APPLICATION);
-    if (shared_icon_ == nullptr)
-        throw DiagnosticError(format_win32_error(
-            "LoadIconW shared tray icon failed", GetLastError()));
+    const UINT dpi = GetDpiForSystem();
+    icon_.load(GetSystemMetricsForDpi(SM_CXSMICON, dpi), GetSystemMetricsForDpi(SM_CYSMICON, dpi));
 
     std::string diagnostic;
     if (!add_to_shell(diagnostic))
@@ -127,18 +123,19 @@ void TrayIcon::add(HWND owner)
     lifecycle_active_ = true;
     if (!set_version(diagnostic))
     {
-        NOTIFYICONDATAW data = notification_data(owner_, shared_icon_, false);
+        NOTIFYICONDATAW data = notification_data(owner_, icon_.get(), false);
         (void)Shell_NotifyIconW(NIM_DELETE, &data);
         lifecycle_active_ = false;
         owner_ = nullptr;
-        shared_icon_ = nullptr;
+        icon_.reset();
         throw DiagnosticError(std::move(diagnostic));
     }
 }
 
 bool TrayIcon::add_to_shell(std::string& diagnostic) noexcept
 {
-    NOTIFYICONDATAW data = notification_data(owner_, shared_icon_, true);
+    NOTIFYICONDATAW data = notification_data(owner_, icon_.get(), true);
+    if (!icon_.get()) data.uFlags &= ~NIF_ICON;
     SetLastError(ERROR_SUCCESS);
     if (!Shell_NotifyIconW(NIM_ADD, &data))
     {
@@ -151,7 +148,7 @@ bool TrayIcon::add_to_shell(std::string& diagnostic) noexcept
 
 bool TrayIcon::set_version(std::string& diagnostic) noexcept
 {
-    NOTIFYICONDATAW data = notification_data(owner_, shared_icon_, false);
+    NOTIFYICONDATAW data = notification_data(owner_, icon_.get(), false);
     data.uVersion = NOTIFYICON_VERSION_4;
     SetLastError(ERROR_SUCCESS);
     if (!Shell_NotifyIconW(NIM_SETVERSION, &data))
@@ -168,8 +165,10 @@ bool TrayIcon::restore_after_taskbar_created(std::string& diagnostic) noexcept
     if (!lifecycle_active_) return false;
     // Makes a synthetic/repeated TaskbarCreated idempotent for the stable
     // hWnd/uID identity, while NIM_DELETE is harmless after a real shell reset.
-    NOTIFYICONDATAW data = notification_data(owner_, shared_icon_, false);
+    NOTIFYICONDATAW data = notification_data(owner_, icon_.get(), false);
     (void)Shell_NotifyIconW(NIM_DELETE, &data);
+    const UINT dpi = GetDpiForSystem();
+    icon_.load(GetSystemMetricsForDpi(SM_CXSMICON, dpi), GetSystemMetricsForDpi(SM_CYSMICON, dpi));
     if (!add_to_shell(diagnostic)) return false;
     if (!set_version(diagnostic))
     {
@@ -179,10 +178,29 @@ bool TrayIcon::restore_after_taskbar_created(std::string& diagnostic) noexcept
     return true;
 }
 
+bool TrayIcon::refresh_icon(std::string& diagnostic) noexcept
+{
+    if (!lifecycle_active_) return false;
+    const UINT dpi = GetDpiForSystem();
+    ApplicationIcon replacement;
+    replacement.load(GetSystemMetricsForDpi(SM_CXSMICON, dpi), GetSystemMetricsForDpi(SM_CYSMICON, dpi));
+    if (!replacement.get()) return false;
+    auto data = notification_data(owner_, replacement.get(), false);
+    data.uFlags = NIF_ICON;
+    SetLastError(ERROR_SUCCESS);
+    if (!Shell_NotifyIconW(NIM_MODIFY, &data))
+    {
+        diagnostic = format_win32_error("Shell_NotifyIconW icon refresh failed", GetLastError());
+        return false;
+    }
+    icon_.swap(replacement);
+    return true;
+}
+
 bool TrayIcon::remove(std::string& diagnostic) noexcept
 {
     if (!lifecycle_active_) return true;
-    NOTIFYICONDATAW data = notification_data(owner_, shared_icon_, false);
+    NOTIFYICONDATAW data = notification_data(owner_, icon_.get(), false);
     SetLastError(ERROR_SUCCESS);
     const bool removed = Shell_NotifyIconW(NIM_DELETE, &data) != FALSE;
     if (!removed)
@@ -190,7 +208,7 @@ bool TrayIcon::remove(std::string& diagnostic) noexcept
             "Shell_NotifyIconW NIM_DELETE failed", GetLastError());
     lifecycle_active_ = false;
     owner_ = nullptr;
-    shared_icon_ = nullptr;
+    icon_.reset();
     return removed;
 }
 
@@ -256,7 +274,7 @@ void TrayIcon::return_focus_to_notification_area(
     std::string& diagnostic) noexcept
 {
     if (!lifecycle_active_) return;
-    NOTIFYICONDATAW data = notification_data(owner_, shared_icon_, false);
+    NOTIFYICONDATAW data = notification_data(owner_, icon_.get(), false);
     SetLastError(ERROR_SUCCESS);
     const bool succeeded = Shell_NotifyIconW(NIM_SETFOCUS, &data) != FALSE;
     if (!succeeded && diagnostic.empty()) diagnostic = notification_focus_diagnostic(false);
