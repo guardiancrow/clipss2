@@ -7,8 +7,9 @@ param(
     [Parameter(Mandatory)][string]$ReferenceProduct,
     [Parameter(Mandatory)][string]$ManagedOriginal,
     [Parameter(Mandatory)][string]$ManagedDerivative,
-    [ValidateSet('3a','3b')][string]$Phase='3a',
+    [ValidateSet('3a','3b','3c')][string]$Phase='3a',
     [string]$PreviousRun,
+    [string]$Png3aRun,
     [ValidateRange(1,32)][int]$Jobs=6
 )
 $ErrorActionPreference='Stop'
@@ -21,11 +22,12 @@ $prefix=(Join-Path $root "build/sec-maint-v013/$Phase")+[IO.Path]::DirectorySepa
 if(!$run.StartsWith($prefix,[StringComparison]::OrdinalIgnoreCase)){Stop-S1 MaintRunRoot}
 Assert-S1NoReparse $run
 $manifest='cmake/security/sec-maint-v013'
-if($Phase -ceq '3b'){
+if($Phase -cne '3a'){
     if(!$PreviousRun){Stop-S1 MaintPreviousRun}
-    $manifest+='/3b'
+    $manifest+="/$Phase"
 }
 $scope="sec-maint-v013-$Phase"
+$plan=Read-S1StrictJson (Resolve-S1Path $root "$manifest/source-inputs-v1.json")
 $contract=Resolve-S1Path $root 'cmake/security/sec-maint-v013/toolchain-v1.json'
 $tools=Read-S1StrictJson $contract
 # Resolve the approved tools before vcvarsall adds Visual Studio's bundled copies.
@@ -83,12 +85,20 @@ foreach($name in 'jxl.dll','jxl_cms.dll','jxl_threads.dll','hwy.dll','brotlidec.
 }
 $baselineProduct=$ReferenceProduct
 $baselineIdentity=Resolve-S1Path $ReferenceProduct 'BUILD-IDENTITY.json'
-if($Phase -ceq '3b'){
+if($Phase -cne '3a'){
     $baselineProduct=Resolve-S1Path $PreviousRun 'product'
     $baselineIdentity=Resolve-S1Path $PreviousRun 'BUILD-IDENTITY.json'
     $old=(Read-S1StrictJson $baselineIdentity).binaries
     foreach($item in $old){
         Assert-S1Identity (Resolve-S1Path $baselineProduct $item.path) $item.size $item.sha256
+    }
+}
+if($Phase -ceq '3c'){
+    if(!$Png3aRun){Stop-S1 MaintPng3aReference}
+    $reference3a=Resolve-S1Path $Png3aRun 'BUILD-IDENTITY.json'
+    if((Get-FileHash -LiteralPath $reference3a).Hash -cne $plan.png3aBuildIdentitySha256){Stop-S1 MaintPng3aReference}
+    foreach($item in (Read-S1StrictJson $reference3a).binaries | Where-Object path -CIn @('libpng16.dll','z.dll')){
+        Assert-S1Identity (Resolve-S1Path $Png3aRun ('product/'+$item.path)) $item.size $item.sha256
     }
 }
 $build=Join-Path $run build
@@ -125,9 +135,15 @@ $cmakeOptions=[ordered]@{
     VCPKG_OVERLAY_TRIPLETS=(Join-Path $root triplets)
     BUILD_TESTING='ON'
 }
-if($Phase -ceq '3b'){
-    $cmakeOptions.CLIPSS2_MAINT_PNG_REFERENCE_INSTALLED=Resolve-S1Path $PreviousRun 'installed'
-    $cmakeOptions.CLIPSS2_MAINT_PNG_REFERENCE_PRODUCT=$baselineProduct
+if($Phase -cne '3a'){
+    $pngReference=if($Phase -ceq '3c'){$Png3aRun}else{$PreviousRun}
+    $cmakeOptions.CLIPSS2_MAINT_PNG_REFERENCE_INSTALLED=Resolve-S1Path $pngReference 'installed'
+    $cmakeOptions.CLIPSS2_MAINT_PNG_REFERENCE_PRODUCT=Resolve-S1Path $pngReference 'product'
+}
+if($Phase -ceq '3c'){
+    $cmakeOptions.CLIPSS2_MAINT_PNG_PREVIOUS_INSTALLED=Resolve-S1Path $PreviousRun 'installed'
+    $cmakeOptions.CLIPSS2_MAINT_PNG_PREVIOUS_PRODUCT=$baselineProduct
+    $cmakeOptions.CLIPSS2_MAINT_PREVIOUS_RUN=[IO.Path]::GetFullPath($PreviousRun)
 }
 $arguments=@('-S',$root,'-B',$build,'-G','Ninja')+@($cmakeOptions.GetEnumerator() | ForEach-Object {
     '-D'+$_.Key+'='+$_.Value.Replace('\','/')
@@ -136,14 +152,15 @@ Invoke-MaintTool configure $cmake $arguments
 Invoke-MaintTool build $cmake @('--build',$build,'--parallel',[string]$Jobs)
 Invoke-MaintTool ctest $ctest @('--test-dir',$build,'--output-on-failure','--output-junit',(Join-Path $run 'ctest.xml'))
 
-$profile=Read-S1StrictJson (Resolve-S1Path $root "packaging/public/profile-$scope.json")
-$plan=Read-S1StrictJson (Resolve-S1Path $root "$manifest/source-inputs-v1.json")
+$profilePath=Resolve-S1Path $root "packaging/public/profile-$scope.json"
+$profile=Read-S1StrictJson $profilePath
 New-S1OwnedDirectory $product
 $installed=Join-Path $run installed
 $bin=Join-Path $installed ($tools.targetTriplet+'/bin')
 $installedShare=Join-Path $installed ($tools.targetTriplet+'/share')
 $licenses=@{ 'libjxl/copyright'='licenses/libjxl/copyright'; 'libjxl/PATENTS'='licenses/libjxl/PATENTS'; 'brotli/copyright'='licenses/brotli/copyright' }
-if($Phase -ceq '3b'){$licenses['libpng/copyright']='licenses/libpng/copyright'}
+if($Phase -cne '3a'){$licenses['libpng/copyright']='licenses/libpng/copyright'}
+if($Phase -ceq '3c'){$licenses['zlib/copyright']=$plan.zlib.license}
 foreach($binding in $licenses.GetEnumerator()){
     if((Get-FileHash -LiteralPath (Resolve-S1Path $installedShare $binding.Key)).Hash -cne
         (Get-FileHash -LiteralPath (Resolve-S1Path $root $binding.Value)).Hash){Stop-S1 MaintLicense}
@@ -166,9 +183,9 @@ $mustImport=[ordered]@{
     'jxl.dll'=@('jxl_cms.dll','hwy.dll','brotlidec.dll','brotlienc.dll')
     'jxl_cms.dll'=@('lcms2-2.dll','hwy.dll')
 }
-if($Phase -ceq '3b'){
+if($Phase -cne '3a'){
     $mustImport['clipss2.exe']+=@('libpng16.dll')
-    $mustImport['libpng16.dll']=@('z.dll')
+    $mustImport['libpng16.dll']=if($Phase -ceq '3c'){@('libz.dll')}else{@('z.dll')}
 }
 foreach($check in $mustImport.GetEnumerator()){
     $imports=($binaries | Where-Object path -CEQ $check.Key).imports
@@ -184,6 +201,7 @@ if(!$external.Count){
 }
 foreach($binary in $binaries){
     if(@($binary.imports | Where-Object {$_ -notin $allowed -and $_ -notin $external}).Count){Stop-S1 MaintUnexpectedImport}
+    if($Phase -ceq '3c' -and 'z.dll' -in $binary.imports){Stop-S1 MaintLegacyZlibImport}
 }
 $dumpbin=(Get-Command dumpbin.exe -CommandType Application).Source
 foreach($binary in $binaries){
@@ -213,11 +231,24 @@ foreach($name in 'jxl.dll','jxl_cms.dll','jxl_threads.dll'){
     if(!$before.Count -or !$after.Count -or @($before | Where-Object {$_ -cnotin $after}).Count){Stop-S1 MaintMissingJxlExport}
     ($binaries | Where-Object path -CEQ $name).jxlExports=$after
 }
-if($Phase -ceq '3b'){
+if($Phase -cne '3a'){
     $before=@(Get-MaintExports (Resolve-S1Path $baselineProduct 'libpng16.dll') png_)
     $after=@(Get-MaintExports (Resolve-S1Path $product 'libpng16.dll') png_)
     if(!$before.Count -or !$after.Count -or @($before | Where-Object {$_ -cnotin $after}).Count){Stop-S1 MaintMissingPngExport}
     ($binaries | Where-Object path -CEQ 'libpng16.dll').pngExports=$after
+}
+if($Phase -ceq '3c'){
+    $legacyExports=@(Get-MaintExports (Resolve-S1Path $baselineProduct 'z.dll') '')
+    $newExports=@(Get-MaintExports (Resolve-S1Path $product 'libz.dll') '')
+    $importLines=@(& $dumpbin /imports:libz.dll (Resolve-S1Path $product 'libpng16.dll'))
+    if($LASTEXITCODE -ne 0){Stop-S1 MaintZlibImports}
+    $used=@($importLines|ForEach-Object {if($_ -cmatch '^\s+[A-F0-9]+\s+([A-Za-z_]\w+)\s*$'){$Matches[1]}})
+    if(!$legacyExports.Count -or !$newExports.Count -or !$used.Count -or
+       @($used|Where-Object {$_ -cnotin $newExports}).Count){Stop-S1 MaintZlibExports}
+    ($binaries | Where-Object path -CEQ 'libz.dll').exportChanges=[ordered]@{
+        priorCount=$legacyExports.Count;count=$newExports.Count;pngImports=$used;
+        removed=@($legacyExports|Where-Object {$_ -cnotin $newExports});
+        added=@($newExports|Where-Object {$_ -cnotin $legacyExports})}
 }
 $marker=Join-Path $installed "share/clipss2-sec-maint-$Phase-installed-v1.json"
 $receipt=Join-Path $installed "share/clipss2-sec-maint-$Phase-install-receipt-v1.json"
@@ -229,6 +260,17 @@ $identity=[ordered]@{schemaVersion=1;version='0.1.3';scope=$scope;sourceBaseComm
     sourceInputsSha256=(Get-FileHash -LiteralPath (Resolve-S1Path $root "$manifest/source-inputs-v1.json")).Hash;
     installedReceiptSha256=(Get-FileHash -LiteralPath $receipt).Hash;installedMarkerSha256=(Get-FileHash -LiteralPath $marker).Hash;
     binaries=$binaries;runtimeBundled=$false;releaseApproved=$false;ownerAcceptance='PENDING'}
-if($Phase -ceq '3b'){$identity.previousBuildIdentitySha256=$plan.referenceBuildIdentitySha256}
+if($Phase -cne '3a'){$identity.previousBuildIdentitySha256=$plan.referenceBuildIdentitySha256}
+if($Phase -ceq '3c'){
+    $identity.profileSha256=(Get-FileHash -LiteralPath $profilePath).Hash
+    $identity.productRuntimeDlls=$profile.productRuntimeDlls
+    $identity.installedRuntimeDlls=$plan.installedRuntimeDlls
+    $identity.zlib=$plan.zlib
+    $identity.embedded=$plan.embedded
+}
 Write-S1NewJson (Join-Path $run 'BUILD-IDENTITY.json') $identity
+if($Phase -ceq '3c'){
+    & (Join-Path $PSScriptRoot test_sec_maint_3c_package.ps1) -Mode Verify -RunRoot $run `
+        -ProductDirectory $product -PreviousRun $PreviousRun
+}
 [ordered]@{result='PASS';binaries=$binaries.Count;releaseApproved=$false}|ConvertTo-Json

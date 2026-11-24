@@ -16,4 +16,13 @@ foreach(encoder IN ITEMS reference candidate)
         COMMAND_ERROR_IS_FATAL ANY)
     file(SHA256 "${image}" digest)
     file(APPEND "${evidence}/cross-read.tsv" "${fixture}\t${encoder}\t${decoder}\t${digest}\n")
+    if(split_idat)
+        set(image "${evidence}/${encoder}-split.png")
+        execute_process(COMMAND "${${encoder}}" write-split "${fixture}" "${image}"
+            COMMAND_ERROR_IS_FATAL ANY)
+        execute_process(COMMAND "${${decoder}}" read "${fixture}" "${image}"
+            COMMAND_ERROR_IS_FATAL ANY)
+        file(SHA256 "${image}" digest)
+        file(APPEND "${evidence}/split-idat.tsv" "${fixture}\t${encoder}\t${decoder}\t${digest}\n")
+    endif()
 endforeach()

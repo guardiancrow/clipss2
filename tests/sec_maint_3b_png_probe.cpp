@@ -3,11 +3,13 @@
 #include "codec/png/png_validator.h"
 
 #include <png.h>
+#include <zlib.h>
 #include <windows.h>
 
 #include <cstdint>
 #include <filesystem>
 #include <iostream>
+#include <span>
 #include <stdexcept>
 #include <string_view>
 
@@ -31,18 +33,63 @@ std::filesystem::path module_directory(HMODULE module)
     return std::filesystem::path(path).parent_path();
 }
 
-void verify_loaded_png()
+HMODULE verify_loaded_png()
 {
     require(PNG_LIBPNG_VER == SEC_MAINT_PNG_VERSION &&
                 png_access_version_number() == SEC_MAINT_PNG_VERSION,
             "Unexpected libpng header or DLL version.");
     const auto executable = module_directory(nullptr);
-    for (const auto name : {L"libpng16.dll", L"z.dll"})
+    for (const auto name : {L"libpng16.dll", SEC_MAINT_ZLIB_DLL})
     {
         const auto module = GetModuleHandleW(name);
         require(module && std::filesystem::equivalent(module_directory(module), executable),
                 "PNG dependency loaded outside the isolated test directory.");
     }
+    const auto zlib_module = GetModuleHandleW(SEC_MAINT_ZLIB_DLL);
+    const auto runtime_version = reinterpret_cast<decltype(&zlibVersion)>(
+        GetProcAddress(zlib_module, "zlibVersion"));
+    require(std::string_view(ZLIB_VERSION) == SEC_MAINT_ZLIB_VERSION &&
+                runtime_version && std::string_view(runtime_version()) == SEC_MAINT_ZLIB_VERSION,
+            "Unexpected zlib header or DLL version.");
+    return zlib_module;
+}
+
+void append_u32(std::vector<std::byte>& bytes, std::uint32_t value)
+{
+    for (auto shift : {24, 16, 8, 0})
+        bytes.push_back(static_cast<std::byte>((value >> shift) & 255U));
+}
+
+std::vector<std::byte> split_idat(std::span<const std::byte> bytes, HMODULE zlib_module)
+{
+    const auto crc = reinterpret_cast<decltype(&crc32)>(GetProcAddress(zlib_module, "crc32"));
+    require(crc != nullptr, "Missing CRC export.");
+    for (std::size_t offset = 8; offset + 12 <= bytes.size();)
+    {
+        std::uint32_t length = 0;
+        for (const auto value : bytes.subspan(offset, 4))
+            length = (length << 8) | std::to_integer<std::uint32_t>(value);
+        require(length <= bytes.size() - offset - 12, "Invalid generated PNG chunk length.");
+        const auto type = bytes.subspan(offset + 4, 4);
+        if (length > 1 && std::string_view(reinterpret_cast<const char*>(type.data()), 4) == "IDAT")
+        {
+            std::vector<std::byte> result(bytes.begin(), bytes.begin() + offset);
+            const auto payload = bytes.subspan(offset + 8, length);
+            for (const auto part : {payload.first(length / 2), payload.subspan(length / 2)})
+            {
+                append_u32(result, static_cast<std::uint32_t>(part.size()));
+                const auto crc_start = result.size();
+                result.insert(result.end(), type.begin(), type.end());
+                result.insert(result.end(), part.begin(), part.end());
+                append_u32(result, crc(0, reinterpret_cast<const Bytef*>(result.data() + crc_start),
+                                       static_cast<uInt>(4 + part.size())));
+            }
+            result.insert(result.end(), bytes.begin() + offset + 12 + length, bytes.end());
+            return result;
+        }
+        offset += 12 + length;
+    }
+    throw std::runtime_error("Generated PNG has no splittable IDAT chunk.");
 }
 
 CpuImage fixture(std::wstring_view name)
@@ -80,8 +127,8 @@ int wmain(int argc, wchar_t** argv)
 {
     try
     {
-        require(argc == 4, "Usage: probe write|read fixture file.");
-        verify_loaded_png();
+        require(argc == 4, "Usage: probe write|write-split|read fixture file.");
+        const auto zlib_module = verify_loaded_png();
         const std::wstring_view operation = argv[1];
         const auto image = fixture(argv[2]);
         const std::filesystem::path path = argv[3];
@@ -89,9 +136,11 @@ int wmain(int argc, wchar_t** argv)
         {
             (void)validate_screenshot_png(path, image);
         }
-        else if (operation == L"write")
+        else if (operation == L"write" || operation == L"write-split")
         {
             auto bytes = encode_srgb_png_bytes(image);
+            if (operation == L"write-split")
+                bytes = split_idat(bytes, zlib_module);
             (void)validate_screenshot_png(bytes, image);
             (void)write_png_bytes(bytes, path);
             bytes.resize(bytes.size() - 1);
@@ -110,7 +159,8 @@ int wmain(int argc, wchar_t** argv)
         {
             throw std::runtime_error("Unknown probe operation.");
         }
-        std::cout << "libpng " << png_access_version_number() << " verified synthetic PNG\n";
+        std::cout << "libpng " << png_access_version_number() << ", zlib "
+                  << SEC_MAINT_ZLIB_VERSION << " verified synthetic PNG\n";
         return 0;
     }
     catch (const std::exception& error)
