@@ -1,0 +1,7 @@
+{
+  "overlay-ports": [
+    "../../../vcpkg-overlays/security-sec-maint-v013",
+    "../../../vcpkg-overlays/security-sec-br1",
+    "../../../vcpkg-overlays/shipping-privacy-v2"
+  ]
+}

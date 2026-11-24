@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "scope": "sec-maint-v013",
+  "approvedFrom": "SEC-MAINT-3A",
+  "approvedThrough": "SEC-MAINT-6",
+  "visualStudio": "Microsoft.VisualStudio.Product.BuildTools",
+  "visualStudioInstallationVersion": "17.14.37906.3",
+  "platformToolset": "v143",
+  "toolsetDirectory": "14.44.35207",
+  "compiler": "19.44.35230.0",
+  "windowsSDK": "10.0.26100.0",
+  "cmake": "4.4.4",
+  "ninja": "1.13.2",
+  "architecture": "x64",
+  "configuration": "Release",
+  "runtime": "MultiThreadedDLL",
+  "targetTriplet": "x64-windows-shipping-privacy",
+  "hostTriplet": "x64-windows",
+  "libraryLinkage": "dynamic",
+  "crtLinkage": "dynamic",
+  "vcpkgToolVersion": "2026-07-27-98d7cb0cf1f4686a3e43aa5672b6230c1d56bce8",
+  "vcpkgToolSha256": "13B8175E99A884C5AD34249218754B45541A1A63F216E92603AEE57A285AC741",
+  "vcpkgBaseline": "04a9d8e5212d01ee1dd9478eadd9caade4f8b0d4",
+  "msvcFiles": {
+    "bin/Hostx64/x64/cl.exe": "E87E78B3EF6580B75AEBDA843F8A22E874612D9F766344046551399F898EB226",
+    "bin/Hostx64/x64/c1.dll": "3B82D58D21354FDB611EFDD5AB82EC0484ACFA5F3DE37CA6BEA42C630FF2C24A",
+    "bin/Hostx64/x64/c1xx.dll": "A9348B973D399E7E042A79BE7E22DC054E008381A2EF3D9F394300E41AA47470",
+    "bin/Hostx64/x64/c2.dll": "E2FDFD6505CD6E9B670922733A914FBF22CAE5D226943290548F24EAF699267A",
+    "bin/Hostx64/x64/link.exe": "49A5DF25C3182A22684375B1D62A025016DEFFCCEA247894FE5CA2C85610C6A6",
+    "bin/Hostx64/x64/lib.exe": "69317EDA3D44FD723B959C87D5A3B0617E3B7BE70B02FF3F51EC45288EC559D2",
+    "include/yvals_core.h": "5070449E37A1735ADF49204A12C7A7D5EFA145D6AA607720AEF5ADBD2C57EF83",
+    "lib/x64/msvcprt.lib": "59D3AB1065F0A14BD9B27DEBEF4008A91EAFBC7411290013F61091BF12DFCA0F",
+    "lib/x64/msvcrt.lib": "07670951A39739B6D1B50421AE61707EF23C8DFF50CDF35F99408711478F3A7C",
+    "lib/x64/vcruntime.lib": "1ACBD98B43A4BE8373E25C65DCAE4412F36F6111D6B64E47E4A2A97A1D16B27B"
+  },
+  "sdkFiles": {
+    "Lib/10.0.26100.0/ucrt/x64/ucrt.lib": "7EF4EAC926BF597D2F243F16CDFED7E0DB22CB3CA34A1D7E088A84C994A03D66",
+    "Lib/10.0.26100.0/um/x64/kernel32.lib": "842F5CE7AD8CF5AAB7491B791E7968D2BE510AE93F4019D3311797289399D221"
+  }
+}

@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 3.28)
 
+set(clipss2_version 0.1.2)
+if(CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-maint-v013-3a")
+    set(clipss2_version 0.1.3)
+endif()
 project(
     clipss2
-    VERSION 0.1.2
+    VERSION ${clipss2_version}
     LANGUAGES CXX
 )
 
@@ -677,7 +681,7 @@ if(BUILD_TESTING)
     add_test(NAME capture_worker_client COMMAND clipss2_capture_worker_client_test)
 endif()
 
-if(BUILD_TESTING AND CLIPSS2_PUBLICATION_SCOPE MATCHES "^(sec-br[12]|icon-v012)$")
+if(BUILD_TESTING AND CLIPSS2_PUBLICATION_SCOPE MATCHES "^(sec-br[12]|icon-v012|sec-maint-v013-3a)$")
     find_package(unofficial-brotli CONFIG REQUIRED)
     add_executable(clipss2_brotli_sec_br1_test tests/brotli_sec_br1_test.cpp)
     target_link_libraries(clipss2_brotli_sec_br1_test PRIVATE
@@ -696,4 +700,8 @@ if(BUILD_TESTING AND CLIPSS2_SHIPPING_PRIVACY)
     clipss2_configure_cpp_target(clipss2_privacy_diagnostics_test)
     target_compile_options(clipss2_privacy_diagnostics_test PRIVATE /EHs /EHc-)
     add_test(NAME privacy_diagnostics COMMAND clipss2_privacy_diagnostics_test)
+endif()
+
+if(BUILD_TESTING AND CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-maint-v013-3a")
+    include(cmake/security/sec-maint-v013/JxlProbe.cmake)
 endif()

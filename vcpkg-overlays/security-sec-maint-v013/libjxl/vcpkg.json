@@ -1,0 +1,16 @@
+{
+  "name": "libjxl",
+  "version-semver": "0.13.0",
+  "description": "JPEG XL reference implementation (clipss2 Shipping Privacy v2)",
+  "homepage": "https://github.com/libjxl/libjxl",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "brotli",
+    "highway",
+    "lcms",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

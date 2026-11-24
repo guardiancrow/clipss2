@@ -1,0 +1,135 @@
+#requires -Version 7.2
+# Copyright (c) 2026 guardiancrow. MIT.
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory)][ValidateSet('Seal','Verify')][string]$Mode,
+    [Parameter(Mandatory)][string]$RunRoot,
+    [Parameter(Mandatory)][string]$ReferenceInstalled,
+    [string]$Root=(Split-Path $PSScriptRoot -Parent)
+)
+$ErrorActionPreference='Stop'
+. (Join-Path $PSScriptRoot ShippingProfileSecBR1.ps1)
+
+function Read-MaintStatus([string]$Installed) {
+    $status=[IO.File]::ReadAllText((Resolve-S1Path $Installed 'vcpkg/status'))
+    foreach($paragraph in ($status -split '(?:\r?\n){2,}')) {
+        if([string]::IsNullOrWhiteSpace($paragraph)){continue}
+        $fields=@{}
+        foreach($line in ($paragraph -split '\r?\n')) {
+            if($line -cmatch '^([^: ]+): (.*)$') {
+                if($fields.ContainsKey($Matches[1])){Stop-S1 MaintDuplicateStatus}
+                $fields[$Matches[1]]=$Matches[2]
+            }
+        }
+        if($fields['Status'] -cne 'install ok installed'){Stop-S1 MaintInvalidStatus}
+        [ordered]@{name=$fields['Package'];version=$fields['Version'];portVersion=[int]$fields['Port-Version'];
+            feature=$fields['Feature'];triplet=$fields['Architecture'];depends=$fields['Depends'];abi=$fields['Abi']}
+    }
+}
+
+$run=[IO.Path]::GetFullPath($RunRoot)
+$prefix=(Join-Path ([IO.Path]::GetFullPath($Root)) 'build/sec-maint-v013/3a')+[IO.Path]::DirectorySeparatorChar
+if(!$run.StartsWith($prefix,[StringComparison]::OrdinalIgnoreCase)){Stop-S1 MaintRunRoot}
+Assert-S1NoReparse $run
+$installed=Join-Path $run installed
+$tools=Read-S1StrictJson (Resolve-S1Path $Root 'cmake/security/sec-maint-v013/toolchain-v1.json')
+$ledgerPath=Resolve-S1Path $Root 'cmake/security/sec-maint-v013/source-inputs-v1.json'
+$inputs=Read-S1StrictJson $ledgerPath
+$inputsHash=(Get-FileHash -LiteralPath $ledgerPath).Hash.ToLowerInvariant()
+foreach($binding in $inputs.files) {
+    Assert-S1Identity (Resolve-S1Path $Root $binding.path) $binding.size $binding.sha256
+}
+$archive=Join-Path $run 'downloads/libjxl-libjxl-v0.13.0.tar.gz'
+if((Get-FileHash -LiteralPath $archive -Algorithm SHA512).Hash -ine $inputs.libjxl.archiveSha512){Stop-S1 MaintArchive}
+$vcpkg=Join-Path $run vcpkg
+$gitOptions=@('--no-optional-locks','-c',('safe.directory='+$vcpkg.Replace('\','/')),'-C',$vcpkg)
+$tool=Join-Path $vcpkg vcpkg.exe
+if((Get-FileHash -LiteralPath $tool).Hash -cne $tools.vcpkgToolSha256){Stop-S1 MaintTool}
+$commit=& git @gitOptions rev-parse HEAD
+if($LASTEXITCODE -ne 0 -or $commit -cne $tools.vcpkgBaseline){Stop-S1 MaintRegistry}
+foreach($package in $inputs.packages) {
+    if($package.name -cin @('brotli','highway','libjxl','libyuv')){continue}
+    $tree=& git @gitOptions rev-parse ("HEAD:ports/"+$package.name)
+    if($LASTEXITCODE -ne 0 -or $tree -cne $package.portTree){Stop-S1 MaintRegistryPort}
+}
+
+$oldReceipt=Resolve-S1Path $ReferenceInstalled 'share/clipss2-sec-br1-install-receipt-v1.json'
+if((Get-FileHash -LiteralPath $oldReceipt).Hash -cne $inputs.referenceReceiptSha256){Stop-S1 MaintReference}
+$oldStatus=(Read-S1StrictJson $oldReceipt).inventory | Where-Object path -CEQ 'vcpkg/status'
+Assert-S1Identity (Resolve-S1Path $ReferenceInstalled $oldStatus.path) $oldStatus.size $oldStatus.sha256
+$prior=@(Read-MaintStatus $ReferenceInstalled)
+$actual=@(Read-MaintStatus $installed)
+function Get-MaintPackageKey($Row){
+    $feature=if($Row.feature){$Row.feature}else{'core'}
+    return ($Row.name+'/'+$Row.triplet+'/'+$feature)
+}
+Assert-S1InputSet @($prior | ForEach-Object {Get-MaintPackageKey $_}) @($actual | ForEach-Object {Get-MaintPackageKey $_})
+foreach($entry in $actual){
+    $key=Get-MaintPackageKey $entry
+    $old=@($prior | Where-Object {(Get-MaintPackageKey $_) -ceq $key})[0]
+    $expected=if($entry.name -ceq 'libjxl'){'0.13.0'}else{$old.version}
+    if($entry.version -cne $expected -or $entry.portVersion -ne $old.portVersion -or
+       $entry.depends -cne $old.depends){Stop-S1 MaintResolvedPackages}
+    if(!$entry.feature -and $entry.abi -cnotmatch '^[a-f0-9]{64}$'){Stop-S1 MaintAbiMissing}
+    $entry.priorAbi=$old.abi
+}
+
+Test-S1DependencyPayload $installed ([pscustomobject]@{inputs=$inputs})
+$bin=Join-Path $installed ($tools.targetTriplet+'/bin')
+Assert-S1InputSet @($inputs.installedRuntimeDlls) @((Get-ChildItem -LiteralPath $bin -File -Filter '*.dll').Name)
+foreach($name in 'jxl','jxl_cms','jxl_threads'){
+    foreach($relative in @("lib/$name.lib","lib/pkgconfig/lib${name}.pc")){
+        $file=Resolve-S1Path $installed ($tools.targetTriplet+'/'+$relative)
+        if(!(Test-Path -LiteralPath $file -PathType Leaf)){Stop-S1 MaintJxlArtifact}
+    }
+}
+$pkgconf=Resolve-S1Path $installed 'x64-windows/tools/pkgconf/pkgconf.exe'
+$oldLibDir=$env:PKG_CONFIG_LIBDIR
+$oldPkgPath=$env:PKG_CONFIG_PATH
+$pcQueries=[ordered]@{}
+try {
+    $env:PKG_CONFIG_LIBDIR=Join-Path $installed ($tools.targetTriplet+'/lib/pkgconfig')
+    $env:PKG_CONFIG_PATH=$null
+    foreach($name in 'libjxl','libjxl_cms','libjxl_threads'){
+        $version=& $pkgconf --modversion $name
+        if($LASTEXITCODE -ne 0 -or $version -cne '0.13.0'){Stop-S1 MaintJxlPcVersion}
+        foreach($query in 'shared','static'){
+            $arguments=if($query -ceq 'static'){@('--static','--libs-only-l',$name)}else{@('--libs-only-l',$name)}
+            $result=(& $pkgconf @arguments) -join ' '
+            if($LASTEXITCODE -ne 0 -or $result -match '(?:^|\s)-lm(?:\s|$)'){Stop-S1 MaintJxlPcLibm}
+            $pcQueries["$name/$query"]=$result.Trim()
+        }
+    }
+} finally {
+    $env:PKG_CONFIG_LIBDIR=$oldLibDir
+    $env:PKG_CONFIG_PATH=$oldPkgPath
+}
+
+$receiptRelative='share/clipss2-sec-maint-3a-install-receipt-v1.json'
+$markerRelative='share/clipss2-sec-maint-3a-installed-v1.json'
+$receiptPath=Resolve-S1Path $installed $receiptRelative
+$markerPath=Resolve-S1Path $installed $markerRelative
+$files=Get-S1Files $installed
+$inventory=@(foreach($relative in ($files.Keys|Sort-Object -CaseSensitive)){
+    if($relative -cin @($receiptRelative,$markerRelative)){continue}
+    $file=Get-Item -LiteralPath $files[$relative]
+    [ordered]@{path=$relative;size=$file.Length;sha256=(Get-FileHash -LiteralPath $file.FullName).Hash}
+})
+if($Mode -ceq 'Seal'){
+    if((Test-Path -LiteralPath $receiptPath) -or (Test-Path -LiteralPath $markerPath)){Stop-S1 MaintAlreadySealed}
+    [void][IO.Directory]::CreateDirectory((Split-Path -Parent $receiptPath))
+    Write-S1NewJson $receiptPath ([ordered]@{schemaVersion=1;receiptId='clipss2-sec-maint-3a-install-receipt-v1';
+        sourceInputsSha256=$inputsHash;vcpkgBaseline=$tools.vcpkgBaseline;vcpkgToolSha256=$tools.vcpkgToolSha256;
+        compiler=$tools.compiler;packages=$actual;pkgconfig=$pcQueries;inventory=$inventory})
+    Write-S1NewJson $markerPath ([ordered]@{schemaVersion=1;markerId='clipss2-sec-maint-3a-installed-v1';
+        sourceInputsSha256=$inputsHash;receiptSha256=(Get-FileHash -LiteralPath $receiptPath).Hash.ToLowerInvariant()})
+}
+$receipt=Read-S1StrictJson $receiptPath
+$marker=Read-S1StrictJson $markerPath
+if($receipt.sourceInputsSha256 -cne $inputsHash -or $marker.sourceInputsSha256 -cne $inputsHash -or
+   $marker.receiptSha256 -cne (Get-FileHash -LiteralPath $receiptPath).Hash.ToLowerInvariant()){Stop-S1 MaintReceiptBinding}
+Assert-S1InputSet @($inventory.path) @($receipt.inventory.path)
+foreach($item in $receipt.inventory){Assert-S1Identity $files[$item.path] $item.size $item.sha256}
+[ordered]@{result='PASS';sourceInputsSha256=$inputsHash;receiptSha256=$marker.receiptSha256;
+    packageCount=@($actual | Where-Object { !$_.feature }).Count;installedDllCount=$inputs.installedRuntimeDlls.Count;
+    pkgconfig=$pcQueries;binaryReleaseApproved=$false}|ConvertTo-Json -Depth 5

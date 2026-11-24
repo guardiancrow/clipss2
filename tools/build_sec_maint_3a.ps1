@@ -1,0 +1,194 @@
+#requires -Version 7.2
+# Copyright (c) 2026 guardiancrow. MIT.
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory)][string]$RunRoot,
+    [Parameter(Mandatory)][string]$ReferenceInstalled,
+    [Parameter(Mandatory)][string]$ReferenceProduct,
+    [Parameter(Mandatory)][string]$ManagedOriginal,
+    [Parameter(Mandatory)][string]$ManagedDerivative,
+    [ValidateRange(1,32)][int]$Jobs=6
+)
+$ErrorActionPreference='Stop'
+Import-Module (Join-Path $PSScriptRoot IconV012.psm1) -Force -DisableNameChecking
+. (Join-Path $PSScriptRoot ShippingProfileSecBR1.ps1)
+
+$root=Split-Path $PSScriptRoot -Parent
+$run=[IO.Path]::GetFullPath($RunRoot)
+$prefix=(Join-Path $root 'build/sec-maint-v013/3a')+[IO.Path]::DirectorySeparatorChar
+if(!$run.StartsWith($prefix,[StringComparison]::OrdinalIgnoreCase)){Stop-S1 MaintRunRoot}
+Assert-S1NoReparse $run
+$contract=Resolve-S1Path $root 'cmake/security/sec-maint-v013/toolchain-v1.json'
+$tools=Read-S1StrictJson $contract
+# Resolve the approved tools before vcvarsall adds Visual Studio's bundled copies.
+$cmake=(Get-Command cmake.exe -CommandType Application | Select-Object -First 1).Source
+$ninja=(Get-Command ninja.exe -CommandType Application | Select-Object -First 1).Source
+$ctest=Join-Path (Split-Path -Parent $cmake) ctest.exe
+$cmakeVersion=@(& $cmake --version)
+if(!$cmakeVersion.Count -or $cmakeVersion[0] -cne ('cmake version '+$tools.cmake)){Stop-S1 MaintCMake}
+$ninjaVersion=& $ninja --version
+if($ninjaVersion -cne $tools.ninja){Stop-S1 MaintNinja}
+$ctestVersion=@(& $ctest --version)
+if(!$ctestVersion.Count -or $ctestVersion[0] -cne ('ctest version '+$tools.cmake)){Stop-S1 MaintCTest}
+$finder=Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio/Installer/vswhere.exe'
+$vs=& $finder -latest -products Microsoft.VisualStudio.Product.BuildTools -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+if($LASTEXITCODE -ne 0 -or !$vs){Stop-S1 MaintVisualStudio}
+$batch=Join-Path $vs 'VC/Auxiliary/Build/vcvarsall.bat'
+$settings=& cmd.exe /d /c ('call "'+$batch+'" x64 '+$tools.windowsSDK+' -vcvars_ver='+$tools.toolsetDirectory+' >nul && set')
+if($LASTEXITCODE -ne 0){Stop-S1 MaintDeveloperShell}
+foreach($line in $settings){
+    if($line -match '^([^=]+)=(.*)$'){[Environment]::SetEnvironmentVariable($Matches[1],$Matches[2],'Process')}
+}
+if($env:VCToolsVersion -cne $tools.toolsetDirectory -or $env:WindowsSDKVersion.TrimEnd('\') -cne $tools.windowsSDK -or
+   $env:VSCMD_ARG_TGT_ARCH -cne 'x64'){Stop-S1 MaintToolchainSelection}
+foreach($item in $tools.msvcFiles.GetEnumerator()){
+    if((Get-FileHash -LiteralPath (Join-Path $env:VCToolsInstallDir $item.Key)).Hash -cne $item.Value){Stop-S1 MaintMsvcIdentity}
+}
+foreach($item in $tools.sdkFiles.GetEnumerator()){
+    if((Get-FileHash -LiteralPath (Join-Path $env:WindowsSdkDir $item.Key)).Hash -cne $item.Value){Stop-S1 MaintSdkIdentity}
+}
+$cl=(Get-Command cl.exe -CommandType Application).Source
+if((Get-Item -LiteralPath $cl).VersionInfo.FileVersion -cne $tools.compiler -or
+   (Get-FileHash -LiteralPath $cl).Hash -cne $tools.msvcFiles['bin/Hostx64/x64/cl.exe']){Stop-S1 MaintCompiler}
+$env:VCPKG_ROOT=Join-Path $run vcpkg
+$env:VCPKG_DISABLE_METRICS='1'
+$env:TEMP=Join-Path $run tmp
+$env:TMP=$env:TEMP
+
+# These fixed reference checkouts are read-only inputs. Do not modify Git configuration on disk.
+$env:GIT_OPTIONAL_LOCKS='0'
+$refs=@($ManagedOriginal) + @('third_party/highway','third_party/skcms','third_party/libjpeg-turbo' | ForEach-Object {Join-Path $ManagedOriginal $_})
+$env:GIT_CONFIG_COUNT=[string]$refs.Count
+for($i=0;$i -lt $refs.Count;$i++){
+    [Environment]::SetEnvironmentVariable("GIT_CONFIG_KEY_$i",'safe.directory','Process')
+    [Environment]::SetEnvironmentVariable("GIT_CONFIG_VALUE_$i",([IO.Path]::GetFullPath($refs[$i]).Replace('\','/')),'Process')
+}
+$null=Test-S1ManagedOriginal $root $ManagedOriginal
+$null=Test-S1ManagedDerivative $root $ManagedDerivative
+$null=& (Join-Path $PSScriptRoot validate_sec_maint_3a_install.ps1) -Mode Verify -RunRoot $run -ReferenceInstalled $ReferenceInstalled
+
+$reference=Read-S1StrictJson (Resolve-S1Path $root 'packaging/public/profile-icon-v012-rc1.json')
+foreach($name in 'jxl.dll','jxl_cms.dll','jxl_threads.dll','hwy.dll','brotlidec.dll','brotlienc.dll','brotlicommon.dll','lcms2-2.dll'){
+    $item=$reference.files | Where-Object path -CEQ $name
+    Assert-S1Identity (Resolve-S1Path $ReferenceProduct $name) $item.size $item.sha256
+}
+$build=Join-Path $run build
+$product=Join-Path $run product
+if((Test-Path -LiteralPath $build) -or (Test-Path -LiteralPath $product)){Stop-S1 MaintBuildExists}
+function Invoke-MaintTool([string]$Name,[string]$Exe,[string[]]$Arguments){
+    $log=Join-Path $run ($Name+'.log')
+    if(Test-Path -LiteralPath $log){Stop-S1 MaintLogExists}
+    & $Exe @Arguments *> $log
+    if($LASTEXITCODE -ne 0){Stop-S1 ('MaintToolFailed:'+ $Name)}
+}
+
+$cmakeOptions=[ordered]@{
+    CMAKE_BUILD_TYPE='Release'
+    CMAKE_MSVC_RUNTIME_LIBRARY='MultiThreadedDLL'
+    CMAKE_EXPORT_COMPILE_COMMANDS='ON'
+    CMAKE_MAKE_PROGRAM=$ninja
+    CMAKE_TOOLCHAIN_FILE=(Join-Path $run 'vcpkg/scripts/buildsystems/vcpkg.cmake')
+    CMAKE_FIND_USE_PACKAGE_REGISTRY='OFF'
+    CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY='OFF'
+    CLIPSS2_PUBLICATION_SCOPE='sec-maint-v013-3a'
+    CLIPSS2_SHIPPING_PRIVACY='ON'
+    CLIPSS2_SHIPPING_PROFILE='v2'
+    CLIPSS2_MAINT_RUN_ROOT=$run
+    CLIPSS2_MAINT_REFERENCE_INSTALLED=$ReferenceInstalled
+    CLIPSS2_MAINT_REFERENCE_PRODUCT=$ReferenceProduct
+    CLIPSS2_JPEGLI_SOURCE_DIR=$ManagedOriginal
+    CLIPSS2_DERIVED_JPEGLI_DIR=$ManagedDerivative
+    VCPKG_MANIFEST_DIR=(Join-Path $root 'cmake/security/sec-maint-v013')
+    VCPKG_INSTALLED_DIR=(Join-Path $run installed)
+    VCPKG_MANIFEST_INSTALL='OFF'
+    VCPKG_TARGET_TRIPLET=$tools.targetTriplet
+    VCPKG_HOST_TRIPLET=$tools.hostTriplet
+    VCPKG_OVERLAY_TRIPLETS=(Join-Path $root triplets)
+    BUILD_TESTING='ON'
+}
+$arguments=@('-S',$root,'-B',$build,'-G','Ninja')+@($cmakeOptions.GetEnumerator() | ForEach-Object {
+    '-D'+$_.Key+'='+$_.Value.Replace('\','/')
+})
+Invoke-MaintTool configure $cmake $arguments
+Invoke-MaintTool build $cmake @('--build',$build,'--parallel',[string]$Jobs)
+Invoke-MaintTool ctest $ctest @('--test-dir',$build,'--output-on-failure','--output-junit',(Join-Path $run 'ctest.xml'))
+
+$profile=Read-S1StrictJson (Resolve-S1Path $root 'packaging/public/profile-sec-maint-v013-3a.json')
+$plan=Read-S1StrictJson (Resolve-S1Path $root 'cmake/security/sec-maint-v013/source-inputs-v1.json')
+New-S1OwnedDirectory $product
+$installed=Join-Path $run installed
+$bin=Join-Path $installed ($tools.targetTriplet+'/bin')
+$installedShare=Join-Path $installed ($tools.targetTriplet+'/share')
+foreach($binding in @{ 'libjxl/copyright'='licenses/libjxl/copyright'; 'libjxl/PATENTS'='licenses/libjxl/PATENTS'; 'brotli/copyright'='licenses/brotli/copyright' }.GetEnumerator()){
+    if((Get-FileHash -LiteralPath (Resolve-S1Path $installedShare $binding.Key)).Hash -cne
+        (Get-FileHash -LiteralPath (Resolve-S1Path $root $binding.Value)).Hash){Stop-S1 MaintLicense}
+}
+$binaries=@(foreach($name in @('clipss2.exe')+@($profile.productRuntimeDlls)){
+    $from=Resolve-S1Path $build $name
+    if($name -cne 'clipss2.exe' -and (Get-FileHash -LiteralPath $from).Hash -cne
+       (Get-FileHash -LiteralPath (Resolve-S1Path $bin $name)).Hash){Stop-S1 MaintAppLocalIdentity}
+    $destination=Join-Path $product $name
+    [IO.File]::Copy($from,$destination,$false)
+    Read-IconPE $destination
+})
+$allowed=$profile.productRuntimeDlls
+$mustImport=[ordered]@{
+    'clipss2.exe'=@('jxl.dll','jxl_threads.dll')
+    'jxl.dll'=@('jxl_cms.dll','hwy.dll','brotlidec.dll','brotlienc.dll')
+    'jxl_cms.dll'=@('lcms2-2.dll','hwy.dll')
+}
+foreach($check in $mustImport.GetEnumerator()){
+    $imports=($binaries | Where-Object path -CEQ $check.Key).imports
+    foreach($dll in $check.Value){if($dll -notin $imports){Stop-S1 ('MaintMissingImport:'+ $dll)}}
+}
+# The new product may only require the same external DLL families as v0.1.2.
+$external=@((Read-S1StrictJson (Resolve-S1Path $ReferenceProduct 'BUILD-IDENTITY.json')).binaries.imports |
+    Where-Object {$_ -notin $allowed} | Sort-Object -Unique)
+if(!$external.Count){
+    $external=@(foreach($name in @('clipss2.exe')+@($allowed)){
+        (Read-IconPE (Resolve-S1Path $ReferenceProduct $name)).imports | Where-Object {$_ -notin $allowed}
+    }) | Sort-Object -Unique
+}
+foreach($binary in $binaries){
+    if(@($binary.imports | Where-Object {$_ -notin $allowed -and $_ -notin $external}).Count){Stop-S1 MaintUnexpectedImport}
+}
+$dumpbin=(Get-Command dumpbin.exe -CommandType Application).Source
+foreach($binary in $binaries){
+    $headers=@(& $dumpbin /headers (Resolve-S1Path $product $binary.path))
+    if($LASTEXITCODE -ne 0){Stop-S1 MaintPEHeaders}
+    $delay=@($headers | Where-Object {$_ -match 'RVA \[size\] of Delay Import Directory'})
+    if($delay.Count -ne 1 -or $delay[0] -notmatch '^\s*0+\s+\[\s*0+\]'){Stop-S1 MaintDelayImports}
+    $binary.delayImports=@()
+    $binary.codeView=@(foreach($line in $headers){
+        if($line -match 'Format:\s*RSDS,\s*[^,]+,\s*\d+,\s*(.+)$'){
+            $pdb=$Matches[1].Trim()
+            if($pdb -notmatch '^[A-Za-z0-9_.-]+\.pdb$'){Stop-S1 MaintCodeViewPath}
+            $pdb
+        }
+    })
+}
+function Get-MaintJxlExports([string]$Path){
+    $lines=@(& $dumpbin /exports $Path)
+    if($LASTEXITCODE -ne 0){Stop-S1 MaintPEExports}
+    foreach($line in $lines){
+        if($line -cmatch '^\s*\d+\s+[A-Fa-f0-9]+\s+[A-Fa-f0-9]+\s+(Jxl\w+)\b'){$Matches[1]}
+    }
+}
+foreach($name in 'jxl.dll','jxl_cms.dll','jxl_threads.dll'){
+    $before=@(Get-MaintJxlExports (Resolve-S1Path $ReferenceProduct $name))
+    $after=@(Get-MaintJxlExports (Resolve-S1Path $product $name))
+    if(!$before.Count -or !$after.Count -or @($before | Where-Object {$_ -cnotin $after}).Count){Stop-S1 MaintMissingJxlExport}
+    ($binaries | Where-Object path -CEQ $name).jxlExports=$after
+}
+$marker=Join-Path $installed 'share/clipss2-sec-maint-3a-installed-v1.json'
+$receipt=Join-Path $installed 'share/clipss2-sec-maint-3a-install-receipt-v1.json'
+$head=& git --no-optional-locks -C $root rev-parse HEAD
+if($LASTEXITCODE -ne 0 -or $head -cne $plan.baseCommit){Stop-S1 MaintBuildSource}
+$identity=[ordered]@{schemaVersion=1;version='0.1.3';scope='sec-maint-v013-3a';sourceBaseCommit=$head;sourceBindings=$plan.files;
+    configuration='MSVC x64 Release /MD';compiler=$tools.compiler;windowsSDK=$tools.windowsSDK;
+    toolchainSha256=(Get-FileHash -LiteralPath $contract).Hash;
+    sourceInputsSha256=(Get-FileHash -LiteralPath (Resolve-S1Path $root 'cmake/security/sec-maint-v013/source-inputs-v1.json')).Hash;
+    installedReceiptSha256=(Get-FileHash -LiteralPath $receipt).Hash;installedMarkerSha256=(Get-FileHash -LiteralPath $marker).Hash;
+    binaries=$binaries;runtimeBundled=$false;releaseApproved=$false;ownerAcceptance='PENDING'}
+Write-S1NewJson (Join-Path $run 'BUILD-IDENTITY.json') $identity
+[ordered]@{result='PASS';binaries=$binaries.Count;releaseApproved=$false}|ConvertTo-Json

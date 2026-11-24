@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "profileId": "clipss2-sec-maint-v013-3a",
+  "version": "0.1.3",
+  "configuration": "Release",
+  "architecture": "AMD64",
+  "baselineProfile": "packaging/public/profile-icon-v012-rc1.json",
+  "binaryReleaseApproved": false,
+  "publicDistributionAllowed": false,
+  "ownerAcceptance": "PENDING",
+  "productRuntimeDlls": [
+    "aom.dll",
+    "avif.dll",
+    "brotlicommon.dll",
+    "brotlidec.dll",
+    "brotlienc.dll",
+    "hwy.dll",
+    "jpeg62.dll",
+    "jxl.dll",
+    "jxl_cms.dll",
+    "jxl_threads.dll",
+    "lcms2-2.dll",
+    "libpng16.dll",
+    "libsharpyuv.dll",
+    "libwebp.dll",
+    "libyuv.dll",
+    "turbojpeg.dll",
+    "z.dll"
+  ],
+  "dependencyNotice": "cmake/security/sec-maint-v013/THIRD-PARTY-NOTICES.md",
+  "microsoftTerms": "packaging/icon-v012/MICROSOFT-COMPONENT-TERMS.txt",
+  "runtimeBundled": false
+}

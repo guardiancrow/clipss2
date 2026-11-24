@@ -1,4 +1,8 @@
-# Upstream libjxl 0.12 exports pkg-config modules, not CMake config targets.
+# Upstream libjxl exports pkg-config modules.
+set(_jxl_version 0.12.0)
+if(CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-maint-v013-3a")
+    set(_jxl_version 0.13.0)
+endif()
 find_program(PKG_CONFIG_EXECUTABLE NAMES pkgconf pkg-config REQUIRED
     PATHS "${VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/tools/pkgconf"
     NO_DEFAULT_PATH)
@@ -12,7 +16,7 @@ else()
 endif()
 set(ENV{PKG_CONFIG_PATH} "${_jxl_pkgconfig}")
 set(ENV{PKG_CONFIG_LIBDIR} "${_jxl_pkgconfig}")
-pkg_check_modules(LIBJXL REQUIRED IMPORTED_TARGET libjxl=0.12.0)
-pkg_check_modules(LIBJXL_THREADS REQUIRED IMPORTED_TARGET libjxl_threads=0.12.0)
+pkg_check_modules(LIBJXL REQUIRED IMPORTED_TARGET "libjxl=${_jxl_version}")
+pkg_check_modules(LIBJXL_THREADS REQUIRED IMPORTED_TARGET "libjxl_threads=${_jxl_version}")
 set(ENV{PKG_CONFIG_PATH} "${_jxl_saved_pkg_config_path}")
 set(ENV{PKG_CONFIG_LIBDIR} "${_jxl_saved_pkg_config_libdir}")

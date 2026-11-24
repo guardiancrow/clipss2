@@ -1,0 +1,113 @@
+diff --git a/lib/jxl/base/status.h b/lib/jxl/base/status.h
+--- a/lib/jxl/base/status.h
++++ b/lib/jxl/base/status.h
+@@ -1,5 +1,5 @@
+ // Copyright (c) the JPEG XL Project Authors. All rights reserved.
+-//
++// Modified for clipss2 Shipping Privacy v2 (diagnostic file ID).
+ // Use of this source code is governed by a BSD-style
+ // license that can be found in the LICENSE file.
+ 
+@@ -66,7 +66,7 @@
+ //   #define JXL_DEBUG_MYMODULE 0
+ //   #endif JXL_DEBUG_MYMODULE
+ #define JXL_DEBUG_TMP(format, ...) \
+-  ::jxl::Debug(("%s:%d: " format "\n"), __FILE__, __LINE__, ##__VA_ARGS__)
++  ::jxl::Debug(("%s:%d: " format "\n"), "libjxl", __LINE__, ##__VA_ARGS__)
+ 
+ #define JXL_DEBUG(enabled, format, ...)     \
+   do {                                      \
+@@ -100,7 +100,7 @@
+ #define JXL_DEBUG_ABORT(format, ...)                                   \
+   do {                                                                 \
+     if (JXL_DEBUG_ON_ABORT) {                                          \
+-      ::jxl::Debug(("%s:%d: JXL_DEBUG_ABORT: " format "\n"), __FILE__, \
++      ::jxl::Debug(("%s:%d: JXL_DEBUG_ABORT: " format "\n"), "libjxl", \
+                    __LINE__, ##__VA_ARGS__);                           \
+     }                                                                  \
+     ::jxl::Abort();                                                    \
+@@ -115,7 +115,7 @@
+ // this if this path is really unreachable.
+ #if JXL_IS_DEBUG_BUILD
+ #define JXL_UNREACHABLE(format, ...)                                          \
+-  (::jxl::Debug(("%s:%d: JXL_UNREACHABLE: " format "\n"), __FILE__, __LINE__, \
++  (::jxl::Debug(("%s:%d: JXL_UNREACHABLE: " format "\n"), "libjxl", __LINE__, \
+                 ##__VA_ARGS__),                                               \
+    ::jxl::Abort(), JXL_FAILURE(format, ##__VA_ARGS__))
+ #else  // JXL_IS_DEBUG_BUILD
+@@ -142,7 +142,7 @@
+ // A jxl::Status value from a StatusCode or Status which prints a debug message
+ // when enabled.
+ #define JXL_STATUS(status, format, ...)                                        \
+-  ::jxl::StatusMessage(::jxl::Status(status), "%s:%d: " format "\n", __FILE__, \
++  ::jxl::StatusMessage(::jxl::Status(status), "%s:%d: " format "\n", "libjxl", \
+                        __LINE__, ##__VA_ARGS__)
+ 
+ // Notify of an error but discard the resulting Status value. This is only
+@@ -176,7 +176,7 @@
+     if (!jxl_return_if_error_status) {                                    \
+       (void)::jxl::StatusMessage(                                         \
+           jxl_return_if_error_status,                                     \
+-          "%s:%d: JXL_RETURN_IF_ERROR code=%d: %s\n", __FILE__, __LINE__, \
++          "%s:%d: JXL_RETURN_IF_ERROR code=%d: %s\n", "libjxl", __LINE__, \
+           static_cast<int>(jxl_return_if_error_status.code()), #status);  \
+       return jxl_return_if_error_status;                                  \
+     }                                                                     \
+diff --git a/lib/jxl/decode.cc b/lib/jxl/decode.cc
+--- a/lib/jxl/decode.cc
++++ b/lib/jxl/decode.cc
+@@ -1,5 +1,5 @@
+ // Copyright (c) the JPEG XL Project Authors. All rights reserved.
+-//
++// Modified for clipss2 Shipping Privacy v2 (diagnostic file ID).
+ // Use of this source code is governed by a BSD-style
+ // license that can be found in the LICENSE file.
+ 
+@@ -87,12 +87,12 @@
+ // JXL_DEC_ERROR
+ #if (JXL_CRASH_ON_ERROR)
+ #define JXL_API_ERROR(format, ...)                                           \
+-  (::jxl::Debug(("%s:%d: " format "\n"), __FILE__, __LINE__, ##__VA_ARGS__), \
++  (::jxl::Debug(("%s:%d: " format "\n"), "libjxl", __LINE__, ##__VA_ARGS__), \
+    ::jxl::Abort(), JXL_DEC_ERROR)
+ #else  // JXL_CRASH_ON_ERROR
+ #define JXL_API_ERROR(format, ...)                                             \
+   (((JXL_IS_DEBUG_BUILD) &&                                                    \
+-    ::jxl::Debug(("%s:%d: " format "\n"), __FILE__, __LINE__, ##__VA_ARGS__)), \
++    ::jxl::Debug(("%s:%d: " format "\n"), "libjxl", __LINE__, ##__VA_ARGS__)), \
+    JXL_DEC_ERROR)
+ #endif  // JXL_CRASH_ON_ERROR
+ 
+diff --git a/lib/jxl/encode.cc b/lib/jxl/encode.cc
+--- a/lib/jxl/encode.cc
++++ b/lib/jxl/encode.cc
+@@ -1,5 +1,5 @@
+ // Copyright (c) the JPEG XL Project Authors. All rights reserved.
+-//
++// Modified for clipss2 Shipping Privacy v2 (diagnostic file ID).
+ // Use of this source code is governed by a BSD-style
+ // license that can be found in the LICENSE file.
+ 
+@@ -91,18 +91,18 @@
+ #if (JXL_CRASH_ON_ERROR)
+ #define JXL_API_ERROR(enc, error_code, format, ...)                          \
+   (enc->error = error_code,                                                  \
+-   ::jxl::Debug(("%s:%d: " format "\n"), __FILE__, __LINE__, ##__VA_ARGS__), \
++   ::jxl::Debug(("%s:%d: " format "\n"), "libjxl", __LINE__, ##__VA_ARGS__), \
+    ::jxl::Abort(), JxlErrorOrStatus::Error())
+ #define JXL_API_ERROR_NOSET(format, ...)                                     \
+-  (::jxl::Debug(("%s:%d: " format "\n"), __FILE__, __LINE__, ##__VA_ARGS__), \
++  (::jxl::Debug(("%s:%d: " format "\n"), "libjxl", __LINE__, ##__VA_ARGS__), \
+    ::jxl::Abort(), JxlErrorOrStatus::Error())
+ #else  // JXL_CRASH_ON_ERROR
+ #define JXL_API_ERROR(enc, error_code, format, ...)                            \
+   (enc->error = error_code,                                                    \
+    ((JXL_IS_DEBUG_BUILD) &&                                                    \
+-    ::jxl::Debug(("%s:%d: " format "\n"), __FILE__, __LINE__, ##__VA_ARGS__)), \
++    ::jxl::Debug(("%s:%d: " format "\n"), "libjxl", __LINE__, ##__VA_ARGS__)), \
+    JxlErrorOrStatus::Error())
+ #define JXL_API_ERROR_NOSET(format, ...)                                     \
+-  (::jxl::Debug(("%s:%d: " format "\n"), __FILE__, __LINE__, ##__VA_ARGS__), \
++  (::jxl::Debug(("%s:%d: " format "\n"), "libjxl", __LINE__, ##__VA_ARGS__), \
+    JxlErrorOrStatus::Error())
+ #endif  // JXL_CRASH_ON_ERROR
