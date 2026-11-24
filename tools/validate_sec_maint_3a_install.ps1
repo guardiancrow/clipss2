@@ -5,6 +5,8 @@ param(
     [Parameter(Mandatory)][ValidateSet('Seal','Verify')][string]$Mode,
     [Parameter(Mandatory)][string]$RunRoot,
     [Parameter(Mandatory)][string]$ReferenceInstalled,
+    [ValidateSet('3a','3b')][string]$Phase='3a',
+    [string]$PreviousRun,
     [string]$Root=(Split-Path $PSScriptRoot -Parent)
 )
 $ErrorActionPreference='Stop'
@@ -28,12 +30,14 @@ function Read-MaintStatus([string]$Installed) {
 }
 
 $run=[IO.Path]::GetFullPath($RunRoot)
-$prefix=(Join-Path ([IO.Path]::GetFullPath($Root)) 'build/sec-maint-v013/3a')+[IO.Path]::DirectorySeparatorChar
+$prefix=(Join-Path ([IO.Path]::GetFullPath($Root)) "build/sec-maint-v013/$Phase")+[IO.Path]::DirectorySeparatorChar
 if(!$run.StartsWith($prefix,[StringComparison]::OrdinalIgnoreCase)){Stop-S1 MaintRunRoot}
 Assert-S1NoReparse $run
 $installed=Join-Path $run installed
 $tools=Read-S1StrictJson (Resolve-S1Path $Root 'cmake/security/sec-maint-v013/toolchain-v1.json')
-$ledgerPath=Resolve-S1Path $Root 'cmake/security/sec-maint-v013/source-inputs-v1.json'
+$manifest='cmake/security/sec-maint-v013'
+if($Phase -ceq '3b'){$manifest+='/3b'}
+$ledgerPath=Resolve-S1Path $Root "$manifest/source-inputs-v1.json"
 $inputs=Read-S1StrictJson $ledgerPath
 $inputsHash=(Get-FileHash -LiteralPath $ledgerPath).Hash.ToLowerInvariant()
 foreach($binding in $inputs.files) {
@@ -41,6 +45,10 @@ foreach($binding in $inputs.files) {
 }
 $archive=Join-Path $run 'downloads/libjxl-libjxl-v0.13.0.tar.gz'
 if((Get-FileHash -LiteralPath $archive -Algorithm SHA512).Hash -ine $inputs.libjxl.archiveSha512){Stop-S1 MaintArchive}
+if($Phase -ceq '3b'){
+    $pngArchive=Join-Path $run 'downloads/pnggroup-libpng-v1.6.59.tar.gz'
+    if((Get-FileHash -LiteralPath $pngArchive -Algorithm SHA512).Hash -ine $inputs.libpng.archiveSha512){Stop-S1 MaintPngArchive}
+}
 $vcpkg=Join-Path $run vcpkg
 $gitOptions=@('--no-optional-locks','-c',('safe.directory='+$vcpkg.Replace('\','/')),'-C',$vcpkg)
 $tool=Join-Path $vcpkg vcpkg.exe
@@ -49,11 +57,25 @@ $commit=& git @gitOptions rev-parse HEAD
 if($LASTEXITCODE -ne 0 -or $commit -cne $tools.vcpkgBaseline){Stop-S1 MaintRegistry}
 foreach($package in $inputs.packages) {
     if($package.name -cin @('brotli','highway','libjxl','libyuv')){continue}
+    if($Phase -ceq '3b' -and $package.name -ceq 'libpng'){continue}
     $tree=& git @gitOptions rev-parse ("HEAD:ports/"+$package.name)
     if($LASTEXITCODE -ne 0 -or $tree -cne $package.portTree){Stop-S1 MaintRegistryPort}
 }
 
 $oldReceipt=Resolve-S1Path $ReferenceInstalled 'share/clipss2-sec-br1-install-receipt-v1.json'
+if($Phase -ceq '3b'){
+    if(!$PreviousRun){Stop-S1 MaintPreviousRun}
+    $previous=[IO.Path]::GetFullPath($PreviousRun)
+    $oldPrefix=(Join-Path ([IO.Path]::GetFullPath($Root)) 'build/sec-maint-v013/3a')+[IO.Path]::DirectorySeparatorChar
+    if(!$previous.StartsWith($oldPrefix,[StringComparison]::OrdinalIgnoreCase)){Stop-S1 MaintPreviousRun}
+    Assert-S1NoReparse $previous
+    $ReferenceInstalled=Join-Path $previous installed
+    $oldReceipt=Resolve-S1Path $ReferenceInstalled 'share/clipss2-sec-maint-3a-install-receipt-v1.json'
+    $oldMarker=Resolve-S1Path $ReferenceInstalled 'share/clipss2-sec-maint-3a-installed-v1.json'
+    $oldIdentity=Resolve-S1Path $previous 'BUILD-IDENTITY.json'
+    if((Get-FileHash -LiteralPath $oldMarker).Hash -cne $inputs.referenceMarkerSha256 -or
+       (Get-FileHash -LiteralPath $oldIdentity).Hash -cne $inputs.referenceBuildIdentitySha256){Stop-S1 MaintPreviousIdentity}
+}
 if((Get-FileHash -LiteralPath $oldReceipt).Hash -cne $inputs.referenceReceiptSha256){Stop-S1 MaintReference}
 $oldStatus=(Read-S1StrictJson $oldReceipt).inventory | Where-Object path -CEQ 'vcpkg/status'
 Assert-S1Identity (Resolve-S1Path $ReferenceInstalled $oldStatus.path) $oldStatus.size $oldStatus.sha256
@@ -67,10 +89,19 @@ Assert-S1InputSet @($prior | ForEach-Object {Get-MaintPackageKey $_}) @($actual 
 foreach($entry in $actual){
     $key=Get-MaintPackageKey $entry
     $old=@($prior | Where-Object {(Get-MaintPackageKey $_) -ceq $key})[0]
-    $expected=if($entry.name -ceq 'libjxl'){'0.13.0'}else{$old.version}
-    if($entry.version -cne $expected -or $entry.portVersion -ne $old.portVersion -or
+    $expected=$old.version
+    $expectedPortVersion=$old.portVersion
+    if($Phase -ceq '3a' -and $entry.name -ceq 'libjxl'){$expected='0.13.0'}
+    if($Phase -ceq '3b' -and $entry.name -ceq 'libpng'){
+        $expected=$inputs.libpng.version
+        $expectedPortVersion=$inputs.libpng.portVersion
+    }
+    if($entry.version -cne $expected -or $entry.portVersion -ne $expectedPortVersion -or
        $entry.depends -cne $old.depends){Stop-S1 MaintResolvedPackages}
     if(!$entry.feature -and $entry.abi -cnotmatch '^[a-f0-9]{64}$'){Stop-S1 MaintAbiMissing}
+    if($Phase -ceq '3b' -and !$entry.feature){
+        if(($entry.abi -cne $old.abi) -ne ($entry.name -ceq 'libpng')){Stop-S1 MaintUnexpectedAbiChange}
+    }
     $entry.priorAbi=$old.abi
 }
 
@@ -105,8 +136,10 @@ try {
     $env:PKG_CONFIG_PATH=$oldPkgPath
 }
 
-$receiptRelative='share/clipss2-sec-maint-3a-install-receipt-v1.json'
-$markerRelative='share/clipss2-sec-maint-3a-installed-v1.json'
+$receiptId="clipss2-sec-maint-$Phase-install-receipt-v1"
+$markerId="clipss2-sec-maint-$Phase-installed-v1"
+$receiptRelative="share/$receiptId.json"
+$markerRelative="share/$markerId.json"
 $receiptPath=Resolve-S1Path $installed $receiptRelative
 $markerPath=Resolve-S1Path $installed $markerRelative
 $files=Get-S1Files $installed
@@ -118,15 +151,16 @@ $inventory=@(foreach($relative in ($files.Keys|Sort-Object -CaseSensitive)){
 if($Mode -ceq 'Seal'){
     if((Test-Path -LiteralPath $receiptPath) -or (Test-Path -LiteralPath $markerPath)){Stop-S1 MaintAlreadySealed}
     [void][IO.Directory]::CreateDirectory((Split-Path -Parent $receiptPath))
-    Write-S1NewJson $receiptPath ([ordered]@{schemaVersion=1;receiptId='clipss2-sec-maint-3a-install-receipt-v1';
+    Write-S1NewJson $receiptPath ([ordered]@{schemaVersion=1;receiptId=$receiptId;
         sourceInputsSha256=$inputsHash;vcpkgBaseline=$tools.vcpkgBaseline;vcpkgToolSha256=$tools.vcpkgToolSha256;
         compiler=$tools.compiler;packages=$actual;pkgconfig=$pcQueries;inventory=$inventory})
-    Write-S1NewJson $markerPath ([ordered]@{schemaVersion=1;markerId='clipss2-sec-maint-3a-installed-v1';
+    Write-S1NewJson $markerPath ([ordered]@{schemaVersion=1;markerId=$markerId;
         sourceInputsSha256=$inputsHash;receiptSha256=(Get-FileHash -LiteralPath $receiptPath).Hash.ToLowerInvariant()})
 }
 $receipt=Read-S1StrictJson $receiptPath
 $marker=Read-S1StrictJson $markerPath
-if($receipt.sourceInputsSha256 -cne $inputsHash -or $marker.sourceInputsSha256 -cne $inputsHash -or
+if($receipt.receiptId -cne $receiptId -or $marker.markerId -cne $markerId -or
+   $receipt.sourceInputsSha256 -cne $inputsHash -or $marker.sourceInputsSha256 -cne $inputsHash -or
    $marker.receiptSha256 -cne (Get-FileHash -LiteralPath $receiptPath).Hash.ToLowerInvariant()){Stop-S1 MaintReceiptBinding}
 Assert-S1InputSet @($inventory.path) @($receipt.inventory.path)
 foreach($item in $receipt.inventory){Assert-S1Identity $files[$item.path] $item.size $item.sha256}

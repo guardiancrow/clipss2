@@ -1,0 +1,8 @@
+{
+  "overlay-ports": [
+    "../../../../vcpkg-overlays/security-sec-maint-v013/libpng",
+    "../../../../vcpkg-overlays/security-sec-maint-v013/libjxl",
+    "../../../../vcpkg-overlays/security-sec-br1",
+    "../../../../vcpkg-overlays/shipping-privacy-v2"
+  ]
+}

@@ -7,6 +7,8 @@ param(
     [Parameter(Mandatory)][string]$ReferenceProduct,
     [Parameter(Mandatory)][string]$ManagedOriginal,
     [Parameter(Mandatory)][string]$ManagedDerivative,
+    [ValidateSet('3a','3b')][string]$Phase='3a',
+    [string]$PreviousRun,
     [ValidateRange(1,32)][int]$Jobs=6
 )
 $ErrorActionPreference='Stop'
@@ -15,9 +17,15 @@ Import-Module (Join-Path $PSScriptRoot IconV012.psm1) -Force -DisableNameCheckin
 
 $root=Split-Path $PSScriptRoot -Parent
 $run=[IO.Path]::GetFullPath($RunRoot)
-$prefix=(Join-Path $root 'build/sec-maint-v013/3a')+[IO.Path]::DirectorySeparatorChar
+$prefix=(Join-Path $root "build/sec-maint-v013/$Phase")+[IO.Path]::DirectorySeparatorChar
 if(!$run.StartsWith($prefix,[StringComparison]::OrdinalIgnoreCase)){Stop-S1 MaintRunRoot}
 Assert-S1NoReparse $run
+$manifest='cmake/security/sec-maint-v013'
+if($Phase -ceq '3b'){
+    if(!$PreviousRun){Stop-S1 MaintPreviousRun}
+    $manifest+='/3b'
+}
+$scope="sec-maint-v013-$Phase"
 $contract=Resolve-S1Path $root 'cmake/security/sec-maint-v013/toolchain-v1.json'
 $tools=Read-S1StrictJson $contract
 # Resolve the approved tools before vcvarsall adds Visual Studio's bundled copies.
@@ -65,12 +73,23 @@ for($i=0;$i -lt $refs.Count;$i++){
 }
 $null=Test-S1ManagedOriginal $root $ManagedOriginal
 $null=Test-S1ManagedDerivative $root $ManagedDerivative
-$null=& (Join-Path $PSScriptRoot validate_sec_maint_3a_install.ps1) -Mode Verify -RunRoot $run -ReferenceInstalled $ReferenceInstalled
+$null=& (Join-Path $PSScriptRoot validate_sec_maint_3a_install.ps1) -Mode Verify -RunRoot $run `
+    -ReferenceInstalled $ReferenceInstalled -Phase $Phase -PreviousRun $PreviousRun
 
 $reference=Read-S1StrictJson (Resolve-S1Path $root 'packaging/public/profile-icon-v012-rc1.json')
 foreach($name in 'jxl.dll','jxl_cms.dll','jxl_threads.dll','hwy.dll','brotlidec.dll','brotlienc.dll','brotlicommon.dll','lcms2-2.dll'){
     $item=$reference.files | Where-Object path -CEQ $name
     Assert-S1Identity (Resolve-S1Path $ReferenceProduct $name) $item.size $item.sha256
+}
+$baselineProduct=$ReferenceProduct
+$baselineIdentity=Resolve-S1Path $ReferenceProduct 'BUILD-IDENTITY.json'
+if($Phase -ceq '3b'){
+    $baselineProduct=Resolve-S1Path $PreviousRun 'product'
+    $baselineIdentity=Resolve-S1Path $PreviousRun 'BUILD-IDENTITY.json'
+    $old=(Read-S1StrictJson $baselineIdentity).binaries
+    foreach($item in $old){
+        Assert-S1Identity (Resolve-S1Path $baselineProduct $item.path) $item.size $item.sha256
+    }
 }
 $build=Join-Path $run build
 $product=Join-Path $run product
@@ -90,7 +109,7 @@ $cmakeOptions=[ordered]@{
     CMAKE_TOOLCHAIN_FILE=(Join-Path $run 'vcpkg/scripts/buildsystems/vcpkg.cmake')
     CMAKE_FIND_USE_PACKAGE_REGISTRY='OFF'
     CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY='OFF'
-    CLIPSS2_PUBLICATION_SCOPE='sec-maint-v013-3a'
+    CLIPSS2_PUBLICATION_SCOPE=$scope
     CLIPSS2_SHIPPING_PRIVACY='ON'
     CLIPSS2_SHIPPING_PROFILE='v2'
     CLIPSS2_MAINT_RUN_ROOT=$run
@@ -98,13 +117,17 @@ $cmakeOptions=[ordered]@{
     CLIPSS2_MAINT_REFERENCE_PRODUCT=$ReferenceProduct
     CLIPSS2_JPEGLI_SOURCE_DIR=$ManagedOriginal
     CLIPSS2_DERIVED_JPEGLI_DIR=$ManagedDerivative
-    VCPKG_MANIFEST_DIR=(Join-Path $root 'cmake/security/sec-maint-v013')
+    VCPKG_MANIFEST_DIR=(Join-Path $root $manifest)
     VCPKG_INSTALLED_DIR=(Join-Path $run installed)
     VCPKG_MANIFEST_INSTALL='OFF'
     VCPKG_TARGET_TRIPLET=$tools.targetTriplet
     VCPKG_HOST_TRIPLET=$tools.hostTriplet
     VCPKG_OVERLAY_TRIPLETS=(Join-Path $root triplets)
     BUILD_TESTING='ON'
+}
+if($Phase -ceq '3b'){
+    $cmakeOptions.CLIPSS2_MAINT_PNG_REFERENCE_INSTALLED=Resolve-S1Path $PreviousRun 'installed'
+    $cmakeOptions.CLIPSS2_MAINT_PNG_REFERENCE_PRODUCT=$baselineProduct
 }
 $arguments=@('-S',$root,'-B',$build,'-G','Ninja')+@($cmakeOptions.GetEnumerator() | ForEach-Object {
     '-D'+$_.Key+'='+$_.Value.Replace('\','/')
@@ -113,13 +136,15 @@ Invoke-MaintTool configure $cmake $arguments
 Invoke-MaintTool build $cmake @('--build',$build,'--parallel',[string]$Jobs)
 Invoke-MaintTool ctest $ctest @('--test-dir',$build,'--output-on-failure','--output-junit',(Join-Path $run 'ctest.xml'))
 
-$profile=Read-S1StrictJson (Resolve-S1Path $root 'packaging/public/profile-sec-maint-v013-3a.json')
-$plan=Read-S1StrictJson (Resolve-S1Path $root 'cmake/security/sec-maint-v013/source-inputs-v1.json')
+$profile=Read-S1StrictJson (Resolve-S1Path $root "packaging/public/profile-$scope.json")
+$plan=Read-S1StrictJson (Resolve-S1Path $root "$manifest/source-inputs-v1.json")
 New-S1OwnedDirectory $product
 $installed=Join-Path $run installed
 $bin=Join-Path $installed ($tools.targetTriplet+'/bin')
 $installedShare=Join-Path $installed ($tools.targetTriplet+'/share')
-foreach($binding in @{ 'libjxl/copyright'='licenses/libjxl/copyright'; 'libjxl/PATENTS'='licenses/libjxl/PATENTS'; 'brotli/copyright'='licenses/brotli/copyright' }.GetEnumerator()){
+$licenses=@{ 'libjxl/copyright'='licenses/libjxl/copyright'; 'libjxl/PATENTS'='licenses/libjxl/PATENTS'; 'brotli/copyright'='licenses/brotli/copyright' }
+if($Phase -ceq '3b'){$licenses['libpng/copyright']='licenses/libpng/copyright'}
+foreach($binding in $licenses.GetEnumerator()){
     if((Get-FileHash -LiteralPath (Resolve-S1Path $installedShare $binding.Key)).Hash -cne
         (Get-FileHash -LiteralPath (Resolve-S1Path $root $binding.Value)).Hash){Stop-S1 MaintLicense}
 }
@@ -127,6 +152,10 @@ $binaries=@(foreach($name in @('clipss2.exe')+@($profile.productRuntimeDlls)){
     $from=Resolve-S1Path $build $name
     if($name -cne 'clipss2.exe' -and (Get-FileHash -LiteralPath $from).Hash -cne
        (Get-FileHash -LiteralPath (Resolve-S1Path $bin $name)).Hash){Stop-S1 MaintAppLocalIdentity}
+    if($Phase -ceq '3b' -and $name -cnotin @('clipss2.exe','libpng16.dll')){
+        if((Get-FileHash -LiteralPath $from).Hash -cne
+           (Get-FileHash -LiteralPath (Resolve-S1Path $baselineProduct $name)).Hash){Stop-S1 MaintFixedDllIdentity}
+    }
     $destination=Join-Path $product $name
     [IO.File]::Copy($from,$destination,$false)
     Read-IconPE $destination
@@ -137,16 +166,20 @@ $mustImport=[ordered]@{
     'jxl.dll'=@('jxl_cms.dll','hwy.dll','brotlidec.dll','brotlienc.dll')
     'jxl_cms.dll'=@('lcms2-2.dll','hwy.dll')
 }
+if($Phase -ceq '3b'){
+    $mustImport['clipss2.exe']+=@('libpng16.dll')
+    $mustImport['libpng16.dll']=@('z.dll')
+}
 foreach($check in $mustImport.GetEnumerator()){
     $imports=($binaries | Where-Object path -CEQ $check.Key).imports
     foreach($dll in $check.Value){if($dll -notin $imports){Stop-S1 ('MaintMissingImport:'+ $dll)}}
 }
-# The new product may only require the same external DLL families as v0.1.2.
-$external=@((Read-S1StrictJson (Resolve-S1Path $ReferenceProduct 'BUILD-IDENTITY.json')).binaries.imports |
+# Preserve the external DLL families of the previous accepted product.
+$external=@((Read-S1StrictJson $baselineIdentity).binaries.imports |
     Where-Object {$_ -notin $allowed} | Sort-Object -Unique)
 if(!$external.Count){
     $external=@(foreach($name in @('clipss2.exe')+@($allowed)){
-        (Read-IconPE (Resolve-S1Path $ReferenceProduct $name)).imports | Where-Object {$_ -notin $allowed}
+        (Read-IconPE (Resolve-S1Path $baselineProduct $name)).imports | Where-Object {$_ -notin $allowed}
     }) | Sort-Object -Unique
 }
 foreach($binary in $binaries){
@@ -167,28 +200,35 @@ foreach($binary in $binaries){
         }
     })
 }
-function Get-MaintJxlExports([string]$Path){
+function Get-MaintExports([string]$Path,[string]$Prefix){
     $lines=@(& $dumpbin /exports $Path)
     if($LASTEXITCODE -ne 0){Stop-S1 MaintPEExports}
     foreach($line in $lines){
-        if($line -cmatch '^\s*\d+\s+[A-Fa-f0-9]+\s+[A-Fa-f0-9]+\s+(Jxl\w+)\b'){$Matches[1]}
+        if($line -cmatch ('^\s*\d+\s+[A-Fa-f0-9]+\s+[A-Fa-f0-9]+\s+('+$Prefix+'\w+)\b')){$Matches[1]}
     }
 }
 foreach($name in 'jxl.dll','jxl_cms.dll','jxl_threads.dll'){
-    $before=@(Get-MaintJxlExports (Resolve-S1Path $ReferenceProduct $name))
-    $after=@(Get-MaintJxlExports (Resolve-S1Path $product $name))
+    $before=@(Get-MaintExports (Resolve-S1Path $baselineProduct $name) Jxl)
+    $after=@(Get-MaintExports (Resolve-S1Path $product $name) Jxl)
     if(!$before.Count -or !$after.Count -or @($before | Where-Object {$_ -cnotin $after}).Count){Stop-S1 MaintMissingJxlExport}
     ($binaries | Where-Object path -CEQ $name).jxlExports=$after
 }
-$marker=Join-Path $installed 'share/clipss2-sec-maint-3a-installed-v1.json'
-$receipt=Join-Path $installed 'share/clipss2-sec-maint-3a-install-receipt-v1.json'
+if($Phase -ceq '3b'){
+    $before=@(Get-MaintExports (Resolve-S1Path $baselineProduct 'libpng16.dll') png_)
+    $after=@(Get-MaintExports (Resolve-S1Path $product 'libpng16.dll') png_)
+    if(!$before.Count -or !$after.Count -or @($before | Where-Object {$_ -cnotin $after}).Count){Stop-S1 MaintMissingPngExport}
+    ($binaries | Where-Object path -CEQ 'libpng16.dll').pngExports=$after
+}
+$marker=Join-Path $installed "share/clipss2-sec-maint-$Phase-installed-v1.json"
+$receipt=Join-Path $installed "share/clipss2-sec-maint-$Phase-install-receipt-v1.json"
 $head=& git --no-optional-locks -C $root rev-parse HEAD
 if($LASTEXITCODE -ne 0 -or $head -cne $plan.baseCommit){Stop-S1 MaintBuildSource}
-$identity=[ordered]@{schemaVersion=1;version='0.1.3';scope='sec-maint-v013-3a';sourceBaseCommit=$head;sourceBindings=$plan.files;
+$identity=[ordered]@{schemaVersion=1;version='0.1.3';scope=$scope;sourceBaseCommit=$head;sourceBindings=$plan.files;
     configuration='MSVC x64 Release /MD';compiler=$tools.compiler;windowsSDK=$tools.windowsSDK;
     toolchainSha256=(Get-FileHash -LiteralPath $contract).Hash;
-    sourceInputsSha256=(Get-FileHash -LiteralPath (Resolve-S1Path $root 'cmake/security/sec-maint-v013/source-inputs-v1.json')).Hash;
+    sourceInputsSha256=(Get-FileHash -LiteralPath (Resolve-S1Path $root "$manifest/source-inputs-v1.json")).Hash;
     installedReceiptSha256=(Get-FileHash -LiteralPath $receipt).Hash;installedMarkerSha256=(Get-FileHash -LiteralPath $marker).Hash;
     binaries=$binaries;runtimeBundled=$false;releaseApproved=$false;ownerAcceptance='PENDING'}
+if($Phase -ceq '3b'){$identity.previousBuildIdentitySha256=$plan.referenceBuildIdentitySha256}
 Write-S1NewJson (Join-Path $run 'BUILD-IDENTITY.json') $identity
 [ordered]@{result='PASS';binaries=$binaries.Count;releaseApproved=$false}|ConvertTo-Json
