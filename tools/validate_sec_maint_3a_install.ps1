@@ -5,7 +5,7 @@ param(
     [Parameter(Mandatory)][ValidateSet('Seal','Verify')][string]$Mode,
     [Parameter(Mandatory)][string]$RunRoot,
     [Parameter(Mandatory)][string]$ReferenceInstalled,
-    [ValidateSet('3a','3b','3c')][string]$Phase='3a',
+    [ValidateSet('3a','3b','3c','3d')][string]$Phase='3a',
     [string]$PreviousRun,
     [string]$Root=(Split-Path $PSScriptRoot -Parent)
 )
@@ -49,9 +49,33 @@ if($Phase -cne '3a'){
     $pngArchive=Join-Path $run 'downloads/pnggroup-libpng-v1.6.59.tar.gz'
     if((Get-FileHash -LiteralPath $pngArchive -Algorithm SHA512).Hash -ine $inputs.libpng.archiveSha512){Stop-S1 MaintPngArchive}
 }
-if($Phase -ceq '3c'){
+if($Phase -cin @('3c','3d')){
     $zlibArchive=Join-Path $run 'downloads/madler-zlib-v1.4.tar.gz'
     if((Get-FileHash -LiteralPath $zlibArchive -Algorithm SHA512).Hash -ine $inputs.zlib.archiveSha512){Stop-S1 MaintZlibArchive}
+}
+if($Phase -ceq '3d'){
+    foreach($component in @($inputs.libjpegTurbo,$inputs.libspng)){
+        if((Get-FileHash -LiteralPath (Resolve-S1Path $run ('downloads/'+$component.archive)) -Algorithm SHA512).Hash -ine
+           $component.archiveSha512){Stop-S1 MaintJpegArchive}
+    }
+    $evidencePath=Resolve-S1Path $run 'external-link-evidence.json'
+    if((Get-FileHash -LiteralPath $evidencePath).Hash -cne $inputs.externalLinkEvidenceSha256){Stop-S1 MaintExternalLinkEvidence}
+    $linkEvidence=Read-S1StrictJson $evidencePath
+    if($linkEvidence.triplet -cne $tools.targetTriplet -or $linkEvidence.result -cne 'PASS' -or $inputs.embedded.Count){
+        Stop-S1 MaintExternalLinkEvidence
+    }
+    $actualRoot=Join-Path $installed $tools.targetTriplet
+    foreach($binary in $linkEvidence.binaries){
+        if((Get-FileHash -LiteralPath (Resolve-S1Path $actualRoot ('bin/'+$binary.dll))).Hash -cne $binary.sha256 -or
+           (Get-FileHash -LiteralPath (Resolve-S1Path $actualRoot ('lib/'+$binary.importLibrary))).Hash -cne $binary.importLibrarySha256){
+            Stop-S1 MaintExternalBinaryEvidence
+        }
+    }
+    if((Get-FileHash -LiteralPath (Resolve-S1Path $actualRoot 'bin/libz.dll')).Hash -cne $linkEvidence.zlib.sha256 -or
+       (Get-FileHash -LiteralPath (Resolve-S1Path $actualRoot 'lib/libz.lib')).Hash -cne $linkEvidence.zlib.importLibrarySha256 -or
+       (Get-FileHash -LiteralPath (Resolve-S1Path $actualRoot 'bin/libpng16.dll')).Hash -cne $linkEvidence.pngSha256){
+        Stop-S1 MaintExternalBinaryEvidence
+    }
 }
 $vcpkg=Join-Path $run vcpkg
 $gitOptions=@('--no-optional-locks','-c',('safe.directory='+$vcpkg.Replace('\','/')),'-C',$vcpkg)
@@ -62,7 +86,8 @@ if($LASTEXITCODE -ne 0 -or $commit -cne $tools.vcpkgBaseline){Stop-S1 MaintRegis
 foreach($package in $inputs.packages) {
     if($package.name -cin @('brotli','highway','libjxl','libyuv')){continue}
     if($Phase -cne '3a' -and $package.name -ceq 'libpng'){continue}
-    if($Phase -ceq '3c' -and $package.name -ceq 'zlib'){continue}
+    if($Phase -cin @('3c','3d') -and $package.name -ceq 'zlib'){continue}
+    if($Phase -ceq '3d' -and $package.name -ceq 'libjpeg-turbo'){continue}
     $tree=& git @gitOptions rev-parse ("HEAD:ports/"+$package.name)
     if($LASTEXITCODE -ne 0 -or $tree -cne $package.portTree){Stop-S1 MaintRegistryPort}
 }
@@ -70,7 +95,7 @@ foreach($package in $inputs.packages) {
 if($Phase -ceq '3a'){
     $oldReceipt=Resolve-S1Path $ReferenceInstalled 'share/clipss2-sec-br1-install-receipt-v1.json'
 }else{
-    $previousPhase=if($Phase -ceq '3c'){'3b'}else{'3a'}
+    $previousPhase=switch($Phase){'3d'{'3c'} '3c'{'3b'} default{'3a'}}
     if(!$PreviousRun){Stop-S1 MaintPreviousRun}
     $previous=[IO.Path]::GetFullPath($PreviousRun)
     $oldPrefix=(Join-Path ([IO.Path]::GetFullPath($Root)) "build/sec-maint-v013/$previousPhase")+[IO.Path]::DirectorySeparatorChar
@@ -92,9 +117,28 @@ function Get-MaintPackageKey($Row){
     $feature=if($Row.feature){$Row.feature}else{'core'}
     return ($Row.name+'/'+$Row.triplet+'/'+$feature)
 }
-Assert-S1InputSet @($prior | ForEach-Object {Get-MaintPackageKey $_}) @($actual | ForEach-Object {Get-MaintPackageKey $_})
+$packageKeys=@($prior | ForEach-Object {Get-MaintPackageKey $_})
+if($Phase -ceq '3d'){
+    $packageKeys+=@("libspng/$($tools.targetTriplet)/core","libjpeg-turbo/$($tools.targetTriplet)/turbojpeg")
+}
+Assert-S1InputSet $packageKeys @($actual | ForEach-Object {Get-MaintPackageKey $_})
 foreach($entry in $actual){
     $key=Get-MaintPackageKey $entry
+    if($Phase -ceq '3d' -and $entry.name -ceq 'libspng'){
+        if($entry.version -cne $inputs.libspng.version -or $entry.portVersion -ne $inputs.libspng.portVersion -or
+           $entry.depends -cne 'vcpkg-cmake:x64-windows, vcpkg-cmake-config:x64-windows, zlib' -or $entry.abi -cnotmatch '^[a-f0-9]{64}$'){
+            Stop-S1 MaintSpngPackage
+        }
+        $entry.priorAbi=$null
+        continue
+    }
+    if($Phase -ceq '3d' -and $entry.name -ceq 'libjpeg-turbo' -and $entry.feature -ceq 'turbojpeg'){
+        if($entry.version -or $entry.abi -or $entry.portVersion -ne 0 -or $entry.depends -cne 'libspng, zlib'){
+            Stop-S1 MaintTurboFeature
+        }
+        $entry.priorAbi=$null
+        continue
+    }
     $old=@($prior | Where-Object {(Get-MaintPackageKey $_) -ceq $key})[0]
     $expected=$old.version
     $expectedPortVersion=$old.portVersion
@@ -107,6 +151,10 @@ foreach($entry in $actual){
         $expected=$inputs.zlib.version
         $expectedPortVersion=$inputs.zlib.portVersion
     }
+    if($Phase -ceq '3d' -and $entry.name -ceq 'libjpeg-turbo'){
+        $expected=$inputs.libjpegTurbo.version
+        $expectedPortVersion=$inputs.libjpegTurbo.portVersion
+    }
     if($entry.version -cne $expected -or $entry.portVersion -ne $expectedPortVersion -or
        $entry.depends -cne $old.depends){Stop-S1 MaintResolvedPackages}
     if(!$entry.feature -and $entry.abi -cnotmatch '^[a-f0-9]{64}$'){Stop-S1 MaintAbiMissing}
@@ -115,6 +163,10 @@ foreach($entry in $actual){
     }
     if($Phase -ceq '3c' -and !$entry.feature -and $entry.name -cin @('zlib','libpng') -and $entry.abi -ceq $old.abi){
         Stop-S1 MaintMissingRebuild
+    }
+    if($Phase -ceq '3d' -and !$entry.feature){
+        if($entry.name -cin @('libjpeg-turbo','libyuv','libavif') -and $entry.abi -ceq $old.abi){Stop-S1 MaintMissingJpegRebuild}
+        if($entry.name -cin @('zlib','libpng') -and $entry.abi -cne $old.abi){Stop-S1 MaintZlibAbiDrift}
     }
     $entry.priorAbi=$old.abi
 }
@@ -145,7 +197,7 @@ try {
             $pcQueries["$name/$query"]=$result.Trim()
         }
     }
-    if($Phase -ceq '3c'){
+    if($Phase -cin @('3c','3d')){
         $zlibVersion=& $pkgconf --modversion zlib
         if($LASTEXITCODE -ne 0 -or $zlibVersion -cne $inputs.zlib.version){Stop-S1 MaintZlibPcVersion}
         foreach($query in 'shared','static'){
@@ -183,10 +235,15 @@ if($Mode -ceq 'Seal'){
     $sealedReceipt=[ordered]@{schemaVersion=1;receiptId=$receiptId;
         sourceInputsSha256=$inputsHash;vcpkgBaseline=$tools.vcpkgBaseline;vcpkgToolSha256=$tools.vcpkgToolSha256;
         compiler=$tools.compiler;packages=$actual;pkgconfig=$pcQueries;inventory=$inventory}
-    if($Phase -ceq '3c'){
+    if($Phase -cin @('3c','3d')){
         $sealedReceipt.zlib=$inputs.zlib
         $sealedReceipt.embedded=$inputs.embedded
         $sealedReceipt.installedRuntimeDlls=$inputs.installedRuntimeDlls
+    }
+    if($Phase -ceq '3d'){
+        $sealedReceipt.libjpegTurbo=$inputs.libjpegTurbo
+        $sealedReceipt.libspng=$inputs.libspng
+        $sealedReceipt.externalLinkEvidenceSha256=$inputs.externalLinkEvidenceSha256
     }
     Write-S1NewJson $receiptPath $sealedReceipt
     Write-S1NewJson $markerPath ([ordered]@{schemaVersion=1;markerId=$markerId;

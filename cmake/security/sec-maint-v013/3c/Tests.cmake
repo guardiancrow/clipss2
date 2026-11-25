@@ -6,8 +6,12 @@ clipss2_configure_cpp_target(clipss2_maint_zlib_test)
 add_test(NAME sec_maint_3c_zlib_stream COMMAND clipss2_maint_zlib_test)
 
 find_program(maint_pwsh pwsh.exe REQUIRED)
+set(packaging_args)
+if(CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-maint-v013-3d")
+    list(APPEND packaging_args -Phase 3d -LegacyRun "${CLIPSS2_MAINT_PNG_PREVIOUS_RUN}")
+endif()
 add_test(NAME sec_maint_3c_packaging
     COMMAND "${maint_pwsh}" -NoProfile -File "${CMAKE_SOURCE_DIR}/tools/test_sec_maint_3c_package.ps1"
         -Mode SelfTest -RunRoot "${CLIPSS2_MAINT_RUN_ROOT}"
         -ProductDirectory "$<TARGET_FILE_DIR:clipss2>"
-        -PreviousRun "${CLIPSS2_MAINT_PREVIOUS_RUN}")
+        -PreviousRun "${CLIPSS2_MAINT_PREVIOUS_RUN}" ${packaging_args})

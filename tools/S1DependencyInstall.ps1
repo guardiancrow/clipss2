@@ -133,7 +133,7 @@ function Get-S1InstallArguments($Root,$Paths,$Plan) {
 function Test-S1DependencyPayload($Installed,$Plan) {
     $files=Get-S1Files $Installed
     $lists=@($files.Keys|Where-Object {$_ -clike 'vcpkg/info/*.list'})
-    if($lists.Count -ne 16){Stop-S1 PackageLists}
+    if($lists.Count -ne $Plan.inputs.packages.Count){Stop-S1 PackageLists}
     foreach($package in $Plan.inputs.packages){
         $triplet=if($package.role -ceq 'target'){$Plan.inputs.targetTriplet}else{$Plan.inputs.hostTriplet}
         $matching=@($lists|Where-Object {$_ -clike ('vcpkg/info/'+$package.name+'_*_'+$triplet+'.list')})
