@@ -3,7 +3,7 @@ set(_app_local "${VCPKG_APPLOCAL_DEPS}")
 set(VCPKG_APPLOCAL_DEPS OFF)
 set(_png_candidate "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
 set(variants reference candidate)
-if(CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-maint-v013-3[cde]$")
+if(CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-maint-v013-3[cdef]$")
     list(APPEND variants reference_3b)
 endif()
 foreach(variant IN LISTS variants)
@@ -19,7 +19,7 @@ foreach(variant IN LISTS variants)
     if(variant STREQUAL "candidate")
         set(dll_source "${_png_candidate}/bin")
         target_include_directories(${probe} PRIVATE "${_png_candidate}/include")
-        if(CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-maint-v013-3[cde]$")
+        if(CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-maint-v013-3[cdef]$")
             set(z_dll libz)
             set(z_version 1.4)
         endif()
@@ -59,7 +59,7 @@ foreach(fixture IN ITEMS odd large transparent detail flat)
             "-Dfixture=${fixture}"
             "-Devidence_root=${CMAKE_BINARY_DIR}/png-probes/evidence"
             -P "${CMAKE_CURRENT_LIST_DIR}/PngCrossRead.cmake")
-    if(CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-maint-v013-3[cde]$")
+    if(CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-maint-v013-3[cdef]$")
         add_test(NAME "sec_maint_3c_png_${fixture}"
             COMMAND "${CMAKE_COMMAND}"
                 "-Dreference=$<TARGET_FILE:clipss2_maint_png_reference_3b>"

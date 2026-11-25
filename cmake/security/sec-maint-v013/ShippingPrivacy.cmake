@@ -1,7 +1,7 @@
 # Copyright (c) 2026 guardiancrow. MIT.
 set(maint_phase "3a")
 set(maint_manifest "${CMAKE_CURRENT_LIST_DIR}")
-if(CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-maint-v013-(3[bcde])$")
+if(CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-maint-v013-(3[bcdef])$")
     set(maint_phase "${CMAKE_MATCH_1}")
     string(APPEND maint_manifest "/${maint_phase}")
 endif()

@@ -6,9 +6,10 @@ param(
     [Parameter(Mandatory)][string]$RunRoot,
     [Parameter(Mandatory)][string]$ProductDirectory,
     [Parameter(Mandatory)][string]$PreviousRun,
-    [ValidateSet('3c','3d','3e')][string]$Phase='3c',
+    [ValidateSet('3c','3d','3e','3f')][string]$Phase='3c',
     [string]$LegacyRun,
-    [string]$TurboReferenceRun
+    [string]$TurboReferenceRun,
+    [string]$AvifReferenceRun
 )
 $ErrorActionPreference='Stop'
 Import-Module (Join-Path $PSScriptRoot IconV012.psm1) -Force -DisableNameChecking
@@ -44,7 +45,7 @@ function Assert-Maint3cPackage($Product,$Install,$ReceiptFile,$MarkerFile){
     $files=Get-S1Files $Product
     if($files.ContainsKey('z.dll')){Stop-S1 Maint3cLegacyZlib}
     if(!$files.ContainsKey('libz.dll')){Stop-S1 Maint3cMissingZlib}
-    if($Phase -cin @('3d','3e') -and !$files.ContainsKey('spng.dll')){Stop-S1 Maint3dMissingSpng}
+    if($Phase -cin @('3d','3e','3f') -and !$files.ContainsKey('spng.dll')){Stop-S1 Maint3dMissingSpng}
     if($files.Count -ne $set.Count -or @($files.Keys|Where-Object {$_ -cnotin $set}).Count){Stop-S1 Maint3cPayloadNames}
     $packages=$receipt.packages
     $zlib=@($packages|Where-Object {$_.name -ceq 'zlib' -and !$_.feature})
@@ -56,11 +57,11 @@ function Assert-Maint3cPackage($Product,$Install,$ReceiptFile,$MarkerFile){
         $pe=Read-IconPE $files[$name]
         if('z.dll' -in $pe.imports){Stop-S1 Maint3cLegacyImport}
         if($name -ceq 'libpng16.dll' -and 'libz.dll' -notin $pe.imports){Stop-S1 Maint3cPngImport}
-        if($Phase -cin @('3d','3e')){
+        if($Phase -cin @('3d','3e','3f')){
             if($name -ceq 'turbojpeg.dll' -and 'spng.dll' -notin $pe.imports){Stop-S1 Maint3dTurboImport}
             if($name -ceq 'spng.dll' -and 'libz.dll' -notin $pe.imports){Stop-S1 Maint3dSpngImport}
         }
-        if($Phase -ceq '3e' -and $name -ceq 'avif.dll' -and
+        if($Phase -cin @('3e','3f') -and $name -ceq 'avif.dll' -and
            ('aom.dll' -notin $pe.imports -or 'libyuv.dll' -notin $pe.imports)){Stop-S1 MaintAvifImports}
         if($name -ceq 'clipss2.exe'){continue}
         $bound=@($receipt.inventory|Where-Object path -CEQ ($plan.targetTriplet+'/bin/'+$name))
@@ -87,10 +88,10 @@ if($Mode -ceq 'SelfTest'){
     New-S1OwnedDirectory $scratch
     $oldInstall=Resolve-S1Path $PreviousRun 'installed'
     $oldProduct=Resolve-S1Path $PreviousRun 'product'
-    $earlier=switch($Phase){'3e'{'3d'} '3d'{'3c'} default{'3b'}}
+    $earlier=switch($Phase){'3f'{'3e'} '3e'{'3d'} '3d'{'3c'} default{'3b'}}
     $oldReceipt=Resolve-S1Path $oldInstall "share/clipss2-sec-maint-$earlier-install-receipt-v1.json"
     $oldMarker=Resolve-S1Path $oldInstall "share/clipss2-sec-maint-$earlier-installed-v1.json"
-    $legacyProduct=if($Phase -cin @('3d','3e')){Resolve-S1Path $LegacyRun 'product'}else{$oldProduct}
+    $legacyProduct=if($Phase -cin @('3d','3e','3f')){Resolve-S1Path $LegacyRun 'product'}else{$oldProduct}
 
     function New-Maint3cFixture($Name,$Skip=@(),$Replace=@{},$Add=@{}){
         $fixture=Join-Path $scratch $Name
@@ -131,13 +132,13 @@ if($Mode -ceq 'SelfTest'){
     Assert-Maint3cRejected 'old marker' Maint3cMarker $good $installed $receiptPath $oldMarker
     Assert-Maint3cRejected 'extra DLL' Maint3cPayloadNames (New-Maint3cFixture extra @() @{} @{'extra.dll'=$candidateZlib})
     Assert-Maint3cRejected 'other installation' Maint3cInstallRoot $good $oldInstall
-    if($Phase -cin @('3d','3e')){
+    if($Phase -cin @('3d','3e','3f')){
         Assert-Maint3cRejected 'missing shared spng' Maint3dMissingSpng (New-Maint3cFixture no-spng @('spng.dll'))
         $wrongSpng=New-Maint3cFixture wrong-spng
         $stream=[IO.File]::Open((Join-Path $wrongSpng 'spng.dll'),[IO.FileMode]::Append)
         try{$stream.WriteByte(1)}finally{$stream.Dispose()}
         Assert-Maint3cRejected 'other spng bytes' Maint3cDllHash $wrongSpng
-        $oldJpegProduct=if($Phase -ceq '3e'){Resolve-S1Path $TurboReferenceRun 'product'}else{$oldProduct}
+        $oldJpegProduct=if($Phase -cin @('3e','3f')){Resolve-S1Path $TurboReferenceRun 'product'}else{$oldProduct}
         $oldTurbo=Resolve-S1Path $oldJpegProduct 'turbojpeg.dll'
         Assert-Maint3cRejected 'legacy TurboJPEG' Maint3dTurboImport (New-Maint3cFixture old-turbo @() @{'turbojpeg.dll'=$oldTurbo})
         $oldJpeg=Resolve-S1Path $oldJpegProduct 'jpeg62.dll'
@@ -152,11 +153,23 @@ if($Mode -ceq 'SelfTest'){
             'old SBOM MaintBomPhase'
         }
     }
-    if($Phase -ceq '3e'){
+    if($Phase -cin @('3e','3f')){
+        $oldAvifProduct=if($Phase -ceq '3f'){Resolve-S1Path $AvifReferenceRun 'product'}else{$oldProduct}
         foreach($dll in 'aom.dll','libyuv.dll','avif.dll'){
-            $oldDll=Resolve-S1Path $oldProduct $dll
+            $oldDll=Resolve-S1Path $oldAvifProduct $dll
             Assert-Maint3cRejected "previous $dll" Maint3cDllHash (New-Maint3cFixture ("old-"+$dll) @() @{$dll=$oldDll})
         }
+    }
+    if($Phase -ceq '3f'){
+        $priorWebp=Resolve-S1Path $oldProduct 'libwebp.dll'
+        Assert-Maint3cRejected 'previous libwebp' Maint3cDllHash (New-Maint3cFixture old-webp @() @{'libwebp.dll'=$priorWebp})
+        foreach($dll in 'libwebp.dll','libsharpyuv.dll'){
+            $fixture=New-Maint3cFixture ('wrong-'+$dll)
+            $stream=[IO.File]::Open((Join-Path $fixture $dll),[IO.FileMode]::Append)
+            try{$stream.WriteByte(1)}finally{$stream.Dispose()}
+            Assert-Maint3cRejected "altered $dll" Maint3cDllHash $fixture
+        }
+        Assert-Maint3cRejected 'missing libsharpyuv' Maint3cPayloadNames (New-Maint3cFixture no-sharp @('libsharpyuv.dll'))
     }
     return
 }
@@ -182,19 +195,27 @@ $components=@(foreach($package in $plan.packages){
             @{name='clipss2:linkage';value='shared'},@{name='clipss2:licenseFile';value=$plan.zlib.license})
         $item.externalReferences=@(@{type='vcs';url=$plan.zlib.source})
     }
-    if($Phase -cin @('3d','3e') -and $package.name -cin @('libjpeg-turbo','libspng')){
+    if($Phase -cin @('3d','3e','3f') -and $package.name -cin @('libjpeg-turbo','libspng')){
         $component=if($package.name -ceq 'libspng'){$plan.libspng}else{$plan.libjpegTurbo}
         $item.licenses=@(@{expression=$component.licenseExpression})
         $item.externalReferences=@(@{type='vcs';url=$component.source})
         $item.properties+=@(@{name='clipss2:archiveSha512';value=$component.archiveSha512},
             @{name='clipss2:linkage';value='shared'})
     }
-    if($Phase -ceq '3e' -and $package.name -cin @('aom','libyuv')){
+    if($Phase -cin @('3e','3f') -and $package.name -cin @('aom','libyuv')){
         $component=$plan[$package.name]
         $item.licenses=@(@{expression=$component.licenseExpression})
         $item.externalReferences=@(@{type='vcs';url=$component.source})
         $item.properties+=@(@{name='clipss2:commit';value=$component.commit},
             @{name='clipss2:tree';value=$component.tree},@{name='clipss2:archiveSha512';value=$component.archiveSha512})
+    }
+    if($Phase -ceq '3f' -and $package.name -ceq 'libwebp'){
+        $item.version=$plan.libwebp.version
+        $item.licenses=@(@{expression=$plan.libwebp.licenseExpression})
+        $item.externalReferences=@(@{type='vcs';url=$plan.libwebp.source})
+        $item.properties+=@(@{name='clipss2:localPortVersion';value=[string]$plan.libwebp.portVersion},
+            @{name='clipss2:backport';value=$plan.libwebp.backportCommit},
+            @{name='clipss2:patchSha256';value=$plan.libwebp.patchSha256})
     }
     if($package.name -ceq 'libjpeg-turbo' -and $plan.embedded.Count){
         $item.components=@(foreach($input in $plan.embedded){
@@ -228,8 +249,8 @@ $bom=[ordered]@{bomFormat='CycloneDX';specVersion='1.6';version=1;
     dependencies=@(@{ref=$candidateRef;dependsOn=@($profile.productRuntimeDlls|ForEach-Object {'file:'+$_})},
         @{ref='file:libpng16.dll';dependsOn=@('file:libz.dll')},
         @{ref='vcpkg:libpng';dependsOn=@('vcpkg:zlib')})}
-if($Phase -cin @('3d','3e')){
-    $avifDeps=if($Phase -ceq '3e'){@('file:libyuv.dll','file:aom.dll')}else{@('file:libyuv.dll')}
+if($Phase -cin @('3d','3e','3f')){
+    $avifDeps=if($Phase -cin @('3e','3f')){@('file:libyuv.dll','file:aom.dll')}else{@('file:libyuv.dll')}
     $bom.dependencies+=@(@{ref='file:turbojpeg.dll';dependsOn=@('file:spng.dll')},
         @{ref='file:spng.dll';dependsOn=@('file:libz.dll')},
         @{ref='file:libyuv.dll';dependsOn=@('file:jpeg62.dll')},
@@ -238,9 +259,12 @@ if($Phase -cin @('3d','3e')){
         @{ref='vcpkg:libspng';dependsOn=@('vcpkg:zlib')})
     $bom.metadata.properties+=@(@{name='clipss2:externalLinkEvidenceSha256';value=$plan.externalLinkEvidenceSha256})
 }
-if($Phase -ceq '3e'){
+if($Phase -cin @('3e','3f')){
     $bom.dependencies+=@(@{ref='vcpkg:libavif';dependsOn=@('vcpkg:aom','vcpkg:libyuv')},
         @{ref='vcpkg:libyuv';dependsOn=@('vcpkg:libjpeg-turbo')})
+}
+if($Phase -ceq '3f'){
+    $bom.dependencies+=@(@{ref='file:libwebp.dll';dependsOn=@('file:libsharpyuv.dll')})
 }
 Assert-MaintBom $bom $identityHash $identity.installedReceiptSha256 $identity.installedMarkerSha256
 Write-S1NewJson (Join-Path $run 'SBOM.cdx.json') $bom

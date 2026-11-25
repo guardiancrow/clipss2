@@ -1,6 +1,6 @@
 # Copyright (c) 2026 guardiancrow. MIT.
 # No default profile, normal-OFF path or legacy dispatcher in S1.
-if(CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-maint-v013-3[abcde]$")
+if(CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-maint-v013-3[abcdef]$")
     include("${CMAKE_CURRENT_LIST_DIR}/security/sec-maint-v013/ShippingPrivacy.cmake")
     return()
 endif()

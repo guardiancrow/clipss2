@@ -1,0 +1,11 @@
+--- a/src/utils/bit_writer_utils.c
++++ b/src/utils/bit_writer_utils.c
+@@ -277,7 +277,7 @@
+ 
+ void VP8LPutBitsFlushBits(VP8LBitWriter* const bw) {
+   // If needed, make some room by flushing some bits out.
+-  if (bw->cur + VP8L_WRITER_BYTES > bw->end) {
++  if (bw->end - bw->cur < VP8L_WRITER_BYTES) {
+     const uint64_t extra_size = (bw->end - bw->buf) + MIN_EXTRA_SIZE;
+     if (!CheckSizeOverflow(extra_size) ||
+         !VP8LBitWriterResize(bw, (size_t)extra_size)) {
