@@ -2,7 +2,7 @@
 set(avif_app_local "${VCPKG_APPLOCAL_DEPS}")
 set(VCPKG_APPLOCAL_DEPS OFF)
 set(avif_reference "${CLIPSS2_MAINT_PREVIOUS_RUN}")
-if(CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-maint-v013-3f")
+if(clipss2_maint_codec_scope STREQUAL "sec-maint-v013-3f")
     set(avif_reference "${CLIPSS2_MAINT_AVIF_REFERENCE_RUN}")
 endif()
 foreach(variant IN ITEMS reference candidate)

@@ -9,9 +9,12 @@ find_program(maint_pwsh pwsh.exe REQUIRED)
 set(packaging_args)
 if(CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-maint-v013-3d")
     list(APPEND packaging_args -Phase 3d -LegacyRun "${CLIPSS2_MAINT_PNG_PREVIOUS_RUN}")
-elseif(CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-maint-v013-3f")
-    list(APPEND packaging_args -Phase 3f -LegacyRun "${CLIPSS2_MAINT_PNG_PREVIOUS_RUN}"
+elseif(clipss2_maint_codec_scope STREQUAL "sec-maint-v013-3f")
+    list(APPEND packaging_args -Phase "${maint_phase}" -LegacyRun "${CLIPSS2_MAINT_PNG_PREVIOUS_RUN}"
         -TurboReferenceRun "${CLIPSS2_MAINT_TURBO_REFERENCE_RUN}" -AvifReferenceRun "${CLIPSS2_MAINT_AVIF_REFERENCE_RUN}")
+    if(maint_phase STREQUAL "3g-b")
+        list(APPEND packaging_args -WebpReferenceRun "${CLIPSS2_MAINT_WEBP_REFERENCE_RUN}")
+    endif()
 elseif(CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-maint-v013-3e")
     list(APPEND packaging_args -Phase 3e -LegacyRun "${CLIPSS2_MAINT_PNG_PREVIOUS_RUN}"
         -TurboReferenceRun "${CLIPSS2_MAINT_TURBO_REFERENCE_RUN}")

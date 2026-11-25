@@ -1,9 +1,13 @@
 # Copyright (c) 2026 guardiancrow. MIT.
 set(maint_phase "3a")
 set(maint_manifest "${CMAKE_CURRENT_LIST_DIR}")
-if(CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-maint-v013-(3[bcdef])$")
+if(CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-maint-v013-(3[bcdef]|3g-b)$")
     set(maint_phase "${CMAKE_MATCH_1}")
     string(APPEND maint_manifest "/${maint_phase}")
+endif()
+set(maint_ledger "${maint_manifest}/source-inputs-v1.json")
+if(maint_phase STREQUAL "3g-b")
+    set(maint_manifest "${CMAKE_CURRENT_LIST_DIR}/3f")
 endif()
 string(TOUPPER "SEC-MAINT-${maint_phase}" maint_label)
 
@@ -48,9 +52,8 @@ if(NOT owned OR run STREQUAL allowed
     message(FATAL_ERROR "${maint_label}: unapproved dependency or output roots")
 endif()
 
-set(ledger "${maint_manifest}/source-inputs-v1.json")
 set(marker_id "clipss2-sec-maint-${maint_phase}-installed-v1")
-file(SHA256 "${ledger}" inputs_hash)
+file(SHA256 "${maint_ledger}" inputs_hash)
 file(READ "${run}/installed/share/${marker_id}.json" marker)
 set(receipt_id "clipss2-sec-maint-${maint_phase}-install-receipt-v1")
 file(READ "${run}/installed/share/${receipt_id}.json" receipt)

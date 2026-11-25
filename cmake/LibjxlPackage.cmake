@@ -1,6 +1,6 @@
 # Upstream libjxl exports pkg-config modules.
 set(_jxl_version 0.12.0)
-if(CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-maint-v013-3[abcdef]$")
+if(clipss2_maint_codec_scope MATCHES "^sec-maint-v013-3[abcdef]$")
     set(_jxl_version 0.13.0)
 endif()
 find_program(PKG_CONFIG_EXECUTABLE NAMES pkgconf pkg-config REQUIRED

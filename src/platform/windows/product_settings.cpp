@@ -9,6 +9,7 @@
 #include <iostream>
 #include <limits>
 #include <memory>
+#include <mutex>
 #include <stdexcept>
 
 namespace clipss2::platform::windows
@@ -16,6 +17,11 @@ namespace clipss2::platform::windows
 namespace
 {
 using namespace codec::jpeg;
+std::mutex settings_io_mutex;
+
+[[noreturn]] void fail(const char* stage, DWORD error)
+{ throw std::runtime_error(std::string{stage} + ": Win32 error " + std::to_string(error)); }
+
 class FileHandle final
 {
 public:
@@ -26,14 +32,12 @@ public:
     HANDLE get() const noexcept { return handle_; }
     void close()
     {
-        if (!CloseHandle(handle_)) throw std::runtime_error("close: Win32 error " + std::to_string(GetLastError()));
+        if (!CloseHandle(handle_)) fail("close", GetLastError());
         handle_ = INVALID_HANDLE_VALUE;
     }
 private:
     HANDLE handle_;
 };
-[[noreturn]] void fail(const char* stage)
-{ throw std::runtime_error(std::string{stage} + ": Win32 error " + std::to_string(GetLastError())); }
 SettingsLoadResult rejected(SettingsStatus status, std::string diagnostic, bool writable = true)
 { return {{}, status, writable, std::move(diagnostic)}; }
 const char* backend_token(JpegBackendId id)
@@ -236,7 +240,10 @@ std::filesystem::path default_product_settings_path()
 {
     return default_settings_store().path;
 }
-SettingsLoadResult load_product_settings(const std::filesystem::path& path)
+namespace
+{
+// The caller holds settings_io_mutex until its complete I/O operation finishes.
+SettingsLoadResult load_product_settings_locked(const std::filesystem::path& path)
 {
     try
     {
@@ -246,18 +253,26 @@ SettingsLoadResult load_product_settings(const std::filesystem::path& path)
         {
             const DWORD error = GetLastError();
             if (error == ERROR_FILE_NOT_FOUND || error == ERROR_PATH_NOT_FOUND) return {};
-            fail("read/open");
+            fail("read/open", error);
         }
         if (GetFileType(file.get()) != FILE_TYPE_DISK)
             throw std::runtime_error("read: settings must be a disk file");
         std::string bytes(maximum_settings_bytes + 1, '\0');
         DWORD count{};
-        if (!ReadFile(file.get(), bytes.data(), static_cast<DWORD>(bytes.size()), &count, nullptr)) fail("read");
+        if (!ReadFile(file.get(), bytes.data(), static_cast<DWORD>(bytes.size()), &count, nullptr))
+            fail("read", GetLastError());
         bytes.resize(count);
         return parse_product_settings(bytes);
     }
     catch (const std::exception& error)
     { return rejected(SettingsStatus::read_failure, "ReadFailure: " + std::string{error.what()}, false); }
+}
+}
+
+SettingsLoadResult load_product_settings(const std::filesystem::path& path)
+{
+    const std::lock_guard lock(settings_io_mutex);
+    return load_product_settings_locked(path);
 }
 
 SettingsWriteResult write_product_settings(const std::filesystem::path& path,
@@ -265,12 +280,15 @@ SettingsWriteResult write_product_settings(const std::filesystem::path& path,
 {
     std::filesystem::path temporary;
     bool owns_temporary{};
+    // Keep the lock through failure cleanup as well as successful publication.
+    std::unique_lock lock(settings_io_mutex, std::defer_lock);
     try
     {
         const std::string bytes = serialize_product_settings(preferences);
+        lock.lock();
         // Preserve a newer file even if it appeared after startup. This check
         // narrows, but does not eliminate, cross-process version races.
-        const auto previous = load_product_settings(path);
+        const auto previous = load_product_settings_locked(path);
         if (!previous.persistence_enabled) return {false, previous.diagnostic + "; write suppressed"};
         std::filesystem::create_directories(path.parent_path());
         static std::atomic<unsigned long long> counter{};
@@ -282,7 +300,8 @@ SettingsWriteResult write_product_settings(const std::filesystem::path& path,
                 std::to_wstring(counter.fetch_add(1, std::memory_order_relaxed));
             opened = CreateFileW(temporary.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, nullptr);
             if (opened != INVALID_HANDLE_VALUE) break;
-            if (GetLastError() != ERROR_FILE_EXISTS && GetLastError() != ERROR_ALREADY_EXISTS) fail("temp/create");
+            const DWORD error = GetLastError();
+            if (error != ERROR_FILE_EXISTS && error != ERROR_ALREADY_EXISTS) fail("temp/create", error);
             temporary.clear(); // Never remove a different writer's temp.
         }
         if (opened == INVALID_HANDLE_VALUE) throw std::runtime_error("temp/create: unique name attempts exhausted");
@@ -290,21 +309,27 @@ SettingsWriteResult write_product_settings(const std::filesystem::path& path,
         FileHandle file{opened};
         DWORD count{};
         if (fault == SettingsWriteFault::temp_write) throw std::runtime_error("temp/write: injected failure");
-        if (!WriteFile(file.get(), bytes.data(), static_cast<DWORD>(bytes.size()), &count, nullptr)) fail("temp/write");
+        if (!WriteFile(file.get(), bytes.data(), static_cast<DWORD>(bytes.size()), &count, nullptr))
+            fail("temp/write", GetLastError());
         if (count != bytes.size()) throw std::runtime_error("temp/write: short write");
         if (fault == SettingsWriteFault::flush) throw std::runtime_error("flush: injected failure");
-        if (!FlushFileBuffers(file.get())) fail("flush");
+        if (!FlushFileBuffers(file.get())) fail("flush", GetLastError());
         file.close();
         if (fault == SettingsWriteFault::replace) throw std::runtime_error("replace: injected failure");
-        if (!MoveFileExW(temporary.c_str(), path.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)) fail("replace");
+        if (!MoveFileExW(temporary.c_str(), path.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH))
+            fail("replace", GetLastError());
         temporary.clear();
         return {true, {}};
     }
     catch (const std::exception& error)
     {
         std::string diagnostic = "WriteFailure: " + std::string{error.what()};
-        if (owns_temporary && !temporary.empty() && !DeleteFileW(temporary.c_str()) && GetLastError() != ERROR_FILE_NOT_FOUND)
-            diagnostic += "; temp cleanup failed: Win32 error " + std::to_string(GetLastError());
+        if (owns_temporary && !temporary.empty() && !DeleteFileW(temporary.c_str()))
+        {
+            const DWORD cleanup_error = GetLastError();
+            if (cleanup_error != ERROR_FILE_NOT_FOUND)
+                diagnostic += "; temp cleanup failed: Win32 error " + std::to_string(cleanup_error);
+        }
         return {false, std::move(diagnostic)};
     }
 }

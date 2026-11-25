@@ -1,6 +1,7 @@
 #include "platform/windows/product_settings.h"
 #include <Windows.h>
 #include <array>
+#include <barrier>
 #include <fstream>
 #include <iostream>
 #include <iterator>
@@ -33,6 +34,54 @@ struct TempDirectory
     }
     ~TempDirectory() { std::error_code error; std::filesystem::remove_all(path, error); }
 };
+
+void test_shared_settings_io(const std::filesystem::path& path)
+{
+    const ProductPreferences defaults;
+    auto webp = defaults;
+    webp.file_format = ImageFileFormat::webp;
+    webp.ui_language = UiLanguagePreference::english;
+    auto avif = defaults;
+    avif.file_format = ImageFileFormat::avif;
+    avif.filename_policy = FilenamePolicy::guid;
+    require(write_product_settings(path, defaults).persisted);
+    ProductSettings first{path};
+    ProductSettings second{path};
+
+    std::barrier start{3};
+    bool first_saved = true;
+    bool second_saved = true;
+    bool reads_matched = true;
+    const auto save = [&](ProductSettings& store, const ProductPreferences& preferences, bool& saved)
+    {
+        start.arrive_and_wait();
+        for (int i = 0; i < 16; ++i)
+        {
+            const auto result = store.save_from_settings(preferences);
+            saved = saved && result.persisted && result.diagnostic.empty();
+        }
+    };
+    std::thread first_writer([&] { save(first, webp, first_saved); });
+    std::thread second_writer([&] { save(second, avif, second_saved); });
+    std::thread reader([&]
+    {
+        start.arrive_and_wait();
+        for (int i = 0; i < 64; ++i)
+        {
+            const auto value = load_product_settings(path);
+            reads_matched = reads_matched && value.status == SettingsStatus::loaded &&
+                (value.preferences == defaults || value.preferences == webp || value.preferences == avif);
+        }
+    });
+    first_writer.join();
+    second_writer.join();
+    reader.join();
+    require(first_saved && second_saved && reads_matched);
+    require(first.preferences() == webp && second.preferences() == avif);
+    const auto final = text(path);
+    require(final == serialize_product_settings(webp) || final == serialize_product_settings(avif));
+    for (const auto& entry : std::filesystem::directory_iterator(path.parent_path())) require(entry.path() == path);
+}
 }
 int main()
 {
@@ -286,6 +335,7 @@ int main()
         const auto failed_transaction = failed.save_from_settings(pending);
         require(!failed_transaction.persisted && failed.preferences() == before_transaction &&
             text(blocked) == "not a directory");
+        test_shared_settings_io(temporary.path / L"concurrent" / L"settings.conf");
         std::cout << "Settings parser/native atomic writer/whole-object/snapshot/restart/failure tests: passed\n";
     }
     catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
