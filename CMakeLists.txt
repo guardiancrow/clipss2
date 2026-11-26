@@ -4,7 +4,7 @@ set(clipss2_version 0.1.2)
 set(clipss2_languages CXX)
 # 3G-B inherits the 3F codec configuration and regression suite.
 set(clipss2_maint_codec_scope "${CLIPSS2_PUBLICATION_SCOPE}")
-if(CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-maint-v013-3g-b")
+if(CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-maint-v013-(3g-b|4a)$")
     set(clipss2_maint_codec_scope "sec-maint-v013-3f")
 endif()
 if(clipss2_maint_codec_scope MATCHES "^sec-maint-v013-3[abcdef]$")
@@ -506,6 +506,16 @@ if(BUILD_TESTING)
         clipss2_capture_model clipss2_png_codec clipss2_jpeg_codec clipss2_webp_codec clipss2_avif_codec clipss2_jxl_codec)
     clipss2_configure_cpp_target(clipss2_capture_image_output_test)
     add_test(NAME capture_image_output COMMAND clipss2_capture_image_output_test)
+    add_executable(clipss2_jxl_alpha_publication_test
+        tests/jxl_alpha_publication_test.cpp
+        src/capture/capture_image_output.cpp
+        src/platform/windows/file_publication.cpp)
+    target_link_libraries(clipss2_jxl_alpha_publication_test PRIVATE
+        clipss2_capture_model clipss2_png_codec clipss2_jpeg_codec clipss2_webp_codec
+        clipss2_avif_codec clipss2_jxl_codec PkgConfig::LIBJXL ole32)
+    target_compile_definitions(clipss2_jxl_alpha_publication_test PRIVATE WIN32_LEAN_AND_MEAN NOMINMAX)
+    clipss2_configure_cpp_target(clipss2_jxl_alpha_publication_test)
+    add_test(NAME jxl_alpha_publication COMMAND clipss2_jxl_alpha_publication_test)
     foreach(jpeg_test IN ITEMS alpha_flatten encoder validator)
         add_executable(clipss2_jpeg_${jpeg_test}_test tests/jpeg_${jpeg_test}_test.cpp)
         target_link_libraries(clipss2_jpeg_${jpeg_test}_test PRIVATE clipss2_jpeg_audit)

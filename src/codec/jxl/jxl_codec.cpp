@@ -5,6 +5,7 @@
 #include <jxl/decode.h>
 #include <jxl/encode.h>
 #include <jxl/thread_parallel_runner.h>
+#include <jxl/version.h>
 #include <algorithm>
 #include <memory>
 #include <optional>
@@ -101,6 +102,10 @@ std::vector<std::byte> encode_jxl(const image::CpuImage& source,
     enc_ok(JxlEncoderFrameSettingsSetOption(settings, JXL_ENC_FRAME_SETTING_EFFORT, product_jxl_effort), "effort");
     if (lossy)
     {
+#if JPEGXL_NUMERIC_VERSION >= JPEGXL_COMPUTE_NUMERIC_VERSION(0, 13, 0)
+        // The product requires an alpha channel even when every pixel is opaque.
+        enc_ok(JxlEncoderFrameSettingsSetOption(settings, JXL_ENC_FRAME_SETTING_STRIP_ALPHA, 0), "keep alpha");
+#endif
         enc_ok(JxlEncoderSetFrameDistance(settings, distance), "color distance");
         enc_ok(JxlEncoderSetExtraChannelDistance(settings, 0, 0), "lossless alpha distance");
         if (applied) *applied = {distance, 0, product_jxl_effort, info.uses_original_profile == JXL_TRUE};

@@ -2,7 +2,7 @@
 set(webp_app_local "${VCPKG_APPLOCAL_DEPS}")
 set(VCPKG_APPLOCAL_DEPS OFF)
 set(webp_reference "${CLIPSS2_MAINT_PREVIOUS_RUN}")
-if(CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-maint-v013-3g-b")
+if(maint_phase MATCHES "^(3g-b|4a)$")
     set(webp_reference "${CLIPSS2_MAINT_WEBP_REFERENCE_RUN}")
 endif()
 set(webp_previous "${webp_reference}/installed/${VCPKG_TARGET_TRIPLET}")
