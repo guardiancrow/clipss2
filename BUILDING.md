@@ -1,4 +1,10 @@
-# 構築入口と検証ガイド
+# 構築手順
+
+現在の構成は [v0.1.3 の公開ソースからの構築](docs/BUILD-V013.md) を参照してください。標準の windows-x64-shipping-v2 プリセットは root manifest と承認済みの overlay、Shipping Privacy v2 を使用します。
+
+## 過去の構築手順
+
+以下は過去の構築記録です。再現には該当版の固定ソースを使用してください。
 
 現在のv0.1.2未公開候補は[ICON-3の独立Source/Build/Packaging手順](docs/ICON-3-V012.md)を使用します。
 `icon-v012` は新規のsource-bound Release候補scopeです。`icon-local` は開発検証用です。

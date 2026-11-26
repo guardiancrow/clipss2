@@ -1,4 +1,10 @@
-# v0.1.0 Portable Releaseの準備
+# Portable 版の利用と更新
+
+v0.1.3 は Windows x64 向けの Portable 構成です。ZIP を書込み可能な新しいフォルダーへ展開し、EXE、DLL 18 本、clipss2.portable を同じ場所に置いてください。外部の VC++ Runtime x64 を使用します。更新前に旧版をすべて終了し、設定と画像を保全してください。新旧 Portable を併用する場合は別フォルダーに展開します。
+
+現行候補の詳細は [Portable README](../packaging/v013/README.md)、[権利表示](../packaging/v013/THIRD-PARTY-NOTICES.md)、[リリースノート](RELEASE-NOTES-0.1.3.md) を参照してください。
+
+## 過去の Portable Release
 
 最初のS1公開はsource-onlyで、製品バイナリを含まないsnapshotでした。その後R1で実依存InstallとRelease build、R2で18 PEの限定技術受入、R4-Dで45ファイルの非公開候補ZIP受入が完了しています。GitHub Releaseは未公開・公開未承認です。[BUILDING](../BUILDING.md)で構築実績とG2判断の引継ぎを区別します。
 

@@ -1,5 +1,13 @@
 {
   "overlay-ports": [
+    "vcpkg-overlays/security-sec-maint-v013/libwebp",
+    "vcpkg-overlays/security-sec-maint-v013/aom",
+    "vcpkg-overlays/security-sec-maint-v013/libyuv",
+    "vcpkg-overlays/security-sec-maint-v013/libjpeg-turbo",
+    "vcpkg-overlays/security-sec-maint-v013/zlib",
+    "vcpkg-overlays/security-sec-maint-v013/libpng",
+    "vcpkg-overlays/security-sec-maint-v013/libjxl",
+    "vcpkg-overlays/security-sec-br1",
     "vcpkg-overlays/shipping-privacy-v2"
   ]
 }

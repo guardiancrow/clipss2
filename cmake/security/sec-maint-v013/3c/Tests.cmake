@@ -12,7 +12,7 @@ if(CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-maint-v013-3d")
 elseif(clipss2_maint_codec_scope STREQUAL "sec-maint-v013-3f")
     list(APPEND packaging_args -Phase "${maint_phase}" -LegacyRun "${CLIPSS2_MAINT_PNG_PREVIOUS_RUN}"
         -TurboReferenceRun "${CLIPSS2_MAINT_TURBO_REFERENCE_RUN}" -AvifReferenceRun "${CLIPSS2_MAINT_AVIF_REFERENCE_RUN}")
-    if(maint_phase MATCHES "^(3g-b|4a|4b-b)$")
+    if(maint_phase MATCHES "^(3g-b|4a|4b-b|5)$")
         list(APPEND packaging_args -WebpReferenceRun "${CLIPSS2_MAINT_WEBP_REFERENCE_RUN}")
     endif()
 elseif(CLIPSS2_PUBLICATION_SCOPE STREQUAL "sec-maint-v013-3e")

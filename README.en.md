@@ -1,48 +1,16 @@
 [日本語](README.md) | [English](README.en.md)
 
-# clipss2 — v0.1.1 / v0.1.2 candidate
+# clipss2
 
-v0.1.1 is published. This branch prepares a [v0.1.2 candidate with the original application icon](docs/ICON-3-V012.md).
-v0.1.2 is unpublished and awaits Owner acceptance. Existing releases and ZIPs are unchanged.
+clipss2 is a screen capture tool for Windows. The published Windows x64 Portable release is [v0.1.2](https://github.com/guardiancrow/clipss2/releases/tag/v0.1.2). This source tree prepares the v0.1.3 security maintenance candidate. It retains Brotli 1.2.1 and uses the approved codec updates and shared zlib. [v0.1.3 release notes](docs/RELEASE-NOTES-0.1.3.md)
 
-clipss2 is a screen capture tool for Windows. **[v0.1.1 is available on GitHub Releases](https://github.com/guardiancrow/clipss2/releases/tag/v0.1.1)** as a Windows x64 Portable ZIP.
-It includes the Brotli 1.2.1 security maintenance update for CVE-2026-111497, replacing the Brotli 1.2.0 component in v0.1.0. v0.1.2 preserves those dependency versions. This does not claim demonstrated exploitation through clipss2 or proof of non-exploitability.
+## Installation and upgrades
 
-## Download and setup
+Extract the entire ZIP to a new writable directory. Keep clipss2.exe, its 18 app-local DLLs, and clipss2.portable together for v0.1.3. Run clipss2.exe --help for the available commands. A normal launch starts the resident app. Use --settings to open Settings.
 
-Before downloading, using, or redistributing the binary package, review the [v0.1.1 Release page](https://github.com/guardiancrow/clipss2/releases/tag/v0.1.1) and [Microsoft component-specific conditions](https://github.com/guardiancrow/clipss2/blob/8ab9885dd2af78145491258691429793a2099807/packaging/sec-br2/MICROSOFT-COMPONENT-TERMS.txt). Retain the ZIP's README, complete NOTICE and original LICENSE/PATENTS files.
+Install the external Microsoft Visual C++ Redistributable x64. Before upgrading, close old instances and back up your settings and captures. To use old and new Portable copies at the same time, extract them to separate directories so each has its own settings. [Microsoft Runtime downloads](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist), [Windows support](docs/SUPPORT.md)
 
-The distributor requires recipients and redistributors of the Covered SDK Code, as defined in the conditions document, to agree to its component-specific conditions before using or redistributing that code. These conditions preserve the separate MIT license for clipss2-authored code and the licenses of independent third-party components. Providing the document, requesting agreement, and establishing legally effective agreement are distinct matters. Downloading, extracting, or running the package alone does not establish explicit agreement. This English README does not establish the legal effectiveness of the conditions or guarantee any recipient's agreement.
-
-- The package is Windows x64 Portable, built in Release mode with `/MD`, with no installer. It uses D3D11 and Windows.Graphics.Capture.
-- **Microsoft Visual C++ v14 Runtime x64 must be installed separately.** If needed, install it using [Microsoft's official guidance](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist). Runtime DLLs, a Runtime installer, and Windows system DLLs are not bundled; the application does not install the Runtime automatically.
-- **The binaries are unsigned.** Windows or security software may warn that the publisher is unverified. SHA-256 verifies content identity; it is not a substitute for code signing or publisher authentication.
-
-1. Download `clipss2-0.1.1-windows-x64-portable.zip` from the Release page and extract the entire ZIP into a new, writable folder.
-2. Keep `clipss2.portable` and all 17 app-local DLLs beside `clipss2.exe`.
-3. Run `clipss2.exe --help` to view the CLI options. Starting without arguments runs the application in the system tray; `--settings` opens the settings UI.
-
-Portable settings are stored in `settings.conf` beside the executable, and the default image output folder is `captures`. The distributed ZIP contains no user settings or captured images.
-
-| Published ZIP | Details |
-| --- | --- |
-| Filename | `clipss2-0.1.1-windows-x64-portable.zip` |
-| Size | 7,970,478 bytes |
-| Contents | 47 files: one EXE, 17 DLLs, 23 original third-party notices, portable marker, LICENSE, README, complete NOTICE, Microsoft conditions and BUILD-IDENTITY |
-| SHA-256 | `A13DF0E714A061C367548DD5296C3C2D1A7CBCE81E2030FE2BB8C9AD1DE02169` |
-
-To check the downloaded ZIP in PowerShell, run the following command and compare the result with the SHA-256 above:
-
-```powershell
-Get-FileHash -Algorithm SHA256 -LiteralPath ./clipss2-0.1.1-windows-x64-portable.zip
-```
-
-## v0.1.1 publication and v0.1.2 changes
-
-The v0.1.1 tag identifies Source commit `8ab9885dd2af78145491258691429793a2099807`; its product build source is `6c4f48f8908746a7b06ab046ab715a51cbab86f8`. Later packaging/documentation commits are not product rebuild revisions.
-The publication record reports six Owner acceptance items on 2026-10-30: portable startup/exit, settings, Window Capture/PNG, JPEG XL lossless/lossy, Clipboard and pasting, and JPEG/WebP/AVIF. This does not establish acceptance on another PC or for Region/Monitor/HDR.
-
-The unpublished v0.1.2 candidate adds the original icon to the EXE, Settings and notification area, preserving existing CLI/settings compatibility and codec behavior. No external logo was reused. ICON-2 Owner acceptance covers design/recognizability and Explorer details/small/large icons at 100%/200% DPI; the new v0.1.2 ZIP requires separate acceptance.
+See the [v0.1.3 build instructions](docs/BUILD-V013.md), the [third-party notices](packaging/v013/THIRD-PARTY-NOTICES.md), and the [Microsoft component-specific terms](packaging/v013/MICROSOFT-COMPONENT-TERMS.txt).
 
 ## Implemented features and verified scope
 

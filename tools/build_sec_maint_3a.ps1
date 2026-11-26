@@ -7,7 +7,7 @@ param(
     [Parameter(Mandatory)][string]$ReferenceProduct,
     [Parameter(Mandatory)][string]$ManagedOriginal,
     [Parameter(Mandatory)][string]$ManagedDerivative,
-    [ValidateSet('3a','3b','3c','3d','3e','3f','3g-b','4a','4b-b')][string]$Phase='3a',
+    [ValidateSet('3a','3b','3c','3d','3e','3f','3g-b','4a','4b-b','5')][string]$Phase='3a',
     [string]$PreviousRun,
     [string]$Png3aRun,
     [string]$Png3bRun,
@@ -31,8 +31,9 @@ if($Phase -cne '3a'){
     $manifest+="/$Phase"
 }
 $scope="sec-maint-v013-$Phase"
-$dependencyManifest=if($Phase -cin @('3g-b','4a','4b-b')){'cmake/security/sec-maint-v013/3f'}else{$manifest}
-$webpPhase=$Phase -cin @('3f','3g-b','4a','4b-b')
+$dependencyManifest=if($Phase -cin @('3g-b','4a','4b-b','5')){'cmake/security/sec-maint-v013/3f'}else{$manifest}
+if($Phase -ceq '5'){$dependencyManifest='.'}
+$webpPhase=$Phase -cin @('3f','3g-b','4a','4b-b','5')
 $plan=Read-S1StrictJson (Resolve-S1Path $root "$manifest/source-inputs-v1.json")
 $contract=Resolve-S1Path $root 'cmake/security/sec-maint-v013/toolchain-v1.json'
 $tools=Read-S1StrictJson $contract
@@ -99,7 +100,7 @@ if($Phase -cne '3a'){
         Assert-S1Identity (Resolve-S1Path $baselineProduct $item.path) $item.size $item.sha256
     }
 }
-if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b')){
+if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b','5')){
     if(!$Png3aRun){Stop-S1 MaintPng3aReference}
     $reference3a=Resolve-S1Path $Png3aRun 'BUILD-IDENTITY.json'
     if((Get-FileHash -LiteralPath $reference3a).Hash -cne $plan.png3aBuildIdentitySha256){Stop-S1 MaintPng3aReference}
@@ -107,7 +108,7 @@ if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b')){
         Assert-S1Identity (Resolve-S1Path $Png3aRun ('product/'+$item.path)) $item.size $item.sha256
     }
 }
-if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b')){
+if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b','5')){
     if(!$Png3bRun){Stop-S1 MaintPng3bReference}
     $reference3b=Resolve-S1Path $Png3bRun 'BUILD-IDENTITY.json'
     if((Get-FileHash -LiteralPath $reference3b).Hash -cne $plan.png3bBuildIdentitySha256){Stop-S1 MaintPng3bReference}
@@ -149,19 +150,23 @@ $cmakeOptions=[ordered]@{
     VCPKG_OVERLAY_TRIPLETS=(Join-Path $root triplets)
     BUILD_TESTING='ON'
 }
+if($Phase -ceq '5'){
+    $cmakeOptions.VCPKG_MANIFEST_DIR=$root
+    $cmakeOptions.CLIPSS2_MAINT_HISTORICAL_TESTS='ON'
+}
 if($Phase -cne '3a'){
-    $pngReference=if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b')){$Png3aRun}else{$PreviousRun}
+    $pngReference=if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b','5')){$Png3aRun}else{$PreviousRun}
     $cmakeOptions.CLIPSS2_MAINT_PNG_REFERENCE_INSTALLED=Resolve-S1Path $pngReference 'installed'
     $cmakeOptions.CLIPSS2_MAINT_PNG_REFERENCE_PRODUCT=Resolve-S1Path $pngReference 'product'
 }
-if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b')){
-    $pngPrevious=if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b')){$Png3bRun}else{$PreviousRun}
+if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b','5')){
+    $pngPrevious=if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b','5')){$Png3bRun}else{$PreviousRun}
     $cmakeOptions.CLIPSS2_MAINT_PNG_PREVIOUS_INSTALLED=Resolve-S1Path $pngPrevious 'installed'
     $cmakeOptions.CLIPSS2_MAINT_PNG_PREVIOUS_PRODUCT=Resolve-S1Path $pngPrevious 'product'
     $cmakeOptions.CLIPSS2_MAINT_PNG_PREVIOUS_RUN=[IO.Path]::GetFullPath($pngPrevious)
     $cmakeOptions.CLIPSS2_MAINT_PREVIOUS_RUN=[IO.Path]::GetFullPath($PreviousRun)
 }
-if($Phase -cin @('3e','3f','3g-b','4a','4b-b')){
+if($Phase -cin @('3e','3f','3g-b','4a','4b-b','5')){
     if(!$TurboReferenceRun -or
        (Get-FileHash -LiteralPath (Resolve-S1Path $TurboReferenceRun 'BUILD-IDENTITY.json')).Hash -cne
            $plan.turboReferenceBuildIdentitySha256){Stop-S1 MaintTurboReference}
@@ -173,7 +178,7 @@ if($webpPhase){
     $cmakeOptions.CLIPSS2_MAINT_AVIF_REFERENCE_RUN=[IO.Path]::GetFullPath($AvifReferenceRun)
     $cmakeOptions.CLIPSS2_MAINT_WEBP_SOURCE=Resolve-S1Path $run $plan.libwebp.probeSource
 }
-if($Phase -cin @('3g-b','4a','4b-b')){
+if($Phase -cin @('3g-b','4a','4b-b','5')){
     if(!$WebpReferenceRun -or (Get-FileHash -LiteralPath (Resolve-S1Path $WebpReferenceRun 'BUILD-IDENTITY.json')).Hash -cne
        $plan.webpReferenceBuildIdentitySha256){Stop-S1 MaintWebpReference}
     $cmakeOptions.CLIPSS2_MAINT_WEBP_REFERENCE_RUN=[IO.Path]::GetFullPath($WebpReferenceRun)
@@ -181,9 +186,13 @@ if($Phase -cin @('3g-b','4a','4b-b')){
 $arguments=@('-S',$root,'-B',$build,'-G','Ninja')+@($cmakeOptions.GetEnumerator() | ForEach-Object {
     '-D'+$_.Key+'='+$_.Value.Replace('\','/')
 })
+if($Phase -ceq '5'){
+    $env:CLIPSS2_RELEASE_RUN=Split-Path -Leaf $run
+    $arguments=@('--preset','windows-x64-shipping-v2')+$arguments
+}
 Invoke-MaintTool configure $cmake $arguments
 Invoke-MaintTool build $cmake @('--build',$build,'--parallel',[string]$Jobs)
-if($Phase -cin @('3g-b','4a','4b-b')){
+if($Phase -cin @('3g-b','4a','4b-b','5')){
     # Keep tests that resolve the executable's default store inside this run.
     [IO.File]::Copy((Resolve-S1Path $root 'packaging/clipss2.portable'),(Join-Path $build 'clipss2.portable'),$false)
 }
@@ -197,9 +206,9 @@ $bin=Join-Path $installed ($tools.targetTriplet+'/bin')
 $installedShare=Join-Path $installed ($tools.targetTriplet+'/share')
 $licenses=@{ 'libjxl/copyright'='licenses/libjxl/copyright'; 'libjxl/PATENTS'='licenses/libjxl/PATENTS'; 'brotli/copyright'='licenses/brotli/copyright' }
 if($Phase -cne '3a'){$licenses['libpng/copyright']='licenses/libpng/copyright'}
-if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b')){$licenses['zlib/copyright']=$plan.zlib.license}
-if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b')){$licenses['libjpeg-turbo/copyright']='licenses/libjpeg-turbo/copyright'}
-if($Phase -cin @('3e','3f','3g-b','4a','4b-b')){
+if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b','5')){$licenses['zlib/copyright']=$plan.zlib.license}
+if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b','5')){$licenses['libjpeg-turbo/copyright']='licenses/libjpeg-turbo/copyright'}
+if($Phase -cin @('3e','3f','3g-b','4a','4b-b','5')){
     $licenses['aom/copyright']=$plan.aom.license
     $licenses['libyuv/copyright']=$plan.libyuv.license
 }
@@ -208,7 +217,7 @@ foreach($binding in $licenses.GetEnumerator()){
     if((Get-FileHash -LiteralPath (Resolve-S1Path $installedShare $binding.Key)).Hash -cne
         (Get-FileHash -LiteralPath (Resolve-S1Path $root $binding.Value)).Hash){Stop-S1 MaintLicense}
 }
-if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b')){
+if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b','5')){
     $spngCopyright=[IO.File]::ReadAllText((Resolve-S1Path $installedShare 'libspng/copyright')).Replace("`r`n","`n")
     $spngLicense=[IO.File]::ReadAllText((Resolve-S1Path $root $plan.libspng.license)).Replace("`r`n","`n").TrimEnd()
     if(!$spngCopyright.Contains($spngLicense)){Stop-S1 MaintSpngLicense}
@@ -228,7 +237,7 @@ $binaries=@(foreach($name in @('clipss2.exe')+@($profile.productRuntimeDlls)){
     if(($Phase -ceq '3d' -and $name -cin @('libz.dll','libpng16.dll','jxl.dll','brotlidec.dll')) -or
        ($Phase -ceq '3e' -and $name -cnotin @('clipss2.exe','aom.dll','libyuv.dll','avif.dll')) -or
        ($Phase -ceq '3f' -and $name -cnotin @('clipss2.exe','libwebp.dll','libsharpyuv.dll')) -or
-       ($Phase -cin @('3g-b','4a','4b-b') -and $name -cne 'clipss2.exe')){
+       ($Phase -cin @('3g-b','4a','4b-b','5') -and $name -cne 'clipss2.exe')){
         if((Get-FileHash -LiteralPath $from).Hash -cne
            (Get-FileHash -LiteralPath (Resolve-S1Path $baselineProduct $name)).Hash){Stop-S1 Maint3cDllDrift}
     }
@@ -244,16 +253,16 @@ $mustImport=[ordered]@{
 }
 if($Phase -cne '3a'){
     $mustImport['clipss2.exe']+=@('libpng16.dll')
-    $mustImport['libpng16.dll']=if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b')){@('libz.dll')}else{@('z.dll')}
+    $mustImport['libpng16.dll']=if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b','5')){@('libz.dll')}else{@('z.dll')}
 }
-if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b')){
+if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b','5')){
     $mustImport['clipss2.exe']+=@('turbojpeg.dll')
     $mustImport['turbojpeg.dll']=@('spng.dll')
     $mustImport['spng.dll']=@('libz.dll')
     $mustImport['libyuv.dll']=@('jpeg62.dll')
     $mustImport['avif.dll']=@('libyuv.dll')
 }
-if($Phase -cin @('3e','3f','3g-b','4a','4b-b')){
+if($Phase -cin @('3e','3f','3g-b','4a','4b-b','5')){
     $mustImport['clipss2.exe']+=@('avif.dll')
     $mustImport['avif.dll']+=@('aom.dll')
 }
@@ -279,10 +288,10 @@ foreach($binary in $binaries){
     $approvedExternal=$external
     if($Phase -ceq '4b-b' -and $binary.path -ceq 'clipss2.exe'){$approvedExternal+=$settingsSystemDlls}
     if(@($binary.imports | Where-Object {$_ -notin $allowed -and $_ -notin $approvedExternal}).Count){Stop-S1 MaintUnexpectedImport}
-    if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b') -and 'z.dll' -in $binary.imports){Stop-S1 MaintLegacyZlibImport}
+    if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b','5') -and 'z.dll' -in $binary.imports){Stop-S1 MaintLegacyZlibImport}
 }
 $dumpbin=(Get-Command dumpbin.exe -CommandType Application).Source
-if($Phase -ceq '4b-b'){
+if($Phase -cin @('4b-b','5')){
     function Get-MaintImportSymbols($Path){
         $dll=''
         $lines=@(& $dumpbin /imports $Path)
@@ -309,6 +318,7 @@ if($Phase -ceq '4b-b'){
     )+@('AddAccessAllowedAce','EqualSid','GetAce','GetSecurityDescriptorDacl','GetSidLengthRequired',
         'GetTokenInformation','InitializeAcl','InitializeSecurityDescriptor','IsValidSid',
         'SetSecurityDescriptorDacl','SetSecurityDescriptorOwner' | ForEach-Object {"api-ms-win-security-base-l1-1-0.dll/$_"})
+    if($Phase -ceq '5'){$expected=@()}
     if($old.Count -or (($new | Sort-Object -CaseSensitive) -join ',') -cne
         (($expected | Sort-Object -CaseSensitive) -join ',')){Stop-S1 MaintSettingsImportDelta}
 }
@@ -345,8 +355,8 @@ if($Phase -cne '3a'){
     if(!$before.Count -or !$after.Count -or @($before | Where-Object {$_ -cnotin $after}).Count){Stop-S1 MaintMissingPngExport}
     ($binaries | Where-Object path -CEQ 'libpng16.dll').pngExports=$after
 }
-if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b')){
-    $priorZlib=if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b')){'libz.dll'}else{'z.dll'}
+if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b','5')){
+    $priorZlib=if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b','5')){'libz.dll'}else{'z.dll'}
     $legacyExports=@(Get-MaintExports (Resolve-S1Path $baselineProduct $priorZlib) '')
     $newExports=@(Get-MaintExports (Resolve-S1Path $product 'libz.dll') '')
     $importLines=@(& $dumpbin /imports:libz.dll (Resolve-S1Path $product 'libpng16.dll'))
@@ -359,7 +369,7 @@ if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b')){
         removed=@($legacyExports|Where-Object {$_ -cnotin $newExports});
         added=@($newExports|Where-Object {$_ -cnotin $legacyExports})}
 }
-if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b')){
+if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b','5')){
     foreach($dll in 'turbojpeg.dll','jpeg62.dll'){
         $before=@(Get-MaintExports (Resolve-S1Path $baselineProduct $dll) '')
         $after=@(Get-MaintExports (Resolve-S1Path $product $dll) '')
@@ -372,7 +382,7 @@ if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b')){
     if(!$spng.Count -or 'spng_version_string' -cnotin $spng){Stop-S1 MaintSpngExports}
     ($binaries|Where-Object path -CEQ 'spng.dll').spngExports=$spng
 }
-if($Phase -cin @('3e','3f','3g-b','4a','4b-b')){
+if($Phase -cin @('3e','3f','3g-b','4a','4b-b','5')){
     foreach($bind in @(
         @{consumer='clipss2.exe';dll='avif.dll'},
         @{consumer='avif.dll';dll='aom.dll'},
@@ -442,25 +452,25 @@ $identity=[ordered]@{schemaVersion=1;version='0.1.3';scope=$scope;sourceBaseComm
     installedReceiptSha256=(Get-FileHash -LiteralPath $receipt).Hash;installedMarkerSha256=(Get-FileHash -LiteralPath $marker).Hash;
     binaries=$binaries;runtimeBundled=$false;releaseApproved=$false;ownerAcceptance='PENDING'}
 if($Phase -cne '3a'){$identity.previousBuildIdentitySha256=$plan.referenceBuildIdentitySha256}
-if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b')){
+if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b','5')){
     $identity.profileSha256=(Get-FileHash -LiteralPath $profilePath).Hash
     $identity.productRuntimeDlls=$profile.productRuntimeDlls
     $identity.installedRuntimeDlls=$plan.installedRuntimeDlls
     $identity.zlib=$plan.zlib
     $identity.embedded=$plan.embedded
 }
-if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b')){
+if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b','5')){
     $identity.libjpegTurbo=$plan.libjpegTurbo
     $identity.libspng=$plan.libspng
     $identity.externalLinkEvidenceSha256=$plan.externalLinkEvidenceSha256
 }
-if($Phase -cin @('3e','3f','3g-b','4a','4b-b')){
+if($Phase -cin @('3e','3f','3g-b','4a','4b-b','5')){
     $identity.aom=$plan.aom
     $identity.libyuv=$plan.libyuv
 }
 if($webpPhase){$identity.libwebp=$plan.libwebp}
 Write-S1NewJson (Join-Path $run 'BUILD-IDENTITY.json') $identity
-if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b')){
+if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b','5')){
     & (Join-Path $PSScriptRoot test_sec_maint_3c_package.ps1) -Mode Verify -RunRoot $run `
         -ProductDirectory $product -PreviousRun $PreviousRun -Phase $Phase
 }

@@ -2,20 +2,31 @@
 # Copyright (c) 2026 guardiancrow. MIT.
 [CmdletBinding()]
 param($Mode,$Profile,$Scope,$Privacy,$Configuration,$Architecture,
-      $Root=(Split-Path $PSScriptRoot -Parent),$Original='',$Destination='')
+      $Root=(Split-Path $PSScriptRoot -Parent),$Original='',$Destination='',$ReleaseRun='')
 $ErrorActionPreference='Stop'
 . (Join-Path $PSScriptRoot ShippingProfileS1.ps1)
 Assert-S1String $Mode
 if($Mode -cnotin @('VerifyOnly','Derive')){Stop-S1 Mode}
 Assert-S1Selection $Profile $Scope $Privacy $Configuration $Architecture
-$plan=Read-S1SourceInputs $Root
+if($ReleaseRun){
+    $releaseBase=[IO.Path]::GetFullPath((Join-Path $Root 'build/sec-maint-v013/5'))+[IO.Path]::DirectorySeparatorChar
+    $ReleaseRun=[IO.Path]::GetFullPath($ReleaseRun)
+    if(!$ReleaseRun.StartsWith($releaseBase,[StringComparison]::OrdinalIgnoreCase)){Stop-S1 ReleaseRun}
+    Assert-S1NoReparse $ReleaseRun
+    if($Original -or $Destination){Stop-S1 ReleaseRun}
+    $Original=Join-Path $ReleaseRun 'managed-jpegli-src'
+}else{
+    $null=Read-S1SourceInputs $Root
+}
 if($Original -isnot [string]){Stop-S1 ScalarString}
 $originalRoot=if($Original -ceq ''){Resolve-S1Path $Root 'build/managed-jpegli-src'}else{
     if(![IO.Path]::IsPathFullyQualified($Original)){Stop-S1 OriginalRoot}
     Assert-S1NoReparse $Original
     [IO.Path]::GetFullPath($Original).TrimEnd([char[]]@('/','\'))
 }
-$derivedRoot=Get-S1ExpectedRoot $Root 'build/managed-jpegli-s1-v2' $Destination
+$derivedRoot=if($ReleaseRun){Resolve-S1Path $ReleaseRun 'managed-jpegli-v2'}else{
+    Get-S1ExpectedRoot $Root 'build/managed-jpegli-s1-v2' $Destination
+}
 if($originalRoot -ceq $derivedRoot -or $derivedRoot.StartsWith($originalRoot+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase) -or $originalRoot.StartsWith($derivedRoot+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)){Stop-S1 OriginalRoot}
 if($Mode -ceq 'Derive' -and ([IO.Directory]::Exists($derivedRoot) -or [IO.File]::Exists($derivedRoot))){Stop-S1 OutputExists}
 $managed=Test-S1ManagedOriginal $Root $originalRoot

@@ -1,7 +1,8 @@
-param([string]$SourceCache = '')
+param([string]$SourceCache = '',[string]$Destination = '')
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path $PSScriptRoot -Parent
-$destination = Join-Path $repo 'build/managed-jpegli-src'
+if(!$Destination){$Destination=Join-Path $repo 'build/managed-jpegli-src'}
+else{$Destination=[IO.Path]::GetFullPath($Destination)}
 function Run([string[]]$Arguments) {
     & git --no-optional-locks -c core.autocrlf=false @Arguments
     if ($LASTEXITCODE -ne 0) { throw "git failed: $Arguments" }

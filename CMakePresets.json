@@ -14,7 +14,7 @@
       }
     },
     {
-      "name": "windows-x64-shipping-v2",
+      "name": "windows-x64-shipping-v2-s1-legacy",
       "inherits": "_s1-release-base",
       "binaryDir": "${sourceDir}/build/windows-x64-s1-v2",
       "cacheVariables": {
@@ -32,13 +32,59 @@
         "CMAKE_FIND_USE_PACKAGE_REGISTRY": "OFF",
         "CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY": "OFF"
       }
+    },
+    {
+      "name": "windows-x64-shipping-v2",
+      "displayName": "clipss2 v0.1.3 x64 Shipping Privacy v2",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/sec-maint-v013/5/$env{CLIPSS2_RELEASE_RUN}/build",
+      "toolchainFile": "${sourceDir}/build/sec-maint-v013/5/$env{CLIPSS2_RELEASE_RUN}/vcpkg/scripts/buildsystems/vcpkg.cmake",
+      "condition": {
+        "type": "notEquals",
+        "lhs": "$env{CLIPSS2_RELEASE_RUN}",
+        "rhs": ""
+      },
+      "cacheVariables": {
+        "CLIPSS2_PUBLICATION_SCOPE": "sec-maint-v013-5",
+        "CLIPSS2_SHIPPING_PRIVACY": "ON",
+        "CLIPSS2_SHIPPING_PROFILE": "v2",
+        "CLIPSS2_MAINT_RUN_ROOT": "${sourceDir}/build/sec-maint-v013/5/$env{CLIPSS2_RELEASE_RUN}",
+        "CLIPSS2_JPEGLI_SOURCE_DIR": "${sourceDir}/build/sec-maint-v013/5/$env{CLIPSS2_RELEASE_RUN}/managed-jpegli-src",
+        "CLIPSS2_DERIVED_JPEGLI_DIR": "${sourceDir}/build/sec-maint-v013/5/$env{CLIPSS2_RELEASE_RUN}/managed-jpegli-v2",
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreadedDLL",
+        "VCPKG_INSTALLED_DIR": "${sourceDir}/build/sec-maint-v013/5/$env{CLIPSS2_RELEASE_RUN}/installed",
+        "VCPKG_MANIFEST_DIR": "${sourceDir}",
+        "VCPKG_OVERLAY_TRIPLETS": "${sourceDir}/triplets",
+        "VCPKG_TARGET_TRIPLET": "x64-windows-shipping-privacy",
+        "VCPKG_HOST_TRIPLET": "x64-windows",
+        "VCPKG_MANIFEST_INSTALL": "OFF",
+        "CMAKE_FIND_USE_PACKAGE_REGISTRY": "OFF",
+        "CMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY": "OFF",
+        "BUILD_TESTING": "ON"
+      }
     }
   ],
   "buildPresets": [
     {
+      "name": "windows-x64-shipping-v2-s1-legacy",
+      "configurePreset": "windows-x64-shipping-v2-s1-legacy",
+      "configuration": "Release"
+    },
+    {
       "name": "windows-x64-shipping-v2",
       "configurePreset": "windows-x64-shipping-v2",
       "configuration": "Release"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "windows-x64-shipping-v2",
+      "configurePreset": "windows-x64-shipping-v2",
+      "configuration": "Release",
+      "output": {
+        "outputOnFailure": true
+      }
     }
   ]
 }

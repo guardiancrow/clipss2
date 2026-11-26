@@ -5,12 +5,16 @@ param(
     [Parameter(Mandatory)][ValidateSet('Seal','Verify')][string]$Mode,
     [Parameter(Mandatory)][string]$RunRoot,
     [Parameter(Mandatory)][string]$ReferenceInstalled,
-    [ValidateSet('3a','3b','3c','3d','3e','3f','3g-b','4a','4b-b')][string]$Phase='3a',
+    [ValidateSet('3a','3b','3c','3d','3e','3f','3g-b','4a','4b-b','5')][string]$Phase='3a',
     [string]$PreviousRun,
     [string]$AvifReferenceRun,
     [string]$Root=(Split-Path $PSScriptRoot -Parent)
 )
 $ErrorActionPreference='Stop'
+$publicBuild=$Phase -ceq '5' -and !$PreviousRun
+if($publicBuild){
+    Import-Module (Join-Path $PSScriptRoot IconV012.psm1) -Function Read-IconPE -DisableNameChecking
+}
 . (Join-Path $PSScriptRoot ShippingProfileSecBR1.ps1)
 
 function Read-MaintStatus([string]$Installed) {
@@ -35,7 +39,7 @@ $prefix=(Join-Path ([IO.Path]::GetFullPath($Root)) "build/sec-maint-v013/$Phase"
 if(!$run.StartsWith($prefix,[StringComparison]::OrdinalIgnoreCase)){Stop-S1 MaintRunRoot}
 Assert-S1NoReparse $run
 $installed=Join-Path $run installed
-$webpPhase=$Phase -cin @('3f','3g-b','4a','4b-b')
+$webpPhase=$Phase -cin @('3f','3g-b','4a','4b-b','5')
 $tools=Read-S1StrictJson (Resolve-S1Path $Root 'cmake/security/sec-maint-v013/toolchain-v1.json')
 $manifest='cmake/security/sec-maint-v013'
 if($Phase -cne '3a'){$manifest+="/$Phase"}
@@ -51,11 +55,11 @@ if($Phase -cne '3a'){
     $pngArchive=Join-Path $run 'downloads/pnggroup-libpng-v1.6.59.tar.gz'
     if((Get-FileHash -LiteralPath $pngArchive -Algorithm SHA512).Hash -ine $inputs.libpng.archiveSha512){Stop-S1 MaintPngArchive}
 }
-if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b')){
+if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b','5')){
     $zlibArchive=Join-Path $run 'downloads/madler-zlib-v1.4.tar.gz'
     if((Get-FileHash -LiteralPath $zlibArchive -Algorithm SHA512).Hash -ine $inputs.zlib.archiveSha512){Stop-S1 MaintZlibArchive}
 }
-if($Phase -cin @('3e','3f','3g-b','4a','4b-b')){
+if($Phase -cin @('3e','3f','3g-b','4a','4b-b','5')){
     foreach($component in @($inputs.aom,$inputs.libyuv)){
         $source=Resolve-S1Path $run ('downloads/'+$component.archive)
         if((Get-FileHash -LiteralPath $source -Algorithm SHA512).Hash -ine $component.archiveSha512){
@@ -69,12 +73,20 @@ if($webpPhase){
         Stop-S1 MaintWebpArchive
     }
 }
-if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b')){
+if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b','5')){
     foreach($component in @($inputs.libjpegTurbo,$inputs.libspng)){
         if((Get-FileHash -LiteralPath (Resolve-S1Path $run ('downloads/'+$component.archive)) -Algorithm SHA512).Hash -ine
            $component.archiveSha512){Stop-S1 MaintJpegArchive}
     }
-    $evidenceRoot=switch($Phase){'4b-b'{$AvifReferenceRun} '4a'{$AvifReferenceRun} '3g-b'{$AvifReferenceRun} '3f'{$AvifReferenceRun} '3e'{$PreviousRun} default{$run}}
+}
+if($publicBuild){
+    $actualRoot=Join-Path $installed ($tools.targetTriplet+'/bin')
+    foreach($edge in @(@('libpng16.dll','libz.dll'),@('spng.dll','libz.dll'),@('turbojpeg.dll','spng.dll'))){
+        $imports=(Read-IconPE (Resolve-S1Path $actualRoot $edge[0])).imports
+        if($edge[1] -cnotin $imports -or 'z.dll' -in $imports){Stop-S1 MaintExternalBinaryEvidence}
+    }
+}elseif($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b','5')){
+    $evidenceRoot=switch($Phase){'5'{$AvifReferenceRun} '4b-b'{$AvifReferenceRun} '4a'{$AvifReferenceRun} '3g-b'{$AvifReferenceRun} '3f'{$AvifReferenceRun} '3e'{$PreviousRun} default{$run}}
     $evidencePath=Resolve-S1Path $evidenceRoot 'external-link-evidence.json'
     if((Get-FileHash -LiteralPath $evidencePath).Hash -cne $inputs.externalLinkEvidenceSha256){Stop-S1 MaintExternalLinkEvidence}
     $linkEvidence=Read-S1StrictJson $evidencePath
@@ -83,7 +95,7 @@ if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b')){
     }
     $actualRoot=Join-Path $installed $tools.targetTriplet
     foreach($binary in $linkEvidence.binaries){
-        if($Phase -cin @('3e','3f','3g-b','4a','4b-b') -and $binary.dll -cin @('libyuv.dll','avif.dll')){continue}
+        if($Phase -cin @('3e','3f','3g-b','4a','4b-b','5') -and $binary.dll -cin @('libyuv.dll','avif.dll')){continue}
         if((Get-FileHash -LiteralPath (Resolve-S1Path $actualRoot ('bin/'+$binary.dll))).Hash -cne $binary.sha256 -or
            (Get-FileHash -LiteralPath (Resolve-S1Path $actualRoot ('lib/'+$binary.importLibrary))).Hash -cne $binary.importLibrarySha256){
             Stop-S1 MaintExternalBinaryEvidence
@@ -104,18 +116,21 @@ if($LASTEXITCODE -ne 0 -or $commit -cne $tools.vcpkgBaseline){Stop-S1 MaintRegis
 foreach($package in $inputs.packages) {
     if($package.name -cin @('brotli','highway','libjxl','libyuv')){continue}
     if($Phase -cne '3a' -and $package.name -ceq 'libpng'){continue}
-    if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b') -and $package.name -ceq 'zlib'){continue}
-    if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b') -and $package.name -ceq 'libjpeg-turbo'){continue}
-    if($Phase -cin @('3e','3f','3g-b','4a','4b-b') -and $package.name -ceq 'aom'){continue}
+    if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b','5') -and $package.name -ceq 'zlib'){continue}
+    if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b','5') -and $package.name -ceq 'libjpeg-turbo'){continue}
+    if($Phase -cin @('3e','3f','3g-b','4a','4b-b','5') -and $package.name -ceq 'aom'){continue}
     if($webpPhase -and $package.name -ceq 'libwebp'){continue}
     $tree=& git @gitOptions rev-parse ("HEAD:ports/"+$package.name)
     if($LASTEXITCODE -ne 0 -or $tree -cne $package.portTree){Stop-S1 MaintRegistryPort}
 }
 
-if($Phase -ceq '3a'){
+if($publicBuild){
+    $prior=@($inputs.releasePackageStatus)
+    if(!$prior.Count){Stop-S1 MaintReleasePackageStatus}
+}elseif($Phase -ceq '3a'){
     $oldReceipt=Resolve-S1Path $ReferenceInstalled 'share/clipss2-sec-br1-install-receipt-v1.json'
 }else{
-    $previousPhase=switch($Phase){'4b-b'{'4a'} '4a'{'3g-b'} '3g-b'{'3f'} '3f'{'3e'} '3e'{'3d'} '3d'{'3c'} '3c'{'3b'} default{'3a'}}
+    $previousPhase=switch($Phase){'5'{'4b-b'} '4b-b'{'4a'} '4a'{'3g-b'} '3g-b'{'3f'} '3f'{'3e'} '3e'{'3d'} '3d'{'3c'} '3c'{'3b'} default{'3a'}}
     if(!$PreviousRun){Stop-S1 MaintPreviousRun}
     $previous=[IO.Path]::GetFullPath($PreviousRun)
     $oldPrefix=(Join-Path ([IO.Path]::GetFullPath($Root)) "build/sec-maint-v013/$previousPhase")+[IO.Path]::DirectorySeparatorChar
@@ -128,10 +143,12 @@ if($Phase -ceq '3a'){
     if((Get-FileHash -LiteralPath $oldMarker).Hash -cne $inputs.referenceMarkerSha256 -or
        (Get-FileHash -LiteralPath $oldIdentity).Hash -cne $inputs.referenceBuildIdentitySha256){Stop-S1 MaintPreviousIdentity}
 }
-if((Get-FileHash -LiteralPath $oldReceipt).Hash -cne $inputs.referenceReceiptSha256){Stop-S1 MaintReference}
-$oldStatus=(Read-S1StrictJson $oldReceipt).inventory | Where-Object path -CEQ 'vcpkg/status'
-Assert-S1Identity (Resolve-S1Path $ReferenceInstalled $oldStatus.path) $oldStatus.size $oldStatus.sha256
-$prior=@(Read-MaintStatus $ReferenceInstalled)
+if(!$publicBuild){
+    if((Get-FileHash -LiteralPath $oldReceipt).Hash -cne $inputs.referenceReceiptSha256){Stop-S1 MaintReference}
+    $oldStatus=(Read-S1StrictJson $oldReceipt).inventory | Where-Object path -CEQ 'vcpkg/status'
+    Assert-S1Identity (Resolve-S1Path $ReferenceInstalled $oldStatus.path) $oldStatus.size $oldStatus.sha256
+    $prior=@(Read-MaintStatus $ReferenceInstalled)
+}
 $actual=@(Read-MaintStatus $installed)
 function Get-MaintPackageKey($Row){
     $feature=if($Row.feature){$Row.feature}else{'core'}
@@ -203,7 +220,7 @@ foreach($entry in $actual){
             Stop-S1 MaintMissingAvifRebuild
         }
     }
-    if($Phase -cin @('3g-b','4a','4b-b') -and $entry.abi -cne $old.abi){Stop-S1 MaintUnexpectedAbiChange}
+    if($Phase -cin @('3g-b','4a','4b-b','5') -and $entry.abi -cne $old.abi){Stop-S1 MaintUnexpectedAbiChange}
     $entry.priorAbi=$old.abi
 }
 
@@ -233,7 +250,7 @@ try {
             $pcQueries["$name/$query"]=$result.Trim()
         }
     }
-    if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b')){
+    if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b','5')){
         $zlibVersion=& $pkgconf --modversion zlib
         if($LASTEXITCODE -ne 0 -or $zlibVersion -cne $inputs.zlib.version){Stop-S1 MaintZlibPcVersion}
         foreach($query in 'shared','static'){
@@ -265,7 +282,7 @@ $inventory=@(foreach($relative in ($files.Keys|Sort-Object -CaseSensitive)){
     $file=Get-Item -LiteralPath $files[$relative]
     [ordered]@{path=$relative;size=$file.Length;sha256=(Get-FileHash -LiteralPath $file.FullName).Hash}
 })
-if($Phase -cin @('3g-b','4a','4b-b')){
+if(!$publicBuild -and $Phase -cin @('3g-b','4a','4b-b','5')){
     $packagePath="^($($tools.targetTriplet)|$($tools.hostTriplet))/"
     $priorInventory=@((Read-S1StrictJson $oldReceipt).inventory | Where-Object path -CMatch $packagePath)
     Assert-S1InputSet @($priorInventory.path) @($inventory | Where-Object path -CMatch $packagePath | ForEach-Object path)
@@ -277,17 +294,17 @@ if($Mode -ceq 'Seal'){
     $sealedReceipt=[ordered]@{schemaVersion=1;receiptId=$receiptId;
         sourceInputsSha256=$inputsHash;vcpkgBaseline=$tools.vcpkgBaseline;vcpkgToolSha256=$tools.vcpkgToolSha256;
         compiler=$tools.compiler;packages=$actual;pkgconfig=$pcQueries;inventory=$inventory}
-    if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b')){
+    if($Phase -cin @('3c','3d','3e','3f','3g-b','4a','4b-b','5')){
         $sealedReceipt.zlib=$inputs.zlib
         $sealedReceipt.embedded=$inputs.embedded
         $sealedReceipt.installedRuntimeDlls=$inputs.installedRuntimeDlls
     }
-    if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b')){
+    if($Phase -cin @('3d','3e','3f','3g-b','4a','4b-b','5')){
         $sealedReceipt.libjpegTurbo=$inputs.libjpegTurbo
         $sealedReceipt.libspng=$inputs.libspng
         $sealedReceipt.externalLinkEvidenceSha256=$inputs.externalLinkEvidenceSha256
     }
-    if($Phase -cin @('3e','3f','3g-b','4a','4b-b')){
+    if($Phase -cin @('3e','3f','3g-b','4a','4b-b','5')){
         $sealedReceipt.aom=$inputs.aom
         $sealedReceipt.libyuv=$inputs.libyuv
     }

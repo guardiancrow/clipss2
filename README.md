@@ -1,36 +1,16 @@
 [日本語](README.md) | [English](README.en.md)
 
-# clipss2 — v0.1.1 / v0.1.2候補
+# clipss2
 
-v0.1.1は公開済みです。このブランチでは[オリジナルアプリアイコンを導入するv0.1.2候補](docs/ICON-3-V012.md)を準備しています。
-v0.1.2は未公開・Owner受入待ちで、既存の公開Release・ZIPを変更しません。
+Windows のスクリーンキャプチャツールです。公開済みの Windows x64 Portable 版は [v0.1.2](https://github.com/guardiancrow/clipss2/releases/tag/v0.1.2) です。このソースの v0.1.3 はセキュリティメンテナンス候補で、Brotli 1.2.1 を維持し、承認済みの codec と共有 zlib を使用します。 [v0.1.3 リリースノート](docs/RELEASE-NOTES-0.1.3.md)
 
-Windows向けのスクリーンキャプチャツールです。Windows x64 Portable版の **[v0.1.1をGitHub Releasesで公開しています](https://github.com/guardiancrow/clipss2/releases/tag/v0.1.1)**。
-v0.1.1はBrotli 1.2.1を使用するセキュリティ保守更新です。v0.1.0のBrotli 1.2.0に対するCVE-2026-111497対応を維持し、v0.1.2でも依存versionを変更しません。通常の製品経路での悪用実証や悪用不能の証明を意味しません。
+## 導入と更新
 
-## ダウンロードと導入
+ZIP 全体を新しい書込み可能なフォルダーへ展開してください。v0.1.3 候補では clipss2.exe、DLL 18 本、clipss2.portable を同じ場所に置きます。clipss2.exe --help で使い方を確認できます。通常起動は常駐、--settings は設定画面です。
 
-取得・利用・再配布前に、[v0.1.1 Releaseページ](https://github.com/guardiancrow/clipss2/releases/tag/v0.1.1)の案内と[Microsoft対象コード限定条件](https://github.com/guardiancrow/clipss2/blob/8ab9885dd2af78145491258691429793a2099807/packaging/sec-br2/MICROSOFT-COMPONENT-TERMS.txt)を確認してください。ZIP内のREADME、完全NOTICE、原LICENSE/PATENTSも保持してください。
+外部の Microsoft Visual C++ Redistributable x64 が必要です。更新前に旧版の常駐・設定画面を終了し、設定と画像を保全してください。新旧の Portable 版を同時に使う場合は別フォルダーへ展開し、設定先を分けてください。 [Runtime の公式案内](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist)、[動作環境](docs/SUPPORT.md)、[Portable 運用](docs/PORTABLE-RELEASE.md)
 
-- Windows x64 Portable、Release /MD、インストーラなしの構成です。
-- **Microsoft VC++ Runtime x64は外部導入**です。必要に応じて[Microsoft公式案内](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist)から導入してください。Runtime DLL・installer・Windows標準DLLは同梱しません。
-- **未署名**のため、Windows等が発行者未確認の警告を表示する場合があります。SHA-256は内容の同一性確認用であり、発行者認証の代わりにはなりません。
-
-ReleaseページからZIPを取得し、全体を新しい書込み可能なフォルダーへ展開してください。`clipss2.exe`の隣に`clipss2.portable`とapp-local DLL 17本を保持します。`clipss2.exe --help`でCLIを確認でき、通常起動は常駐mode、`--settings`は設定UIです。
-
-| 公開ZIP | 内容 |
-| --- | --- |
-| ファイル名 | `clipss2-0.1.1-windows-x64-portable.zip` |
-| サイズ | 7,970,478 bytes |
-| 構成 | EXE 1本・DLL 17本、第三者原文23点、Portable marker、LICENSE、README、完全NOTICE、Microsoft条件文書、BUILD-IDENTITYの47ファイル |
-| SHA-256 | `A13DF0E714A061C367548DD5296C3C2D1A7CBCE81E2030FE2BB8C9AD1DE02169` |
-
-## v0.1.1の公開とv0.1.2の変更
-
-v0.1.1のtag対象Source commitは`8ab9885dd2af78145491258691429793a2099807`、製品build sourceは`6c4f48f8908746a7b06ab046ab715a51cbab86f8`です。後続Packaging/documentation commitを製品build revisionとは扱いません。
-2026-10-30の公開記録にはOwnerのPortable展開・起動終了、設定、Window Capture/PNG、JPEG XL可逆/非可逆、Clipboardと貼付け、JPEG/WebP/AVIFの6項目PASSが記録されています。別PC、Region/Monitor、HDR等の未検証範囲を解消したとは扱いません。
-
-v0.1.2候補は独自アイコンをEXE、設定UI、通知領域へ導入します。SVG/ICOは独自制作で、外部ロゴの流用はありません。既存CLI・設定互換性とcodec機能を維持します。ICON-2のOwner確認はデザイン・識別性とExplorerの詳細/小/大表示（100%/200% DPI）であり、新しいv0.1.2 ZIPの実機受入は別途必要です。
+公開ソースからの構築は [v0.1.3 構築手順](docs/BUILD-V013.md) を参照してください。利用・再配布時は、同梱の [第三者ソフトウェア通知](packaging/v013/THIRD-PARTY-NOTICES.md) と [Microsoft 対象コード限定条件](packaging/v013/MICROSOFT-COMPONENT-TERMS.txt) を確認してください。
 
 ## 実装機能と確認済み範囲
 

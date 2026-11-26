@@ -1,4 +1,10 @@
-# S1の対象環境と未実測範囲
+# Windows x64 の動作環境
+
+v0.1.3 の候補は Windows x64 Portable、Release /MD です。外部の Microsoft Visual C++ Redistributable x64 は、使用した Visual Studio Build Tools と同じか新しい対応版を使用してください。最小の Runtime 版は実行検証で確定していません。 [Microsoft 公式案内](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist)
+
+Windows 10 2004／build 19041 は API に基づく検証下限の候補です。旧 OS の実機受入は未実施です。設定同期で使う CNG SHA-256 の API は Windows 10 にあります。同じホストとユーザーでも、別セッション・権限の違い、NTFS 以外の実媒体での設定同期は実地未検証です。 [BCryptHash の要件](https://learn.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcrypthash)、[設定 I/O 同期規約](SETTINGS-IO-SYNCHRONIZATION.md)
+
+## 過去の検証記録
 
 対象sourceはWindows x64、D3D11、Windows.Graphics.Captureを用います。
 cursor制御APIのWindows 10 version 2004/build19041以降は検証下限候補であり、全環境での動作保証ではありません。
