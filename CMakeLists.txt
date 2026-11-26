@@ -4,7 +4,7 @@ set(clipss2_version 0.1.2)
 set(clipss2_languages CXX)
 # 3G-B inherits the 3F codec configuration and regression suite.
 set(clipss2_maint_codec_scope "${CLIPSS2_PUBLICATION_SCOPE}")
-if(CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-maint-v013-(3g-b|4a)$")
+if(CLIPSS2_PUBLICATION_SCOPE MATCHES "^sec-maint-v013-(3g-b|4a|4b-b)$")
     set(clipss2_maint_codec_scope "sec-maint-v013-3f")
 endif()
 if(clipss2_maint_codec_scope MATCHES "^sec-maint-v013-3[abcdef]$")
@@ -314,6 +314,12 @@ set(CLIPSS2_PRODUCT_SOURCES
     src/platform/windows/region_selector_ui.h
     src/platform/windows/monitor_selection_navigation.h
 )
+add_library(clipss2_settings_io STATIC
+    src/platform/windows/settings_io_lock.cpp src/platform/windows/settings_io_lock.h)
+target_include_directories(clipss2_settings_io PRIVATE src)
+target_compile_definitions(clipss2_settings_io PRIVATE WIN32_LEAN_AND_MEAN NOMINMAX)
+target_link_libraries(clipss2_settings_io PRIVATE advapi32 bcrypt)
+clipss2_configure_cpp_target(clipss2_settings_io)
 set(CLIPSS2_AUDIT_SOURCES
     src/platform/windows/alpha_capture_audit.cpp
     src/platform/windows/alpha_capture_audit.h
@@ -358,6 +364,7 @@ target_compile_definitions(clipss2 PRIVATE
 )
 
 target_link_libraries(clipss2 PRIVATE
+    clipss2_settings_io
     clipss2_ui_windows
     clipss2_unicode_diagnostics
     clipss2_capture_model
@@ -425,6 +432,13 @@ if(BUILD_TESTING)
     target_link_libraries(clipss2_ui_windows_audit PUBLIC user32 gdi32)
     clipss2_configure_cpp_target(clipss2_ui_windows_audit)
 
+    add_library(clipss2_settings_io_test STATIC src/platform/windows/settings_io_lock.cpp)
+    target_include_directories(clipss2_settings_io_test PRIVATE src)
+    target_compile_definitions(clipss2_settings_io_test PRIVATE
+        WIN32_LEAN_AND_MEAN NOMINMAX CLIPSS2_SETTINGS_TEST_NAMESPACE)
+    target_link_libraries(clipss2_settings_io_test PRIVATE advapi32 bcrypt)
+    clipss2_configure_cpp_target(clipss2_settings_io_test)
+
     add_executable(clipss2_audit_fixture ${CLIPSS2_PRODUCT_SOURCES} ${CLIPSS2_AUDIT_SOURCES})
     target_sources(clipss2_audit_fixture PRIVATE
         "${CMAKE_CURRENT_BINARY_DIR}/clipss2-version.rc"
@@ -434,6 +448,7 @@ if(BUILD_TESTING)
         CLIPSS2_AUDIT_FEATURES=1 UNICODE _UNICODE WIN32_LEAN_AND_MEAN NOMINMAX)
     clipss2_configure_cpp_target(clipss2_audit_fixture)
     target_link_libraries(clipss2_audit_fixture PRIVATE
+    clipss2_settings_io_test
     clipss2_ui_windows_audit
     clipss2_unicode_diagnostics
     clipss2_capture_model
@@ -572,16 +587,29 @@ if(BUILD_TESTING)
         src/platform/windows/product_settings.cpp src/platform/windows/output_storage.cpp)
     target_include_directories(clipss2_product_settings_test PRIVATE src)
     target_link_libraries(clipss2_product_settings_test PRIVATE clipss2_ui_windows clipss2_unicode_diagnostics clipss2_jpeg_codec shell32 ole32 windowsapp)
+    target_link_libraries(clipss2_product_settings_test PRIVATE clipss2_settings_io_test)
     clipss2_configure_cpp_target(clipss2_product_settings_test)
     add_test(NAME product_settings COMMAND clipss2_product_settings_test)
+    add_executable(clipss2_product_settings_process_test tests/product_settings_process_test.cpp
+        src/platform/windows/product_settings.cpp src/platform/windows/output_storage.cpp)
+    target_include_directories(clipss2_product_settings_process_test PRIVATE src)
+    target_compile_definitions(clipss2_product_settings_process_test PRIVATE
+        NOMINMAX WIN32_LEAN_AND_MEAN CLIPSS2_SETTINGS_PROCESS_TEST)
+    target_link_libraries(clipss2_product_settings_process_test PRIVATE
+        clipss2_settings_io_test clipss2_ui_windows clipss2_unicode_diagnostics clipss2_jpeg_codec shell32 ole32 windowsapp)
+    clipss2_configure_cpp_target(clipss2_product_settings_process_test)
+    add_test(NAME product_settings_process COMMAND clipss2_product_settings_process_test)
+    set_tests_properties(product_settings product_settings_process PROPERTIES RESOURCE_LOCK clipss2_settings_user)
     add_executable(clipss2_output_storage_test tests/output_storage_test.cpp
         src/platform/windows/output_storage.cpp src/platform/windows/file_publication.cpp
         src/platform/windows/product_settings.cpp)
     target_include_directories(clipss2_output_storage_test PRIVATE src)
     target_link_libraries(clipss2_output_storage_test PRIVATE clipss2_ui_windows clipss2_unicode_diagnostics clipss2_jpeg_codec shell32 ole32 windowsapp)
+    target_link_libraries(clipss2_output_storage_test PRIVATE clipss2_settings_io_test)
     target_compile_definitions(clipss2_output_storage_test PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN)
     clipss2_configure_cpp_target(clipss2_output_storage_test)
     add_test(NAME output_storage COMMAND clipss2_output_storage_test)
+    set_tests_properties(output_storage PROPERTIES RESOURCE_LOCK clipss2_settings_user)
 
     add_executable(clipss2_settings_location_test tests/settings_location_test.cpp
         src/platform/windows/settings_location.cpp src/platform/windows/product_settings.cpp
@@ -589,9 +617,10 @@ if(BUILD_TESTING)
     target_include_directories(clipss2_settings_location_test PRIVATE src)
     target_compile_definitions(clipss2_settings_location_test PRIVATE CLIPSS2_AUDIT_FEATURES=0 NOMINMAX WIN32_LEAN_AND_MEAN)
     target_link_libraries(clipss2_settings_location_test PRIVATE clipss2_ui_windows
-        clipss2_unicode_diagnostics clipss2_jpeg_codec shell32 ole32 windowsapp)
+        clipss2_settings_io_test clipss2_unicode_diagnostics clipss2_jpeg_codec shell32 ole32 windowsapp)
     clipss2_configure_cpp_target(clipss2_settings_location_test)
     add_test(NAME settings_location COMMAND clipss2_settings_location_test)
+    set_tests_properties(settings_location PROPERTIES RESOURCE_LOCK clipss2_settings_user)
 
     add_executable(clipss2_region_geometry_test tests/region_geometry_test.cpp
         src/platform/windows/monitor_capture_source.cpp)

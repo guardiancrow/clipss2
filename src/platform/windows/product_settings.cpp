@@ -1,5 +1,6 @@
 #include "audit/audit_policy.h"
 #include "platform/windows/product_settings.h"
+#include "platform/windows/settings_io_lock.h"
 #include "platform/windows/unicode_diagnostics.h"
 #include <Windows.h>
 #include <ShlObj.h>
@@ -9,16 +10,17 @@
 #include <iostream>
 #include <limits>
 #include <memory>
-#include <mutex>
+#include <optional>
 #include <stdexcept>
 
 namespace clipss2::platform::windows
 {
+#if defined(CLIPSS2_SETTINGS_PROCESS_TEST)
+void settings_process_test_before_publish();
+#endif
 namespace
 {
 using namespace codec::jpeg;
-std::mutex settings_io_mutex;
-
 [[noreturn]] void fail(const char* stage, DWORD error)
 { throw std::runtime_error(std::string{stage} + ": Win32 error " + std::to_string(error)); }
 
@@ -271,8 +273,14 @@ SettingsLoadResult load_product_settings_locked(const std::filesystem::path& pat
 
 SettingsLoadResult load_product_settings(const std::filesystem::path& path)
 {
-    const std::lock_guard lock(settings_io_mutex);
-    return load_product_settings_locked(path);
+    try
+    {
+        SettingsIoLock lock;
+        lock.acquire();
+        return load_product_settings_locked(path);
+    }
+    catch (const std::exception& error)
+    { return rejected(SettingsStatus::read_failure, "ReadFailure: " + std::string{error.what()}, false); }
 }
 
 SettingsWriteResult write_product_settings(const std::filesystem::path& path,
@@ -281,13 +289,13 @@ SettingsWriteResult write_product_settings(const std::filesystem::path& path,
     std::filesystem::path temporary;
     bool owns_temporary{};
     // Keep the lock through failure cleanup as well as successful publication.
-    std::unique_lock lock(settings_io_mutex, std::defer_lock);
+    std::optional<SettingsIoLock> lock;
     try
     {
         const std::string bytes = serialize_product_settings(preferences);
-        lock.lock();
-        // Preserve a newer file even if it appeared after startup. This check
-        // narrows, but does not eliminate, cross-process version races.
+        lock.emplace().acquire();
+        // Read under the same lock used by cooperating publishers. An external
+        // writer that ignores the protocol can still change the file.
         const auto previous = load_product_settings_locked(path);
         if (!previous.persistence_enabled) return {false, previous.diagnostic + "; write suppressed"};
         std::filesystem::create_directories(path.parent_path());
@@ -316,6 +324,9 @@ SettingsWriteResult write_product_settings(const std::filesystem::path& path,
         if (!FlushFileBuffers(file.get())) fail("flush", GetLastError());
         file.close();
         if (fault == SettingsWriteFault::replace) throw std::runtime_error("replace: injected failure");
+#if defined(CLIPSS2_SETTINGS_PROCESS_TEST)
+        settings_process_test_before_publish();
+#endif
         if (!MoveFileExW(temporary.c_str(), path.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH))
             fail("replace", GetLastError());
         temporary.clear();
@@ -335,7 +346,14 @@ SettingsWriteResult write_product_settings(const std::filesystem::path& path,
 }
 ProductSettings::ProductSettings()
 {
-    try { store_ = default_settings_store(); path_ = store_.path; loaded_ = load_product_settings(path_); }
+    try
+    {
+        SettingsIoLock lock;
+        lock.acquire();
+        store_ = default_settings_store();
+        path_ = store_.path;
+        loaded_ = load_product_settings_locked(path_);
+    }
     catch (const std::exception& error)
     { loaded_ = rejected(SettingsStatus::read_failure, "ReadFailure/path: " + std::string{error.what()}, false); }
     print_load(loaded_);
